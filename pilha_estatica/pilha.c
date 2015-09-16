@@ -7,7 +7,7 @@ void inicializa_pilha (PILHA *p, int *s)
     return;
 }
 
-void PUSH (PILHA *p, float v, int *s)
+void PUSH (PILHA *p, TIPO_DADO v, int *s)
 {
     if (p->topo == TAM-1)
     {
@@ -20,9 +20,9 @@ void PUSH (PILHA *p, float v, int *s)
     return;
 }
 
-float POP (PILHA *p, int *s)
+TIPO_DADO POP (PILHA *p, int *s)
 {
-    float t;
+    TIPO_DADO t;
     if (p->topo == -1)
     {
         *s = 0;

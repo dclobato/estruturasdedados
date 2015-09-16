@@ -1,13 +1,14 @@
 #ifndef __PILHA__
 #define __PILHA__
-#define TAM 4
+#define TAM 10                  // Capacidade de pilha
+#define TIPO_DADO
 typedef struct __pilha
 {
-    float dados[TAM];
+    TIPO_DADO dados[TAM];
     int topo;
 } PILHA;
 
 void inicializa_pilha (PILHA *, int *);
-void PUSH (PILHA *, float, int *);
-float POP (PILHA *, int *);
+void PUSH (PILHA *, TIPO_DADO, int *);
+TIPO_DADO POP (PILHA *, int *);
 #endif
