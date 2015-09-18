@@ -1,7 +1,7 @@
 #ifndef __PILHA__
 #define __PILHA__
 #define TAM 10                  // Capacidade de pilha
-#define TIPO_DADO
+#define TIPO_DADO int
 typedef struct __pilha
 {
     TIPO_DADO dados[TAM];

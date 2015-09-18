@@ -1,4 +1,7 @@
 .DS_Store
 *.o
 *.orig
+*.zip
 main.c
+Makefile
+programateste
