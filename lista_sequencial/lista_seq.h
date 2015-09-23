@@ -9,14 +9,14 @@ typedef struct
     int nos[TAM];
 } LISTA;
 
-int inicializa_lista (LISTA *);
-int insere_inicio (LISTA *, TIPO_DADO);
-int insere_final (LISTA *, TIPO_DADO);
-int insere_lista (LISTA *, TIPO_DADO, int);
-int remove_inicio (LISTA *);
-int remove_final (LISTA *);
-int remove_lista (LISTA *, int);
-int consulta_lista (LISTA *, int*);
-void imprime_lista (LISTA *);
+TIPO_DADO consulta_lista (LISTA *l, int p, int* status);
+void imprime_lista (LISTA *l);
+void inicializa_lista (LISTA *l, int *status);
+void insere_final (LISTA *l, TIPO_DADO v, int *status);
+void insere_inicio (LISTA * l, TIPO_DADO v, int *status);
+void insere_lista (LISTA *l, TIPO_DADO v, int p, int *status);
+void insere_ordenado (LISTA *l, TIPO_DADO v, int *status);
+void remove_final (LISTA *l, int *status);
+void remove_inicio (LISTA *l, int *status);
+void remove_lista (LISTA *l, int p, int *status);
 #endif
-
