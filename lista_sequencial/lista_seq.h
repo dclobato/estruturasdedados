@@ -19,4 +19,5 @@ void insere_ordenado (LISTA *l, TIPO_DADO v, int *status);
 void remove_final (LISTA *l, int *status);
 void remove_inicio (LISTA *l, int *status);
 void remove_lista (LISTA *l, int p, int *status);
+void remove_chave (LISTA *l, TIPO_DADO v, int *status);
 #endif

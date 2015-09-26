@@ -130,6 +130,22 @@ void remove_lista (LISTA *l, int p, int *status)
     return;
 }
 
+void remove_chave (LISTA *l, int v, int *status)
+{
+    int i;
+    *status = 0;
+ 
+    for (i=0; i<(l->numElementos); i++)
+    {
+        if (l->nos[i] == v)
+        {
+            remove_lista (l, i, status);
+            i--;
+        }
+    }
+    return;
+}
+
 TIPO_DADO consulta_lista (LISTA *l, int p, int* status)
 {
     TIPO_DADO t;
