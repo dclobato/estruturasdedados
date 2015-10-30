@@ -34,7 +34,6 @@ void insere_abb (ARVORE *t, ARVORE *f, int *status)
     // Se arvore esta vazia, manda bala ai mesmo
     if (*t == NULL)
     {
-        printf("Inserindo raiz da ABB\n");
         definir_arvore (t, RAIZ, f, status);
         return;
     }
@@ -117,22 +116,22 @@ void percurso_pos (ARVORE t)
     return;
 }
 
-void _imprime_arvore( ARVORE treePtr, int *row)
+void _imprime_arvore (ARVORE p, int *row)
 {
-    if (treePtr != NULL) {
+    if (p != NULL) {
         (*row)++;
-        _imprime_arvore(treePtr->dir,row);
+        _imprime_arvore(p->dir,row);
         int i;
         for(i=0; i<(3*(*row)); i++)
             printf(" ");
 
-        printf("%d\n", treePtr->dado);
-        _imprime_arvore(treePtr->esq,row);
+        printf("%d\n", p->dado);
+        _imprime_arvore(p->esq,row);
         (*row)--;
     }
 }
 
-void imprime_arvore(ARVORE treePtr) {
+void imprime_arvore(ARVORE p) {
     int row = 0;
-    _imprime_arvore(treePtr,&row);
+    _imprime_arvore(p,&row);
 }
