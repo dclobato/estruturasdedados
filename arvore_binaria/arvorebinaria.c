@@ -31,14 +31,7 @@ ARVORE aloca_no_arvore (int v, int *status)
 void insere_abb (ARVORE *t, ARVORE *f, int *status)
 {
     ARVORE p, antes;
-    // Se arvore esta vazia, manda bala ai mesmo
-    if (*t == NULL)
-    {
-        definir_arvore (t, RAIZ, f, status);
-        return;
-    }
-
-    // Caso contrario, vamos procurar onde colocar
+   
     p = *t;
     antes = NULL;
     while (p != NULL)
@@ -54,10 +47,16 @@ void insere_abb (ARVORE *t, ARVORE *f, int *status)
         else
             p = p->dir;
     }
-    if ((*f)->dado < antes->dado)
-        definir_arvore (&antes, ESQ, f, status);
+    if (antes == NULL)          // Inserindo na raiz
+      definir_arvore (t, RAIZ, f, status);
     else
-        definir_arvore (&antes, DIR, f, status);
+    {
+       if ((*f)->dado < antes->dado)
+          definir_arvore (&antes, ESQ, f, status);
+       else
+          definir_arvore (&antes, DIR, f, status);
+    }
+    return;
 }
 
 void definir_arvore (ARVORE *t, TipoNo tipono, ARVORE *f, int *status)
