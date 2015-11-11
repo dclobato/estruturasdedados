@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <estruturas.h>
+#include "estruturas.h"
 
 void mostra_freq (LISTA, int);
 void cria_arvore (ARVORE *);

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <estruturas.h>
+#include "estruturas.h"
 
 void inicializa_lista (LISTA *l)
 {
@@ -20,7 +20,7 @@ int insere_ordenado (LISTA *l, char* s, int f, ARVORE t1, ARVORE t2, int atualiz
     tmp->esq = t1;
     tmp->dir = t2;
     /* vamos manter uma lista usando os ponteiros de baseprox apenas com as folhas. ou seja,
-       baseprox só vai ser atualizado na insercao dos simbolos individuais. quando for para colocar
+       baseprox sÃ³ vai ser atualizado na insercao dos simbolos individuais. quando for para colocar
        simbolos compostos, a gente encadeia soh por prox, e deixa o baseprox como esta. No final, se
        percorrer a lista por baseprox, vai andar so nas folhas */
     tmp->prox = NULL;
