@@ -1,7 +1,7 @@
 .DS_Store
+obj/
 *.o
 *.orig
 *.zip
-main.c
-Makefile
 programateste
+bin/
