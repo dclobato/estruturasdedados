@@ -4,10 +4,12 @@
 #include <stdbool.h>
 #define MAXNUMVERTICES  100
 #define MAXNUMARESTAS   4500
+#define MAXTAMROTULO    30
 
 typedef struct __TipoGrafo
 {
-  int Mat[MAXNUMVERTICES][MAXNUMVERTICES];
+  int **Mat;
+  char **Rotulos;
   unsigned MaxVertices;
   unsigned NumVertices;
   unsigned NumArestas;
@@ -22,7 +24,7 @@ typedef struct __RegistroAdjacencia
 
 typedef struct __TipoListaAdjGrafo
 {
-  RegistroAdjacencia Lista[MAXNUMVERTICES];
+  RegistroAdjacencia *Lista;
   unsigned NumAdjacentes;
 } TipoListaAdjGrafo;
 
@@ -42,7 +44,7 @@ typedef struct __RegistroLargura
 
 typedef struct __PercursoLargura
 {
-  RegistroLargura vertex[MAXNUMVERTICES];
+  RegistroLargura *vertex;
   unsigned Origem;
   unsigned NumDestinos;
 } PercursoBFS;
@@ -57,8 +59,8 @@ typedef struct __RegistroProfundidade
 
 typedef struct __PercursoProfundidade
 {
-  RegistroProfundidade vertex[MAXNUMVERTICES];
-  unsigned OrdemTopologica[MAXNUMVERTICES];
+  RegistroProfundidade *vertex;
+  unsigned *OrdemTopologica;
   bool DAG;
   unsigned Origem;
   unsigned NumDestinos;
@@ -67,12 +69,20 @@ typedef struct __PercursoProfundidade
 
 bool CriaGrafo(TipoGrafo *, unsigned, bool);
 bool InsereAresta(unsigned, unsigned, int, TipoGrafo *);
+bool RetiraAresta(unsigned, unsigned, int *, TipoGrafo *);
+bool InsereRotulo(char *, int, TipoGrafo *, unsigned *);
+void ImprimeGrafo(TipoGrafo *);
+
+//bool DestroiGrafo(TipoGrafo *);
+//bool DestroiListaAdjacencias(TipoGrafo *);
+//bool DestroiPercursoLargura(PercursoBFS*);
+//bool DestroiPercursoProfundidade(PercursoDFS *);
+
+bool ObterGrauNo(unsigned, TipoGrafo *, unsigned *, unsigned *);
 bool ExisteAresta(unsigned, unsigned, TipoGrafo *);
 int  ObterPesoAresta(unsigned, unsigned, TipoGrafo *, int *);
-bool RetiraAresta(unsigned, unsigned, int *, TipoGrafo *);
+
 bool ObterListaAdjacencias(unsigned, TipoGrafo *, TipoListaAdjGrafo *);
-void ImprimeGrafo(TipoGrafo *);
-bool ObterGrauNo(unsigned, TipoGrafo *, unsigned *, unsigned *);
 void PercursoLargura(unsigned, TipoGrafo *, PercursoBFS *);
 void PercursoProfundidade(unsigned, TipoGrafo *, PercursoDFS *, bool);
 void _PP(unsigned, TipoGrafo *, PercursoDFS *, unsigned *, unsigned);

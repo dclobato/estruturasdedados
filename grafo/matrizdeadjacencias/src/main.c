@@ -1,26 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <string.h>
 #include <grafo.h>
 #include <stdbool.h>
 
 int main(int argc, char *argv[])
 {
   TipoGrafo grafo;
-  PercursoBFS percursobfs;
   PercursoDFS percursodfs;
-  unsigned from, to;
-  int weight, i;
-  unsigned gE, gS;
+  char rotulo[20];
+  unsigned from, to, nv, i;
+  int weight;
+  scanf("%u", &nv);
 
-  if (!CriaGrafo(&grafo, 10, true))
+  if (nv > MAXNUMVERTICES)
+  {
+    printf("Numero de vertices maior que a capacidade\n");
+    exit(1);
+  }
+
+  if (!CriaGrafo(&grafo, nv, true))
   {
     printf("Problemas para criar o grafo\n");
     exit(1);
   }
 
+  for (i = 0; i < nv; i++)
+  {
+    memset(rotulo, '\0', sizeof(rotulo));
+    sprintf(rotulo, "Vertice #%u", i);
+
+    if (!InsereRotulo(rotulo, strlen(rotulo), &grafo, &to))
+      printf("Nao foi possivel inserir a aresta\n");
+    else
+      printf("Inserido vertice %u\n", to);
+  }
+
   while (true)
   {
-    printf("Digite a origem, o destino e o peso da aresta: ");
     scanf("%u %u %d", &from, &to, &weight);
 
     if ((from == -1) || (to == -1))
@@ -31,22 +49,6 @@ int main(int argc, char *argv[])
   }
 
   ImprimeGrafo(&grafo);
-  printf("     V  gE  gS\n");
-
-  for (i = 0; i < grafo.MaxVertices; i++)
-  {
-    ObterGrauNo(i, &grafo, &gE, &gS);
-    printf("%6u %3u %3u\n", from, gE, gS);
-  }
-
-  PercursoLargura(0, &grafo, &percursobfs);
-  printf("BFS a partir de 0 tem %d destinos\n", percursobfs.NumDestinos);
-  printf("     V Cor Dist    Pai\n");
-
-  for (to = 0; to < grafo.MaxVertices; to++)
-    printf("%6u %3d %4d %6u\n", to, percursobfs.vertex[to].cor,
-           percursobfs.vertex[to].distancia, percursobfs.vertex[to].pai);
-
   PercursoProfundidade(0, &grafo, &percursodfs, true);
   printf("DFS a partir de todos tem %d destinos\n", percursodfs.NumDestinos);
   printf("DAG: %d\n", percursodfs.DAG);
