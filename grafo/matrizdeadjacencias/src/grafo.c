@@ -39,6 +39,21 @@ bool CriaGrafo(TipoGrafo *Grafo, unsigned max, bool direcionado)
   return true;
 }
 
+bool DestroiGrafo(TipoGrafo *Grafo)
+{
+  unsigned i;
+
+  for (i = 0; i < Grafo->MaxVertices; i++)
+  {
+    free(Grafo->Rotulos[i]);
+    free(Grafo->Mat[i]);
+  }
+
+  free(Grafo->Rotulos);
+  free(Grafo->Mat);
+  return true;
+}
+
 bool InsereAresta(unsigned V1, unsigned V2, int Peso, TipoGrafo *Grafo)
 {
   if ((Peso == 0) || (V1 > Grafo->NumVertices) || (V2 > Grafo->NumVertices) ||
@@ -54,7 +69,7 @@ bool InsereAresta(unsigned V1, unsigned V2, int Peso, TipoGrafo *Grafo)
   return true;
 }
 
-bool InsereRotulo(char *rotulo, int tamanho, TipoGrafo *Grafo,
+bool InsereRotulo(char *rotulo, size_t tamanho, TipoGrafo *Grafo,
                   unsigned *vertice)
 {
   if ((Grafo->NumVertices == MAXNUMVERTICES) || (tamanho > MAXTAMROTULO))
@@ -165,6 +180,12 @@ bool ObterListaAdjacencias(unsigned V1, TipoGrafo *Grafo,
   return true;
 }
 
+bool DestroiListaAdjacencias(TipoListaAdjGrafo *Lista)
+{
+  free(Lista->Lista);
+  return true;
+}
+
 bool ObterGrauNo(unsigned V1, TipoGrafo *Grafo, unsigned *gE, unsigned *gS)
 {
   unsigned i;
@@ -235,10 +256,17 @@ void  PercursoLargura(unsigned V1, TipoGrafo *Grafo, PercursoBFS *bfs)
 
     bfs->vertex[u].cor = PRETO;
     bfs->NumDestinos = bfs->NumDestinos + 1;
+    DestroiListaAdjacencias(&adjacentes);
   }
 
   free(fila);
   return;
+}
+
+bool DestroiPercursoLargura(PercursoBFS *bfs)
+{
+  free(bfs->vertex);
+  return true;
 }
 
 void PercursoProfundidade(unsigned V1, TipoGrafo *Grafo, PercursoDFS *dfs,
@@ -253,6 +281,8 @@ void PercursoProfundidade(unsigned V1, TipoGrafo *Grafo, PercursoDFS *dfs,
 
   dfs->vertex = (RegistroProfundidade *) malloc(Grafo->NumVertices * sizeof(
                   RegistroProfundidade));
+  dfs->OrdemTopologica = (unsigned *) malloc(Grafo->NumVertices * sizeof(
+                           unsigned));
 
   for (i = 0; i < Grafo->NumVertices; i++)
   {
@@ -283,8 +313,6 @@ void PercursoProfundidade(unsigned V1, TipoGrafo *Grafo, PercursoDFS *dfs,
   if (dfs->DAG)
   {
     delta = Grafo->NumVertices - dfs->NumDestinos;
-    dfs->OrdemTopologica = (unsigned *) malloc(Grafo->NumVertices * sizeof(
-                             unsigned));
 
     for (i = 0; i < dfs->NumDestinos; i++)
       dfs->OrdemTopologica[i] = dfs->OrdemTopologica[i + delta];
@@ -292,10 +320,21 @@ void PercursoProfundidade(unsigned V1, TipoGrafo *Grafo, PercursoDFS *dfs,
     for (; i < Grafo->NumVertices; i++)
       dfs->OrdemTopologica[i] = UINT_MAX;
   }
+  else
+    free(dfs->OrdemTopologica);
 
   return;
 }
 
+bool DestroiPercursoProfundidade(PercursoDFS *dfs)
+{
+  free(dfs->vertex);
+
+  if (dfs->DAG)
+    free(dfs->OrdemTopologica);
+
+  return true;
+}
 
 void  _PP(unsigned vertice, TipoGrafo *Grafo, PercursoDFS *dfs,
           unsigned *relogio, unsigned pai)
@@ -332,11 +371,15 @@ void  _PP(unsigned vertice, TipoGrafo *Grafo, PercursoDFS *dfs,
     }
   }
 
+  DestroiListaAdjacencias(&adjacentes);
   *relogio = *relogio + 1;
   dfs->vertex[vertice].cor = PRETO;
   dfs->vertex[vertice].termino = *relogio;
   dfs->NumDestinos = dfs->NumDestinos + 1;
-  // Insere o vertice na cabeca da lista de ordenacao topologica
-  dfs->OrdemTopologica[Grafo->NumVertices - dfs->NumDestinos] = vertice;
+
+  // Insere o vertice na cabeca da lista de ordenacao topologica, se ainda for DAG
+  if (dfs->DAG)
+    dfs->OrdemTopologica[Grafo->NumVertices - dfs->NumDestinos] = vertice;
+
   return;
 }

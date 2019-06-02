@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 {
   TipoGrafo grafo;
   PercursoDFS percursodfs;
+  PercursoBFS percursobfs;
   char rotulo[20];
   unsigned from, to, nv, i;
   int weight;
@@ -20,7 +21,7 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  if (!CriaGrafo(&grafo, nv, true))
+  if (!CriaGrafo(&grafo, nv, false))
   {
     printf("Problemas para criar o grafo\n");
     exit(1);
@@ -59,11 +60,18 @@ int main(int argc, char *argv[])
            percursodfs.vertex[to].descoberta, percursodfs.vertex[to].termino,
            percursodfs.vertex[to].pai);
 
-  printf("Ordem topológica\n");
+  if (percursodfs.DAG)
+  {
+    printf("Ordem topológica\n");
 
-  for (to = 0; to < percursodfs.NumDestinos; to++)
-    printf("%u ", percursodfs.OrdemTopologica[to]);
+    for (to = 0; to < percursodfs.NumDestinos; to++)
+      printf("%u ", percursodfs.OrdemTopologica[to]);
+  }
 
+  DestroiPercursoProfundidade(&percursodfs);
+  PercursoLargura(0, &grafo, &percursobfs);
+  DestroiPercursoLargura(&percursobfs);
   printf("\n");
+  DestroiGrafo(&grafo);
   return true;
 }

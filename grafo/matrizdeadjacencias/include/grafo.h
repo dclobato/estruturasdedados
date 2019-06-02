@@ -70,13 +70,13 @@ typedef struct __PercursoProfundidade
 bool CriaGrafo(TipoGrafo *, unsigned, bool);
 bool InsereAresta(unsigned, unsigned, int, TipoGrafo *);
 bool RetiraAresta(unsigned, unsigned, int *, TipoGrafo *);
-bool InsereRotulo(char *, int, TipoGrafo *, unsigned *);
+bool InsereRotulo(char *, size_t, TipoGrafo *, unsigned *);
 void ImprimeGrafo(TipoGrafo *);
 
-//bool DestroiGrafo(TipoGrafo *);
-//bool DestroiListaAdjacencias(TipoGrafo *);
-//bool DestroiPercursoLargura(PercursoBFS*);
-//bool DestroiPercursoProfundidade(PercursoDFS *);
+bool DestroiGrafo(TipoGrafo *);
+bool DestroiListaAdjacencias(TipoListaAdjGrafo *);
+bool DestroiPercursoLargura(PercursoBFS *);
+bool DestroiPercursoProfundidade(PercursoDFS *);
 
 bool ObterGrauNo(unsigned, TipoGrafo *, unsigned *, unsigned *);
 bool ExisteAresta(unsigned, unsigned, TipoGrafo *);
