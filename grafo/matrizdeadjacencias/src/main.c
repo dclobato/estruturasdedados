@@ -10,9 +10,11 @@ int main(int argc, char *argv[])
   TipoGrafo grafo;
   PercursoDFS percursodfs;
   PercursoBFS percursobfs;
+  AGM agm;
   char rotulo[20];
   unsigned from, to, nv, i;
   int weight;
+  int dirigido;
   scanf("%u", &nv);
 
   if (nv > MAXNUMVERTICES)
@@ -21,7 +23,9 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
-  if (!CriaGrafo(&grafo, nv, false))
+  scanf("%d", &dirigido);
+
+  if (!CriaGrafo(&grafo, nv, (bool) dirigido))
   {
     printf("Problemas para criar o grafo\n");
     exit(1);
@@ -30,7 +34,7 @@ int main(int argc, char *argv[])
   for (i = 0; i < nv; i++)
   {
     memset(rotulo, '\0', sizeof(rotulo));
-    sprintf(rotulo, "Vertice #%u", i);
+    sprintf(rotulo, "%c", i + 65);
 
     if (!InsereRotulo(rotulo, strlen(rotulo), &grafo, &to))
       printf("Nao foi possivel inserir a aresta\n");
@@ -72,6 +76,23 @@ int main(int argc, char *argv[])
   PercursoLargura(0, &grafo, &percursobfs);
   DestroiPercursoLargura(&percursobfs);
   printf("\n");
+
+  if (AGMPrim(0, &grafo, &agm))
+  {
+    printf("    De   Para    Peso\n");
+
+    for (to = 0; to < grafo.MaxVertices; to++)
+    {
+      if (agm.pai[to] == UINT_MAX)
+        printf("------ %6u -------\n", to);
+      else
+        printf("%6u %6u %7d\n", agm.pai[to], to, agm.custo[to]);
+    }
+
+    printf("Arestas: %d\tCusto: %ld\n", agm.NumArestas, agm.pesoTotal);
+    DestroiAGM(&agm);
+  }
+
   DestroiGrafo(&grafo);
   return true;
 }

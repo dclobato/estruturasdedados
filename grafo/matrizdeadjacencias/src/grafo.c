@@ -114,6 +114,7 @@ bool ExisteAresta(unsigned V1, unsigned V2, TipoGrafo *Grafo)
 void ImprimeGrafo(TipoGrafo *Grafo)
 {
   unsigned i, j;
+  printf("Rotulos\n");
 
   for (i = 0; i < Grafo->NumVertices; i++)
     printf("Vertice %u: %s\n", i, Grafo->Rotulos[i]);
@@ -138,7 +139,7 @@ void ImprimeGrafo(TipoGrafo *Grafo)
   return;
 }
 
-int ObterPesoAresta(unsigned V1, unsigned V2, TipoGrafo *Grafo, int *Peso)
+bool ObterPesoAresta(unsigned V1, unsigned V2, TipoGrafo *Grafo, int *Peso)
 {
   if ((V1 > Grafo->NumVertices) || (V2 > Grafo->NumVertices) || (V1 < 0) ||
       (V2 < 0))
@@ -383,3 +384,88 @@ void  _PP(unsigned vertice, TipoGrafo *Grafo, PercursoDFS *dfs,
 
   return;
 }
+
+bool AGMPrim(unsigned V1, TipoGrafo *Grafo, AGM *agm)
+{
+  unsigned i, j, nv;
+  unsigned to, from;
+  bool *pertenceMST;
+  int peso;
+  TipoListaAdjGrafo adjacentes;
+
+  if ((V1 > Grafo->NumVertices) || (V1 < 0) || (Grafo->Direcionado))
+    return false;
+
+  pertenceMST = (bool *) malloc(Grafo->NumVertices * sizeof(bool));
+  agm->custo = (int *) malloc(Grafo->NumVertices * sizeof(int));
+  agm->pai = (unsigned *) malloc(Grafo->NumVertices * sizeof(unsigned));
+
+  for (i = 0; i < Grafo->NumVertices; i++)
+  {
+    pertenceMST[i] = false;
+    agm->custo[i] = INT_MAX;
+  }
+
+  agm->custo[V1] = INT_MIN;
+  agm->pai[V1] = UINT_MAX;
+  agm->NumArestas = 0;
+  nv = Grafo->NumVertices - 1;
+
+  for (i = 0; i < nv; i++)
+  {
+    from = minKey(agm->custo, pertenceMST, Grafo->NumVertices);
+    pertenceMST[from] = true;
+    agm->NumArestas++;
+    ObterListaAdjacencias(from, Grafo, &adjacentes);
+
+    for (j = 0; j < adjacentes.NumAdjacentes; j++)
+    {
+      to = adjacentes.Lista[j].vertice;
+      peso = adjacentes.Lista[j].peso;
+
+      if ((!pertenceMST[to]) && (peso < agm->custo[to]))
+      {
+        agm->pai[to] = from;
+        agm->custo[to] = peso;
+      }
+    }
+
+    DestroiListaAdjacencias(&adjacentes);
+  }
+
+  agm->pesoTotal = 0L;
+
+  for (i = 0; i < Grafo->NumVertices; i++)
+    agm->pesoTotal = agm->pesoTotal + (agm->pai[i] != UINT_MAX ? agm->custo[i] :
+                                       0);
+
+  free(pertenceMST);
+  // Arvore geradora minima tem que ter o minimo de arestas para ligar
+  // todos os nos do grafo. Se nao tiver exatamente isso, ou tem algo
+  // errado aqui, e apareceu um ciclo, ou o grafo nao eh conectado
+  return (agm->NumArestas == nv);
+}
+
+bool DestroiAGM(AGM *agm)
+{
+  free(agm->pai);
+  free(agm->custo);
+  return true;
+}
+
+unsigned minKey(int *custo, bool *pertenceMST, unsigned NumVertices)
+{
+  int min;
+  unsigned min_index, vertice;
+  min = INT_MAX;
+
+  for (vertice = 0; vertice < NumVertices; vertice++)
+    if ((!pertenceMST[vertice]) && (custo[vertice] < min))
+    {
+      min = custo[vertice];
+      min_index = vertice;
+    }
+
+  return min_index;
+}
+

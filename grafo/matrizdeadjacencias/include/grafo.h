@@ -66,25 +66,44 @@ typedef struct __PercursoProfundidade
   unsigned NumDestinos;
 } PercursoDFS;
 
+typedef struct __AGM
+{
+  unsigned *pai;
+  int *custo;
+  unsigned NumArestas;
+  long int pesoTotal;
+} AGM;
+
+typedef struct __Coloracao
+{
+  unsigned vertice;
+  unsigned grau;
+  bool colorido;
+  unsigned cor;
+} Cores;
 
 bool CriaGrafo(TipoGrafo *, unsigned, bool);
+bool DestroiGrafo(TipoGrafo *);
 bool InsereAresta(unsigned, unsigned, int, TipoGrafo *);
 bool RetiraAresta(unsigned, unsigned, int *, TipoGrafo *);
 bool InsereRotulo(char *, size_t, TipoGrafo *, unsigned *);
 void ImprimeGrafo(TipoGrafo *);
 
-bool DestroiGrafo(TipoGrafo *);
-bool DestroiListaAdjacencias(TipoListaAdjGrafo *);
-bool DestroiPercursoLargura(PercursoBFS *);
-bool DestroiPercursoProfundidade(PercursoDFS *);
 
 bool ObterGrauNo(unsigned, TipoGrafo *, unsigned *, unsigned *);
 bool ExisteAresta(unsigned, unsigned, TipoGrafo *);
-int  ObterPesoAresta(unsigned, unsigned, TipoGrafo *, int *);
+bool ObterPesoAresta(unsigned, unsigned, TipoGrafo *, int *);
 
 bool ObterListaAdjacencias(unsigned, TipoGrafo *, TipoListaAdjGrafo *);
+bool DestroiListaAdjacencias(TipoListaAdjGrafo *);
 void PercursoLargura(unsigned, TipoGrafo *, PercursoBFS *);
+bool DestroiPercursoLargura(PercursoBFS *);
 void PercursoProfundidade(unsigned, TipoGrafo *, PercursoDFS *, bool);
+bool DestroiPercursoProfundidade(PercursoDFS *);
 void _PP(unsigned, TipoGrafo *, PercursoDFS *, unsigned *, unsigned);
+
+bool AGMPrim(unsigned, TipoGrafo *, AGM *);
+bool DestroiAGM(AGM *);
+unsigned minKey(int *, bool *, unsigned);
 
 #endif
