@@ -8,9 +8,7 @@
 int main(int argc, char *argv[])
 {
   TipoGrafo grafo;
-  PercursoDFS percursodfs;
-  PercursoBFS percursobfs;
-  AGM agm;
+  unsigned *cores;
   char rotulo[20];
   unsigned from, to, nv, i;
   int weight;
@@ -31,15 +29,22 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
+  // limpa buffer dos inteiros
+  scanf("%*c");
+  
   for (i = 0; i < nv; i++)
   {
     memset(rotulo, '\0', sizeof(rotulo));
-    sprintf(rotulo, "%c", i + 65);
+    scanf("%19[^\n]\n", rotulo);
 
-    if (!InsereRotulo(rotulo, strlen(rotulo), &grafo, &to))
-      printf("Nao foi possivel inserir a aresta\n");
+    if (!InsereVertice(rotulo, strlen(rotulo), &grafo, &to))
+    {
+      printf("Nao foi possivel inserir o vertice\n");
+    }
     else
+    {
       printf("Inserido vertice %u\n", to);
+    }
   }
 
   while (true)
@@ -47,52 +52,26 @@ int main(int argc, char *argv[])
     scanf("%u %u %d", &from, &to, &weight);
 
     if ((from == -1) || (to == -1))
+    {
       break;
+    }
 
     if (!InsereAresta(from, to, weight, &grafo))
+    {
       printf("Nao foi possivel inserir a aresta\n");
+    }
   }
 
   ImprimeGrafo(&grafo);
-  PercursoProfundidade(0, &grafo, &percursodfs, true);
-  printf("DFS a partir de todos tem %d destinos\n", percursodfs.NumDestinos);
-  printf("DAG: %d\n", percursodfs.DAG);
-  printf("     V Cor Des Ter    Pai\n");
+  colorirGrafo(&grafo, &cores);
+  printf("V C\n");
 
-  for (to = 0; to < grafo.MaxVertices; to++)
-    printf("%6u %3d %3d %3d %6u\n", to, percursodfs.vertex[to].cor,
-           percursodfs.vertex[to].descoberta, percursodfs.vertex[to].termino,
-           percursodfs.vertex[to].pai);
-
-  if (percursodfs.DAG)
+  for (i = 0; i < grafo.NumVertices; i++)
   {
-    printf("Ordem topológica\n");
-
-    for (to = 0; to < percursodfs.NumDestinos; to++)
-      printf("%u ", percursodfs.OrdemTopologica[to]);
+    printf("%s %u\n", grafo.Rotulos[i], cores[i]);
   }
 
-  DestroiPercursoProfundidade(&percursodfs);
-  PercursoLargura(0, &grafo, &percursobfs);
-  DestroiPercursoLargura(&percursobfs);
-  printf("\n");
-
-  if (AGMPrim(0, &grafo, &agm))
-  {
-    printf("    De   Para    Peso\n");
-
-    for (to = 0; to < grafo.MaxVertices; to++)
-    {
-      if (agm.pai[to] == UINT_MAX)
-        printf("------ %6u -------\n", to);
-      else
-        printf("%6u %6u %7d\n", agm.pai[to], to, agm.custo[to]);
-    }
-
-    printf("Arestas: %d\tCusto: %ld\n", agm.NumArestas, agm.pesoTotal);
-    DestroiAGM(&agm);
-  }
-
+  free(cores);
   DestroiGrafo(&grafo);
   return true;
 }

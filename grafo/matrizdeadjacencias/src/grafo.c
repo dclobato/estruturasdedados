@@ -10,7 +10,9 @@ bool CriaGrafo(TipoGrafo *Grafo, unsigned max, bool direcionado)
   unsigned i, j;
 
   if ((max > MAXNUMVERTICES) || (max < 1))
+  {
     return false;
+  }
 
   Grafo->MaxVertices = max;
   Grafo->NumVertices = 0;
@@ -24,7 +26,9 @@ bool CriaGrafo(TipoGrafo *Grafo, unsigned max, bool direcionado)
     Grafo->Mat[i] = (int *) malloc(max * sizeof(int));
 
     for (j = 0; j < Grafo->MaxVertices; j++)
+    {
       Grafo->Mat[i][j] = 0;
+    }
   }
 
   // Alocando dinamicamente o vetor de rotulos
@@ -58,22 +62,28 @@ bool InsereAresta(unsigned V1, unsigned V2, int Peso, TipoGrafo *Grafo)
 {
   if ((Peso == 0) || (V1 > Grafo->NumVertices) || (V2 > Grafo->NumVertices) ||
       (V1 < 0) || (V2 < 0) || (Grafo->NumArestas == MAXNUMARESTAS))
+  {
     return false;
+  }
 
   Grafo->Mat[V1][V2] = Peso;
 
   if (!Grafo->Direcionado)
+  {
     Grafo->Mat[V2][V1] = Peso;
+  }
 
   Grafo->NumArestas++;
   return true;
 }
 
-bool InsereRotulo(char *rotulo, size_t tamanho, TipoGrafo *Grafo,
-                  unsigned *vertice)
+bool InsereVertice(char *rotulo, size_t tamanho, TipoGrafo *Grafo,
+                   unsigned *vertice)
 {
   if ((Grafo->NumVertices == MAXNUMVERTICES) || (tamanho > MAXTAMROTULO))
+  {
     return false;
+  }
 
   memset(Grafo->Rotulos[Grafo->NumVertices], '\0',
          (size_t) sizeof(*Grafo->Rotulos[Grafo->NumVertices]));
@@ -86,17 +96,23 @@ bool RetiraAresta(unsigned V1, unsigned V2, int *Peso, TipoGrafo *Grafo)
 {
   if ((V1 > Grafo->NumVertices) || (V2 > Grafo->NumVertices) || (V1 < 0) ||
       (V2 < 0))
+  {
     return false;
+  }
 
   *Peso = Grafo->Mat[V1][V2];
 
   if (*Peso == 0)
+  {
     return false;
+  }
 
   Grafo->Mat[V1][V2] = 0;
 
   if (!Grafo->Direcionado)
+  {
     Grafo->Mat[V2][V1] = 0;
+  }
 
   Grafo->NumArestas--;
   return true;
@@ -106,7 +122,9 @@ bool ExisteAresta(unsigned V1, unsigned V2, TipoGrafo *Grafo)
 {
   if ((V1 > Grafo->NumVertices) || (V2 > Grafo->NumVertices) || (V1 < 0) ||
       (V2 < 0))
+  {
     return false;
+  }
 
   return (Grafo->Mat[V1][V2] != 0);
 }
@@ -117,12 +135,16 @@ void ImprimeGrafo(TipoGrafo *Grafo)
   printf("Rotulos\n");
 
   for (i = 0; i < Grafo->NumVertices; i++)
+  {
     printf("Vertice %u: %s\n", i, Grafo->Rotulos[i]);
+  }
 
   printf("   ");
 
   for (i = 0; i < Grafo->NumVertices; i++)
+  {
     printf("%3d", i);
+  }
 
   printf("\n");
 
@@ -131,7 +153,9 @@ void ImprimeGrafo(TipoGrafo *Grafo)
     printf("%3d", i);
 
     for (j = 0; j < Grafo->NumVertices; j++)
+    {
       printf("%3d", Grafo->Mat[i][j]);
+    }
 
     printf("\n");
   }
@@ -143,38 +167,57 @@ bool ObterPesoAresta(unsigned V1, unsigned V2, TipoGrafo *Grafo, int *Peso)
 {
   if ((V1 > Grafo->NumVertices) || (V2 > Grafo->NumVertices) || (V1 < 0) ||
       (V2 < 0))
+  {
     return false;
+  }
 
   *Peso = Grafo->Mat[V1][V2];
   return true;
 }
 
 bool ObterListaAdjacencias(unsigned V1, TipoGrafo *Grafo,
-                           TipoListaAdjGrafo *Lista)
+                           TipoListaAdjGrafo *Lista, bool inverso)
 {
   unsigned i;
   int peso;
 
   if ((V1 > Grafo->NumVertices) || (V1 < 0))
+  {
     return false;
+  }
 
   Lista->NumAdjacentes = 0;
-  Lista->Lista = (RegistroAdjacencia *) malloc(Grafo->NumVertices * sizeof(
-                   RegistroAdjacencia));
+  Lista->Lista = (RegistroVertices *) malloc(Grafo->NumVertices * sizeof(
+                   RegistroVertices));
 
-  for (i = 0; i < Grafo->NumVertices; i++)
+  if (!inverso)
   {
-    if (ExisteAresta(V1, i, Grafo))
+    for (i = 0; i < Grafo->NumVertices; i++)
     {
-      if (!ObterPesoAresta(V1, i, Grafo, &peso))
+      if (ExisteAresta(V1, i, Grafo))
       {
-        printf("Inconsistencia\n");
-        exit(1);
-      }
+        if (!ObterPesoAresta(V1, i, Grafo, &peso))
+        {
+          printf("Inconsistencia\n");
+          exit(1);
+        }
 
-      Lista->Lista[Lista->NumAdjacentes].vertice = i;
-      Lista->Lista[Lista->NumAdjacentes].peso = peso;
-      Lista->NumAdjacentes++;
+        Lista->Lista[Lista->NumAdjacentes].vertice = i;
+        Lista->Lista[Lista->NumAdjacentes].peso = peso;
+        Lista->NumAdjacentes++;
+      }
+    }
+  }
+  else
+  {
+    for (i = 0; i < Grafo->NumVertices; i++)
+    {
+      if (!ExisteAresta(V1, i, Grafo))
+      {
+        Lista->Lista[Lista->NumAdjacentes].vertice = i;
+        Lista->Lista[Lista->NumAdjacentes].peso = 0;
+        Lista->NumAdjacentes++;
+      }
     }
   }
 
@@ -192,18 +235,33 @@ bool ObterGrauNo(unsigned V1, TipoGrafo *Grafo, unsigned *gE, unsigned *gS)
   unsigned i;
 
   if ((V1 > Grafo->NumVertices) || (V1 < 0))
+  {
     return false;
+  }
 
-  *gE = 0;
-  *gS = 0;
+  if (gE)
+  {
+    *gE = 0;
+  }
+
+  if (gS)
+  {
+    *gS = 0;
+  }
 
   for (i = 0; i < Grafo->NumVertices; i++)
   {
-    if (ExisteAresta(V1, i, Grafo))
-      *gS = *gS + 1;
+    if (gS)
+      if (ExisteAresta(V1, i, Grafo))
+      {
+        *gS = *gS + 1;
+      }
 
-    if (ExisteAresta(i, V1, Grafo))
-      *gE = *gE + 1;
+    if (gE)
+      if (ExisteAresta(i, V1, Grafo))
+      {
+        *gE = *gE + 1;
+      }
   }
 
   return true;
@@ -217,45 +275,47 @@ void  PercursoLargura(unsigned V1, TipoGrafo *Grafo, PercursoBFS *bfs)
   TipoListaAdjGrafo adjacentes;
 
   if ((V1 > Grafo->NumVertices) || (V1 < 0))
+  {
     return;
+  }
 
   fila = (unsigned *) malloc(Grafo->NumVertices * sizeof(unsigned));
   inicio = final = 0;
-  bfs->vertex = (RegistroLargura *) malloc(Grafo->NumVertices * sizeof(
-                  RegistroLargura));
+  bfs->vertex = (RegistroVertices *) malloc(Grafo->NumVertices * sizeof(
+                  RegistroVertices));
 
   for (i = 0; i < Grafo->NumVertices; i++)
   {
-    bfs->vertex[i].cor = BRANCO;
+    bfs->vertex[i].corTrabalho = BRANCO;
     bfs->vertex[i].pai = UINT_MAX;
     bfs->vertex[i].distancia = UINT_MAX;
   }
 
   bfs->Origem = V1;
   bfs->NumDestinos = 0;
-  bfs->vertex[V1].cor = CINZA;
+  bfs->vertex[V1].corTrabalho = CINZA;
   bfs->vertex[V1].distancia = 0;
   fila[final++] = V1;
 
   while (inicio != final)
   {
     u = fila[inicio++];
-    ObterListaAdjacencias(u, Grafo, &adjacentes);
+    ObterListaAdjacencias(u, Grafo, &adjacentes, false);
 
     for (i = 0; i < adjacentes.NumAdjacentes; i++)
     {
       v = adjacentes.Lista[i].vertice;
 
-      if (bfs->vertex[v].cor == BRANCO)
+      if (bfs->vertex[v].corTrabalho == BRANCO)
       {
-        bfs->vertex[v].cor = CINZA;
+        bfs->vertex[v].corTrabalho = CINZA;
         bfs->vertex[v].distancia = bfs->vertex[u].distancia + 1;
         bfs->vertex[v].pai = u;
         fila[final++] = v;
       }
     }
 
-    bfs->vertex[u].cor = PRETO;
+    bfs->vertex[u].corTrabalho = PRETO;
     bfs->NumDestinos = bfs->NumDestinos + 1;
     DestroiListaAdjacencias(&adjacentes);
   }
@@ -278,16 +338,18 @@ void PercursoProfundidade(unsigned V1, TipoGrafo *Grafo, PercursoDFS *dfs,
   unsigned delta;
 
   if (((V1 > Grafo->NumVertices) || (V1 < 0)) && (!todos))
+  {
     return;
+  }
 
-  dfs->vertex = (RegistroProfundidade *) malloc(Grafo->NumVertices * sizeof(
-                  RegistroProfundidade));
+  dfs->vertex = (RegistroVertices *) malloc(Grafo->NumVertices * sizeof(
+                  RegistroVertices));
   dfs->OrdemTopologica = (unsigned *) malloc(Grafo->NumVertices * sizeof(
                            unsigned));
 
   for (i = 0; i < Grafo->NumVertices; i++)
   {
-    dfs->vertex[i].cor        = BRANCO;
+    dfs->vertex[i].corTrabalho = BRANCO;
     dfs->vertex[i].pai        = UINT_MAX;
     dfs->vertex[i].descoberta = UINT_MAX;
     dfs->vertex[i].termino    = UINT_MAX;
@@ -299,13 +361,17 @@ void PercursoProfundidade(unsigned V1, TipoGrafo *Grafo, PercursoDFS *dfs,
   dfs->DAG = true;
 
   if (!todos)
+  {
     _PP(V1, Grafo, dfs, &relogio, UINT_MAX);
+  }
   else
   {
     for (i = 0; i < Grafo->NumVertices; i++)
     {
-      if (dfs->vertex[i].cor == BRANCO)
+      if (dfs->vertex[i].corTrabalho == BRANCO)
+      {
         _PP(i, Grafo, dfs, &relogio, UINT_MAX);
+      }
     }
   }
 
@@ -316,13 +382,20 @@ void PercursoProfundidade(unsigned V1, TipoGrafo *Grafo, PercursoDFS *dfs,
     delta = Grafo->NumVertices - dfs->NumDestinos;
 
     for (i = 0; i < dfs->NumDestinos; i++)
+    {
       dfs->OrdemTopologica[i] = dfs->OrdemTopologica[i + delta];
+    }
 
+    // TODO: reescrever essa parte com realloc de dfs->OrdemTopologica
     for (; i < Grafo->NumVertices; i++)
+    {
       dfs->OrdemTopologica[i] = UINT_MAX;
+    }
   }
   else
+  {
     free(dfs->OrdemTopologica);
+  }
 
   return;
 }
@@ -332,7 +405,9 @@ bool DestroiPercursoProfundidade(PercursoDFS *dfs)
   free(dfs->vertex);
 
   if (dfs->DAG)
+  {
     free(dfs->OrdemTopologica);
+  }
 
   return true;
 }
@@ -343,15 +418,15 @@ void  _PP(unsigned vertice, TipoGrafo *Grafo, PercursoDFS *dfs,
   unsigned i, v;
   TipoListaAdjGrafo adjacentes;
   *relogio = *relogio + 1;
-  dfs->vertex[vertice].cor = CINZA;
+  dfs->vertex[vertice].corTrabalho = CINZA;
   dfs->vertex[vertice].descoberta = *relogio;
-  ObterListaAdjacencias(vertice, Grafo, &adjacentes);
+  ObterListaAdjacencias(vertice, Grafo, &adjacentes, false);
 
   for (i = 0; i < adjacentes.NumAdjacentes; i++)
   {
     v = adjacentes.Lista[i].vertice;
 
-    switch (dfs->vertex[v].cor)
+    switch (dfs->vertex[v].corTrabalho)
     {
       case CINZA: // Aresta de retorno
         //Se acho outro que esta sendo processado, o grafo
@@ -374,13 +449,15 @@ void  _PP(unsigned vertice, TipoGrafo *Grafo, PercursoDFS *dfs,
 
   DestroiListaAdjacencias(&adjacentes);
   *relogio = *relogio + 1;
-  dfs->vertex[vertice].cor = PRETO;
+  dfs->vertex[vertice].corTrabalho = PRETO;
   dfs->vertex[vertice].termino = *relogio;
   dfs->NumDestinos = dfs->NumDestinos + 1;
 
   // Insere o vertice na cabeca da lista de ordenacao topologica, se ainda for DAG
   if (dfs->DAG)
+  {
     dfs->OrdemTopologica[Grafo->NumVertices - dfs->NumDestinos] = vertice;
+  }
 
   return;
 }
@@ -394,7 +471,9 @@ bool AGMPrim(unsigned V1, TipoGrafo *Grafo, AGM *agm)
   TipoListaAdjGrafo adjacentes;
 
   if ((V1 > Grafo->NumVertices) || (V1 < 0) || (Grafo->Direcionado))
+  {
     return false;
+  }
 
   pertenceMST = (bool *) malloc(Grafo->NumVertices * sizeof(bool));
   agm->custo = (int *) malloc(Grafo->NumVertices * sizeof(int));
@@ -416,7 +495,7 @@ bool AGMPrim(unsigned V1, TipoGrafo *Grafo, AGM *agm)
     from = minKey(agm->custo, pertenceMST, Grafo->NumVertices);
     pertenceMST[from] = true;
     agm->NumArestas++;
-    ObterListaAdjacencias(from, Grafo, &adjacentes);
+    ObterListaAdjacencias(from, Grafo, &adjacentes, false);
 
     for (j = 0; j < adjacentes.NumAdjacentes; j++)
     {
@@ -469,3 +548,244 @@ unsigned minKey(int *custo, bool *pertenceMST, unsigned NumVertices)
   return min_index;
 }
 
+bool calculaMelhorCaminhoDijkstra(TipoGrafo *Grafo, unsigned origem,
+                                  Caminho **caminhos)
+{
+  unsigned i, j;
+  unsigned vertice;
+  int peso;
+  int menor;
+
+  if ((origem > Grafo->NumVertices) || (origem < 0))
+  {
+    return false;
+  }
+
+  *caminhos = (Caminho *) malloc(Grafo->NumVertices * sizeof(Caminho));
+
+  for (i = 0; i < Grafo->NumVertices; i++)
+  {
+    (*caminhos)[i].custo = INT_MAX;
+    (*caminhos)[i].pai = UINT_MAX;
+    (*caminhos)[i].tamanho = 0;
+    (*caminhos)[i].cor = BRANCO;
+  }
+
+  (*caminhos)[origem].custo = 0;
+  (*caminhos)[origem].pai = origem;
+
+  for (i = 0; i < Grafo->NumVertices; i++)
+  {
+    menor = INT_MAX;
+
+    for (j = 0; j < Grafo->NumVertices; j++)
+      if (((*caminhos)[j].cor == BRANCO) && ((*caminhos)[j].custo <= menor))
+      {
+        menor = (*caminhos)[j].custo;
+        vertice = j;
+      }
+
+    (*caminhos)[vertice].cor = CINZA;
+
+    for (j = 0; j < Grafo->NumVertices; j++)
+    {
+      ObterPesoAresta(vertice, j, Grafo, &peso);
+
+      if ((peso != 0) &&
+          ((*caminhos)[j].cor == BRANCO) &&
+          ((*caminhos)[vertice].custo != INT_MAX) &&
+          (((*caminhos)[vertice].custo + peso) < (*caminhos)[j].custo))
+      {
+        (*caminhos)[j].custo = (*caminhos)[vertice].custo + peso;
+        (*caminhos)[j].pai = vertice;
+      }
+    }
+
+    (*caminhos)[vertice].cor = PRETO;
+  }
+
+  return true;
+}
+
+bool obtemMelhorCaminho(TipoGrafo *Grafo, unsigned origem,
+                        unsigned destino, Caminho *caminhos, int *custo, unsigned **vertices,
+                        unsigned *tamanho)
+{
+  unsigned quantos, i, j;
+  unsigned proximo;
+
+  if ((destino > Grafo->NumVertices) || (destino < 0) || (origem == destino))
+  {
+    return false;
+  }
+
+  *vertices = (unsigned *) malloc(Grafo->NumVertices * sizeof(unsigned));
+  quantos = 0;
+  proximo = destino;
+  (*vertices)[quantos++] = destino;
+
+  do
+  {
+    proximo = caminhos[proximo].pai;
+    (*vertices)[quantos++] = proximo;
+  } while (proximo != origem);
+
+  *custo = caminhos[destino].custo;
+  *tamanho = quantos;
+  *vertices = realloc(*vertices, quantos * sizeof(unsigned));
+  i = 0;
+  j = quantos - 1;
+
+  while (i < j)
+  {
+    swap((*vertices)[i], (*vertices)[j]);
+    i++;
+    j--;
+  }
+
+  return true;
+}
+
+bool colorirGrafo(TipoGrafo *Grafo, unsigned **vetorCores)
+{
+  unsigned i, j, k, cor;
+  RegistroGraus *vertices;
+  TipoListaAdjGrafo naoadjacentes, adjacentes;
+
+  if (Grafo->NumVertices == 0)
+  {
+    return false;
+  }
+
+  vertices = (RegistroGraus *) malloc(Grafo->NumVertices * sizeof(
+                                        RegistroGraus));
+  *vetorCores = (unsigned *) malloc(Grafo->NumVertices * sizeof(unsigned));
+
+  for (i = 0; i < Grafo->NumVertices; i++)
+  {
+    vertices[i].vertice = i;
+    ObterGrauNo(i, Grafo, NULL, &vertices[i].gS);
+    (*vetorCores)[i] = UINT_MAX;
+  }
+
+  ordenaListaVerticesGrau(vertices, GRAU_SAIDA, Grafo->NumVertices, true);
+  cor = UINT_MAX;
+
+  for (i = 0; i < Grafo->NumVertices; i++)
+  {
+    // Pulando o vertice vertices[i].vertice, pois ja esta pintado
+    if ((*vetorCores)[vertices[i].vertice] != UINT_MAX)
+    {
+      continue;
+    }
+
+    // Incrementando a cor
+    cor++;
+    // Pintando e processando vertice vertices[i].vertice da cor cor
+    (*vetorCores)[vertices[i].vertice] = cor;
+    ObterListaAdjacencias(vertices[i].vertice, Grafo, &naoadjacentes,
+                          true);
+
+    for (j = 0; j < naoadjacentes.NumAdjacentes; j++)
+    {
+      if (naoadjacentes.Lista[j].vertice == vertices[i].vertice)
+      {
+        continue;
+      }
+
+      // Processando nao-adjacentes
+      ObterListaAdjacencias(naoadjacentes.Lista[j].vertice, Grafo, &adjacentes,
+                            false);
+
+      // Pulando este, pois ja esta pintado
+      if ((*vetorCores)[naoadjacentes.Lista[j].vertice] != UINT_MAX)
+      {
+        continue;
+      }
+
+      // Procurando nos adjacentes por gente com a mesma cor
+      for (k = 0; k < adjacentes.NumAdjacentes; k++)
+      {
+        // Parando, pois tem gente com a mesma cor do lado
+        if ((*vetorCores)[adjacentes.Lista[k].vertice] == cor)
+        {
+          break;
+        }
+      }
+
+      // Os adjacentes nao tem a cor que eu quero pintar, entao pinta
+      if (k == adjacentes.NumAdjacentes)
+      {
+        (*vetorCores)[naoadjacentes.Lista[j].vertice] = cor;
+      }
+
+      DestroiListaAdjacencias(&adjacentes);
+    }
+
+    DestroiListaAdjacencias(&naoadjacentes);
+  }
+
+  return true;
+}
+
+bool ordenaListaVerticesGrau(RegistroGraus *vertices, TipoOrdenacao chave,
+                             unsigned size, bool reverse)
+{
+  unsigned i, j;
+  RegistroGraus t;
+
+  // TODO: escolher algoritmo de ordenacao mais eficiente
+
+  if (size <= 0)
+  {
+    return false;
+  }
+
+  for (i = 1; i < size; i++)
+  {
+    t = vertices[i];
+    j = i;
+
+    switch (chave)
+    {
+      case GRAU_SAIDA:
+        if (reverse)
+          while ((j > 0) && (t.gS > vertices[j - 1].gS))
+          {
+            vertices[j] = vertices[j - 1];
+            j--;
+          }
+        else
+          while ((j > 0) && (t.gS < vertices[j - 1].gS))
+          {
+            vertices[j] = vertices[j - 1];
+            j--;
+          }
+
+        break;
+
+      case GRAU_ENTRADA:
+        if (reverse)
+          while ((j > 0) && (t.gE > vertices[j - 1].gE))
+          {
+            vertices[j] = vertices[j - 1];
+            j--;
+          }
+        else
+          while ((j > 0) && (t.gE < vertices[j - 1].gE))
+          {
+            vertices[j] = vertices[j - 1];
+            j--;
+          }
+
+        break;
+
+      default:
+        return false;
+    }
+
+    vertices[j] = t;
+  }
+
+  return true;
+}
