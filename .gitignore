@@ -6,3 +6,5 @@ test/
 *.zip
 programateste
 bin/
+cmake-build-debug/
+CMakeLists.txt
