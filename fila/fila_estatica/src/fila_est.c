@@ -2,33 +2,31 @@
 #include <stdbool.h>
 #include <fila_est.h>
 
-bool inicializa_fila (FILA *fila)
+bool inicializa_fila(FILA *fila)
 {
   fila->inicio = fila->final = 0;
   return true;
 }
 
-bool destroi_fila (FILA *fila)
+bool destroi_fila(FILA *fila)
 {
   fila->inicio = fila->final = 0;
   return true;
 }
 
-unsigned int tamanho_fila (const FILA *fila)
+unsigned int tamanho_fila(const FILA *fila)
 {
   unsigned int final;
-
   final = fila->final + (fila->final < fila->inicio ? TAM_FILA : 0);
-
   return (final - fila->inicio);
 }
 
-bool fila_vazia (const FILA *fila)
+bool fila_vazia(const FILA *fila)
 {
   return (fila->inicio == fila->final);
 }
 
-void imprime_fila (const FILA *fila)
+void imprime_fila(const FILA *fila)
 {
   unsigned int i;
 
@@ -50,7 +48,7 @@ void imprime_fila (const FILA *fila)
   }
 }
 
-bool enfileira (FILA *fila, const TIPO_DADO *valor)
+bool enfileira(FILA *fila, const TIPO_DADO *valor)
 {
   if ((!valor) || (((fila->final + 1) % TAM_FILA) == fila->inicio))
   {
@@ -62,7 +60,7 @@ bool enfileira (FILA *fila, const TIPO_DADO *valor)
   return true;
 }
 
-bool enfileira_prioridade (FILA *fila, const TIPO_DADO *valor)
+bool enfileira_prioridade(FILA *fila, const TIPO_DADO *valor)
 {
   unsigned int in, i;
   unsigned int limite;
@@ -98,7 +96,7 @@ bool enfileira_prioridade (FILA *fila, const TIPO_DADO *valor)
   return true;
 }
 
-bool desenfileira (FILA *fila, TIPO_DADO *valor)
+bool desenfileira(FILA *fila, TIPO_DADO *valor)
 {
   if (fila->inicio == fila->final)
   {

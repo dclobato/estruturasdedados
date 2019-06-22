@@ -170,6 +170,7 @@ void imprime_grafo(const TipoGrafo *grafo)
 
     printf("\n");
   }
+
   printf("----------------------------------------\n");
 }
 

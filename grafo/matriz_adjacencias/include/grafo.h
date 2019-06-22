@@ -100,51 +100,68 @@ typedef struct
 /*
  * Operacoes de inicializacao e destruicao do grafo
  */
-bool cria_grafo(TipoGrafo *grafo, unsigned maximoVertices, bool direcionado);
+bool cria_grafo(TipoGrafo *grafo, unsigned maximoVertices,
+                bool direcionado);
 bool destroi_grafo(TipoGrafo *grafo);
 void imprime_grafo(const TipoGrafo *grafo);
 
 /*
  * Insercao, remocao e consulta de vertices e arestas
  */
-bool insere_vertice(TipoGrafo *grafo, char *rotulo, size_t tamanho, unsigned *numeroVertice);
-bool insere_aresta(TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, int peso);
-bool retira_aresta(TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, int *peso);
-bool existe_aresta(const TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino);
-bool obter_peso_aresta(const TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, int *peso);
-bool obter_grau_vertice(const TipoGrafo *grafo, unsigned vertice, unsigned *grauEntrada, unsigned *grauSaida);
+bool insere_vertice(TipoGrafo *grafo, char *rotulo, size_t tamanho,
+                    unsigned *numeroVertice);
+bool insere_aresta(TipoGrafo *grafo, unsigned verticeOrigem,
+                   unsigned verticeDestino, int peso);
+bool retira_aresta(TipoGrafo *grafo, unsigned verticeOrigem,
+                   unsigned verticeDestino, int *peso);
+bool existe_aresta(const TipoGrafo *grafo, unsigned verticeOrigem,
+                   unsigned verticeDestino);
+bool obter_peso_aresta(const TipoGrafo *grafo, unsigned verticeOrigem,
+                       unsigned verticeDestino, int *peso);
+bool obter_grau_vertice(const TipoGrafo *grafo, unsigned vertice,
+                        unsigned *grauEntrada, unsigned *grauSaida);
 
 /*
  * Lista de adjacencia
  */
-bool obter_lista_adjacentes(const TipoGrafo *grafo, unsigned vertice, ListaVerticesAdjacentes *listaAdjacentes, bool complemento);
+bool obter_lista_adjacentes(const TipoGrafo *grafo, unsigned vertice,
+                            ListaVerticesAdjacentes *listaAdjacentes, bool complemento);
 bool destroi_lista_adjacentes(ListaVerticesAdjacentes *listaAdjacentes);
 
 /*
  * Percursos
  */
-bool percurso_largura(const TipoGrafo *grafo, unsigned vertice, PercursoBFS *percurso);
+bool percurso_largura(const TipoGrafo *grafo, unsigned vertice,
+                      PercursoBFS *percurso);
 bool destroi_percurso_largura(PercursoBFS *percurso);
-bool percurso_profundidade(const TipoGrafo *grafo, unsigned vertice, PercursoDFS *percurso, bool todos);
+bool percurso_profundidade(const TipoGrafo *grafo, unsigned vertice,
+                           PercursoDFS *percurso, bool todos);
 bool destroi_percurso_profundidade(PercursoDFS *percurso);
-void __percurso_profundidade(const TipoGrafo *grafo, unsigned vertice, unsigned pai, PercursoDFS *percurso, unsigned *relogio);
+void __percurso_profundidade(const TipoGrafo *grafo, unsigned vertice,
+                             unsigned pai, PercursoDFS *percurso, unsigned *relogio);
 
 /*
  * Arvore geradora minima
  */
-bool arvore_geradora_minima_prim(const TipoGrafo *grafo, unsigned vertice, ArvoreGeradoraMinima *arvore);
+bool arvore_geradora_minima_prim(const TipoGrafo *grafo, unsigned vertice,
+                                 ArvoreGeradoraMinima *arvore);
 bool destroi_arvore_geradora_minima(ArvoreGeradoraMinima *arvore);
-unsigned minKey(const int *custo, const bool *pertenceArvoreGeradora, unsigned numeroVertices);
+unsigned minKey(const int *custo, const bool *pertenceArvoreGeradora,
+                unsigned numeroVertices);
 
 /*
  * Melhores caminhos
  */
-bool calcula_melhor_caminho_Dijkstra(const TipoGrafo *grafo, unsigned verticeOrigem, Caminho **caminho);
-bool obtem_melhor_caminho(const TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, Caminho *caminhos, int *custo, unsigned **vertices, unsigned *tamanho);
+bool calcula_melhor_caminho_Dijkstra(const TipoGrafo *grafo,
+                                     unsigned verticeOrigem, Caminho **caminho);
+bool obtem_melhor_caminho(const TipoGrafo *grafo, unsigned verticeOrigem,
+                          unsigned verticeDestino, Caminho *caminhos, int *custo, unsigned **vertices,
+                          unsigned *tamanho);
 
 /*
  * Coloracao de grafos
  */
 bool colorir_grafo(const TipoGrafo *grafo, unsigned **vetorCores);
-bool ordenar_lista_vertices_grau(RegistroVertices *vertices, TipoOrdenacao chave, unsigned tamanho, bool invertido);
+bool ordenar_lista_vertices_grau(RegistroVertices *vertices,
+                                 TipoOrdenacao chave, unsigned tamanho, bool invertido);
 #endif

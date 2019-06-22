@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <ordenacaointerna.h>
 
-bool bubblesort (TIPO_DADO *arquivo, int tamanho)
+bool bubblesort(TIPO_DADO *arquivo, int tamanho)
 {
   int i, j;
 
@@ -20,7 +20,7 @@ bool bubblesort (TIPO_DADO *arquivo, int tamanho)
   return true;
 }
 
-bool heapsort_ (TIPO_DADO *arquivo, int tamanho)
+bool heapsort_(TIPO_DADO *arquivo, int tamanho)
 {
   int inicio, fim;
 
@@ -39,7 +39,7 @@ bool heapsort_ (TIPO_DADO *arquivo, int tamanho)
   return true;
 }
 
-void criaHeap (TIPO_DADO *arquivo, int inicio, int final)
+void criaHeap(TIPO_DADO *arquivo, int inicio, int final)
 {
   int raiz, filho;
   raiz = inicio;
@@ -65,7 +65,7 @@ void criaHeap (TIPO_DADO *arquivo, int inicio, int final)
   }
 }
 
-bool insertsort (int *arquivo, int tamanho)
+bool insertsort(int *arquivo, int tamanho)
 {
   int i, j;
   TIPO_DADO t;
@@ -87,13 +87,13 @@ bool insertsort (int *arquivo, int tamanho)
   return true;
 }
 
-bool quicksort (TIPO_DADO *arquivo, int tamanho)
+bool quicksort(TIPO_DADO *arquivo, int tamanho)
 {
   particao(arquivo, 0, tamanho - 1);
   return true;
 }
 
-void particao (TIPO_DADO *arquivo, int inicio, int final)
+void particao(TIPO_DADO *arquivo, int inicio, int final)
 {
   int p, i, j;
   p = arquivo[inicio + ((final - inicio) / 2)];
@@ -131,7 +131,7 @@ void particao (TIPO_DADO *arquivo, int inicio, int final)
   }
 }
 
-bool selectsort (int *arquivo, int tamanho)
+bool selectsort(int *arquivo, int tamanho)
 {
   int i, j, min;
 
@@ -156,7 +156,7 @@ bool selectsort (int *arquivo, int tamanho)
   return true;
 }
 
-bool shellsort (int *arquivo, int tamanho)
+bool shellsort(int *arquivo, int tamanho)
 {
   int h, i, j;
   TIPO_DADO t;

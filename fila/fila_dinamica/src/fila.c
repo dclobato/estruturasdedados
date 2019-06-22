@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <fila.h>
 
-bool inicializa_fila (FILA *fila)
+bool inicializa_fila(FILA *fila)
 {
   fila->numElementos = 0;
   fila->final = NULL;
@@ -11,7 +11,7 @@ bool inicializa_fila (FILA *fila)
   return true;
 }
 
-bool destroi_fila (FILA *fila)
+bool destroi_fila(FILA *fila)
 {
   NOH_FILA *p, *q;
   fila->numElementos = 0;
@@ -29,17 +29,17 @@ bool destroi_fila (FILA *fila)
   return true;
 }
 
-unsigned int tamanho_fila (const FILA *fila)
+unsigned int tamanho_fila(const FILA *fila)
 {
   return (fila->numElementos);
 }
 
-bool fila_vazia (const FILA *fila)
+bool fila_vazia(const FILA *fila)
 {
   return (tamanho_fila(fila) == 0);
 }
 
-bool obtem_no_fila (NOH_FILA **nodo)
+bool obtem_no_fila(NOH_FILA **nodo)
 {
   NOH_FILA *p;
   p = (NOH_FILA *) malloc(sizeof(NOH_FILA));
@@ -54,7 +54,7 @@ bool obtem_no_fila (NOH_FILA **nodo)
   return true;
 }
 
-bool libera_no_fila (NOH_FILA **nodo)
+bool libera_no_fila(NOH_FILA **nodo)
 {
   if (!*nodo)
   {
@@ -66,7 +66,7 @@ bool libera_no_fila (NOH_FILA **nodo)
   return true;
 }
 
-bool enfileira (FILA *fila, const TIPO_DADO *valor)
+bool enfileira(FILA *fila, const TIPO_DADO *valor)
 {
   NOH_FILA *t;
 
@@ -92,7 +92,7 @@ bool enfileira (FILA *fila, const TIPO_DADO *valor)
   return true;
 }
 
-bool enfileira_prioridade (FILA *fila, const TIPO_DADO *valor)
+bool enfileira_prioridade(FILA *fila, const TIPO_DADO *valor)
 {
   NOH_FILA *t;
   NOH_FILA *p, *q;
@@ -143,7 +143,7 @@ bool enfileira_prioridade (FILA *fila, const TIPO_DADO *valor)
   return true;
 }
 
-bool desenfileira (FILA *fila, TIPO_DADO *valor)
+bool desenfileira(FILA *fila, TIPO_DADO *valor)
 {
   NOH_FILA *t;
 
@@ -166,7 +166,7 @@ bool desenfileira (FILA *fila, TIPO_DADO *valor)
   return true;
 }
 
-void imprime_fila (const FILA *fila)
+void imprime_fila(const FILA *fila)
 {
   NOH_FILA *p;
   printf("Numero de elementos: %d\n", fila->numElementos);

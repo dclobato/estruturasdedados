@@ -10,7 +10,6 @@ int main()
   unsigned int i;
   TIPO_DADO v;
   srand(time(NULL));
-
   const unsigned int TAM_FILA = 10;
 
   if (!inicializa_fila(&fila))
