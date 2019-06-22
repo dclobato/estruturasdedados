@@ -398,3 +398,67 @@ bool remove_fila(FILA *fila, ARVORE *nodo)
   free(temp);
   return true;
 }
+
+unsigned altura_da_arvore(const ARVORE *arvore)
+{
+  unsigned alturaEsquerda, alturaDireita;
+
+  if (*arvore == NULL)
+  {
+    return 0;
+  }
+
+  alturaEsquerda = altura_da_arvore((const ARVORE *) & (*arvore)->esq);
+  alturaDireita = altura_da_arvore((const ARVORE *) & (*arvore)->dir);
+  return alturaEsquerda > alturaDireita ? alturaEsquerda + 1 : alturaDireita +
+         1;
+}
+
+unsigned numero_de_nodos(const ARVORE *arvore)
+{
+  if (*arvore == NULL)
+  {
+    return 0;
+  }
+
+  return numero_de_nodos((const ARVORE *) & (*arvore)->esq) + 1 +
+         numero_de_nodos((const ARVORE *) & (*arvore)->dir);
+}
+
+unsigned nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor)
+{
+  if (((*arvore) == NULL) || (valor == NULL))
+  {
+    return 0;
+  }
+
+  return __nivel_do_nodo(arvore, valor, 1);
+}
+
+unsigned __nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor,
+                         unsigned nivel)
+{
+  unsigned nivel_para_baixo;
+
+  if (((*arvore) == NULL) || (valor == NULL))
+  {
+    return 0;
+  }
+
+  if ((*arvore)->dado == *valor)
+  {
+    return nivel;
+  }
+
+  nivel_para_baixo = __nivel_do_nodo((const ARVORE *) & (*arvore)->esq, valor,
+                                     nivel + 1);
+
+  if (nivel_para_baixo != 0)
+  {
+    return nivel_para_baixo;
+  }
+
+  nivel_para_baixo = __nivel_do_nodo((const ARVORE *) & (*arvore)->dir, valor,
+                                     nivel + 1);
+  return nivel_para_baixo;
+}

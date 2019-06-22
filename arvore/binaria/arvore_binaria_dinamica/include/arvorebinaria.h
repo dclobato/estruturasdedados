@@ -43,11 +43,22 @@ bool cria_nodo_arvore(ARVORE *arvore);
 bool destroi_nodo_arvore(ARVORE *arvore);
 
 /*
+ * Metadados
+ */
+unsigned altura_da_arvore(const ARVORE *arvore);
+unsigned numero_de_nodos(const ARVORE *arvore);
+unsigned nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor);
+unsigned __nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor,
+                         unsigned nivel);
+
+/*
  * Operacao de insercao e remocao
  */
 bool insere_na_arvore(ARVORE *arvore, TipoNo tipo, const TIPO_DADO *valor);
-// Falta operacao de remocao
-// bool remove_da_arvore (ARVORE *arvore, ARVORE *nodo);
+/*
+ * ARVORE remove_da_arvore (ARVORE *arvore, TIPO_DADO *valor);
+ * bool sucessor_in_ordem (const ARVORE *arvore, ARVORE *nodo);
+ */
 
 /*
  * Operacoes de Arvore Binaria de Busca

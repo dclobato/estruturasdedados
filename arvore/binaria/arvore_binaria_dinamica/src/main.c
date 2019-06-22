@@ -64,14 +64,18 @@ int main()
   }
 
   imprime_arvore(&tree);
+  printf("Altura da arvore: %u\n", altura_da_arvore(&tree));
+  printf("Numero de nodos: %u\n", numero_de_nodos(&tree));
 
   do
   {
     v = (TIPO_DADO) rand() % 1000;
-    printf("Procurando por %d\n", v);
   } while (!pesquisa_abb(&tree, &v, &temp));
 
-  printf("Achou!\n");
+  printf("Achou %u!\n", v);
+  printf("Nivel do nodo %u --> %u\n", v, nivel_do_nodo(&tree, &v));
+  v = 9999;
+  printf("Nivel do nodo %u --> %u\n", v, nivel_do_nodo(&tree, &v));
 
   if (percurso(&tree, PRE, &p1))
   {

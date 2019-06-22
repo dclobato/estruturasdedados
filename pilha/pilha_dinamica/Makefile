@@ -17,7 +17,7 @@ CPPFLAGS += -I$(INC_DIR)     # -I is a preprocessor flag, not a compiler flag
 CFLAGS += -Wall -O2          # some warnings about bad code
 LDFLAGS +=                   # Left empty if no libs are needed (-L diretorio das static lib)
 LDLIBS +=                    # Left empty if no libs are needed (-lm -lpthread...)
-.PHONY: clean format
+.PHONY: all clean format
 
 all: $(EXE)
 
