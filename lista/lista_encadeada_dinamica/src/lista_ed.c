@@ -7,7 +7,7 @@ bool inicializa_lista(LISTA *lista)
 {
   lista->numElementos = 0;
   lista->final = NULL;
-  lista->dados = NULL;
+  lista->inicio = NULL;
   return true;
 }
 
@@ -16,13 +16,13 @@ void imprime_lista(const LISTA *lista)
   NOH *p;
   unsigned int i;
   printf("Posicoes ocupadas: %u\n", tamanho_lista(lista));
-  p = lista->dados;
+  p = lista->inicio;
   i = 0;
 
   while (p != NULL)
   {
     printf("[%03u]: %d\n", i, p->dado);
-    p = p->prox;
+    p = p->sucessor;
     i++;
   }
 
@@ -34,15 +34,15 @@ void __imprime_lista(const LISTA *lista)
   NOH *p;
   unsigned int i;
   printf("Posicoes ocupadas........: %u\n", tamanho_lista(lista));
-  printf("Posicao primeiro elemento: %p\n", lista->dados);
+  printf("Posicao primeiro elemento: %p\n", lista->inicio);
   printf("Posicao ultimo elemento..: %p\n", lista->final);
-  p = lista->dados;
+  p = lista->inicio;
   i = 0;
 
   while (p != NULL)
   {
-    printf("[%03u]: %d   (posicao: %p, proximo: %p)\n", i, p->dado, p, p->prox);
-    p = p->prox;
+    printf("[%03u]: %d   (posicao: %p, proximo: %p)\n", i, p->dado, p, p->sucessor);
+    p = p->sucessor;
     i++;
   }
 
@@ -58,16 +58,16 @@ bool destroi_lista(LISTA *lista)
 {
   NOH *p, *q;
   lista->numElementos = 0;
-  p = lista->dados;
+  p = lista->inicio;
 
   while (p != NULL)
   {
     q = p;
-    p = p->prox;
+    p = p->sucessor;
     libera_no_lista(&q);
   }
 
-  lista->dados = NULL;
+  lista->inicio = NULL;
   lista->final = NULL;
   return true;
 }
@@ -82,7 +82,7 @@ bool obtem_no_lista(NOH **nodo)
     return false;
   }
 
-  p->prox = NULL;
+  p->sucessor = NULL;
   *nodo = p;
   return true;
 }
@@ -137,23 +137,23 @@ bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
   }
 
   t->dado = *valor;
-  t->prox = NULL;
-  p = lista->dados;
+  t->sucessor = NULL;
+  p = lista->inicio;
   q = NULL;
   contador = 0;
 
   while (contador < posicao)
   {
     q = p;
-    p = p->prox;
+    p = p->sucessor;
     contador++;
   }
 
   // inicio da lista ou lista vazia?
   if (q == NULL)
   {
-    t->prox = lista->dados;
-    lista->dados = t;
+    t->sucessor = lista->inicio;
+    lista->inicio = t;
 
     if (!lista->final)
     {
@@ -162,7 +162,7 @@ bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
   }
   else
   {
-    q->prox = t;
+    q->sucessor = t;
 
     // Final da lista?
     if (p == NULL)
@@ -171,7 +171,7 @@ bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
     }
     else
     {
-      t->prox = p;
+      t->sucessor = p;
     }
   }
 
@@ -189,22 +189,22 @@ bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
     return false;
   }
 
-  p = lista->dados;
+  p = lista->inicio;
   q = NULL;
 
   for (contador = 0; contador < posicao; contador++)
   {
     q = p;
-    p = p->prox;
+    p = p->sucessor;
   }
 
   if (q == NULL)
   {
-    lista->dados = p->prox;
+    lista->inicio = p->sucessor;
   }
   else
   {
-    q->prox = p->prox;
+    q->sucessor = p->sucessor;
   }
 
   if (valor)
@@ -212,12 +212,12 @@ bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
     *valor = p->dado;
   }
 
-  if (p->prox == NULL)
+  if (p->sucessor == NULL)
   {
     lista->final = q;
   }
 
-  if (lista->dados == NULL)
+  if (lista->inicio == NULL)
   {
     lista->final = NULL;
   }
@@ -238,11 +238,11 @@ bool consulta_lista(const LISTA *lista, unsigned int posicao,
     return false;
   }
 
-  p = lista->dados;
+  p = lista->inicio;
 
   for (contador = 0; contador < posicao; contador++)
   {
-    p = p->prox;
+    p = p->sucessor;
   }
 
   *valor = p->dado;
@@ -260,21 +260,21 @@ bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
   }
 
   t->dado = *valor;
-  t->prox = NULL;
-  p = lista->dados;
+  t->sucessor = NULL;
+  p = lista->inicio;
   q = NULL;
 
   while ((p != NULL) && (*valor > p->dado))
   {
     q = p;
-    p = p->prox;
+    p = p->sucessor;
   }
 
   // inicio da lista ou lista vazia?
   if (q == NULL)
   {
-    t->prox = lista->dados;
-    lista->dados = t;
+    t->sucessor = lista->inicio;
+    lista->inicio = t;
 
     if (!lista->final)
     {
@@ -286,13 +286,13 @@ bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
     // Final da lista?
     if (p == NULL)
     {
-      q->prox = t;
+      q->sucessor = t;
       lista->final = t;
     }
     else
     {
-      q->prox = t;
-      t->prox = p;
+      q->sucessor = t;
+      t->sucessor = p;
     }
   }
 
@@ -303,7 +303,7 @@ bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
 bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
 {
   NOH *p, *q;
-  p = lista->dados;
+  p = lista->inicio;
   q = NULL;
 
   if (!valor)
@@ -314,7 +314,7 @@ bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
   while ((p != NULL) && (p->dado != *valor))
   {
     q = p;
-    p = p->prox;
+    p = p->sucessor;
   }
 
   if (p == NULL)
@@ -324,19 +324,19 @@ bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
 
   if (q == NULL)
   {
-    lista->dados = p->prox;
+    lista->inicio = p->sucessor;
   }
   else
   {
-    q->prox = p->prox;
+    q->sucessor = p->sucessor;
   }
 
-  if (p->prox == NULL)
+  if (p->sucessor == NULL)
   {
     lista->final = q;
   }
 
-  if (lista->dados == NULL)
+  if (lista->inicio == NULL)
   {
     lista->final = NULL;
   }
@@ -349,7 +349,7 @@ bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
 bool busca_lista(const LISTA *lista, const TIPO_DADO *valor, NOH **nodo)
 {
   NOH *p;
-  p = lista->dados;
+  p = lista->inicio;
 
   if (!valor)
   {
@@ -358,7 +358,7 @@ bool busca_lista(const LISTA *lista, const TIPO_DADO *valor, NOH **nodo)
 
   while ((p != NULL) && (p->dado != *valor))
   {
-    p = p->prox;
+    p = p->sucessor;
   }
 
   // Nao achou
@@ -373,12 +373,12 @@ bool busca_lista(const LISTA *lista, const TIPO_DADO *valor, NOH **nodo)
 
 bool obtem_sucessor(const NOH *nodo, NOH **proximo)
 {
-  if ((nodo == NULL) || (nodo->prox == NULL))
+  if ((nodo == NULL) || (nodo->sucessor == NULL))
   {
     return false;
   }
 
-  *proximo = nodo->prox;
+  *proximo = nodo->sucessor;
   return true;
 }
 
@@ -389,7 +389,7 @@ bool obtem_inicio(const LISTA *lista, NOH **nodo)
     return false;
   }
 
-  *nodo = lista->dados;
+  *nodo = lista->inicio;
   return true;
 }
 
@@ -413,13 +413,13 @@ bool remove_nodo(LISTA *lista, NOH **nodo)
     return false;
   }
 
-  p = lista->dados;
+  p = lista->inicio;
   q = NULL;
 
   while ((p != NULL) && (p != *nodo))
   {
     q = p;
-    p = p->prox;
+    p = p->sucessor;
   }
 
   if (p == NULL)
@@ -429,19 +429,19 @@ bool remove_nodo(LISTA *lista, NOH **nodo)
 
   if (q == NULL)
   {
-    lista->dados = p->prox;
+    lista->inicio = p->sucessor;
   }
   else
   {
-    q->prox = p->prox;
+    q->sucessor = p->sucessor;
   }
 
-  if (p->prox == NULL)
+  if (p->sucessor == NULL)
   {
     lista->final = q;
   }
 
-  if (lista->dados == NULL)
+  if (lista->inicio == NULL)
   {
     lista->final = NULL;
   }
@@ -463,21 +463,21 @@ bool insere_antes_do_nodo(LISTA *lista, const NOH **nodo,
   }
 
   t->dado = *valor;
-  t->prox = NULL;
-  p = lista->dados;
+  t->sucessor = NULL;
+  p = lista->inicio;
   q = NULL;
 
   while ((p != NULL) && (p != *nodo))
   {
     q = p;
-    p = p->prox;
+    p = p->sucessor;
   }
 
   // inicio da lista ou lista vazia?
   if (q == NULL)
   {
-    t->prox = lista->dados;
-    lista->dados = t;
+    t->sucessor = lista->inicio;
+    lista->inicio = t;
 
     if (!lista->final)
     {
@@ -489,13 +489,13 @@ bool insere_antes_do_nodo(LISTA *lista, const NOH **nodo,
     // Final da lista?
     if (p == NULL)
     {
-      q->prox = t;
+      q->sucessor = t;
       lista->final = t;
     }
     else
     {
-      q->prox = t;
-      t->prox = p;
+      q->sucessor = t;
+      t->sucessor = p;
     }
   }
 

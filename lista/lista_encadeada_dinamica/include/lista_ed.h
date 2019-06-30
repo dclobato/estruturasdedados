@@ -6,14 +6,14 @@ typedef int TIPO_DADO;
 typedef struct __noh
 {
   TIPO_DADO dado;
-  struct __noh *prox;
+  struct __noh *sucessor;
 } NOH;
 
 typedef struct __lista
 {
   unsigned int numElementos;
+  NOH *inicio;
   NOH *final;
-  NOH *dados;
 } LISTA;
 
 /*

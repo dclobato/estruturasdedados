@@ -25,10 +25,10 @@ bool inicializa_lista(LISTA *lista)
 
   for (i = 0; i < limite; i++)
   {
-    lista->dados[i].proximo = i + 1;
+    lista->dados[i].sucessor = i + 1;
   }
 
-  lista->dados[limite].proximo = UINT_MAX;
+  lista->dados[limite].sucessor = UINT_MAX;
   return true;
 }
 
@@ -45,7 +45,7 @@ bool obtem_no_lista(LISTA *lista, unsigned int *posicao)
   }
 
   *posicao = lista->inicioLivres;
-  lista->inicioLivres = lista->dados[*posicao].proximo;
+  lista->inicioLivres = lista->dados[*posicao].sucessor;
   lista->numLivres = lista->numLivres - 1;
   lista->numElementos = lista->numElementos + 1;
   return true;
@@ -53,7 +53,7 @@ bool obtem_no_lista(LISTA *lista, unsigned int *posicao)
 
 bool libera_no_lista(LISTA *lista, unsigned int posicao)
 {
-  lista->dados[posicao].proximo = lista->inicioLivres;
+  lista->dados[posicao].sucessor = lista->inicioLivres;
   lista->inicioLivres = posicao;
   lista->numLivres = lista->numLivres + 1;
   lista->numElementos = lista->numElementos - 1;
@@ -80,19 +80,19 @@ bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
   while (contador < posicao)
   {
     anterior = aux;
-    aux = lista->dados[aux].proximo;
+    aux = lista->dados[aux].sucessor;
     contador++;
   }
 
   if (anterior == UINT_MAX)
   {
-    lista->dados[nodo].proximo = lista->inicioElementos;
+    lista->dados[nodo].sucessor = lista->inicioElementos;
     lista->inicioElementos = nodo;
   }
   else
   {
-    lista->dados[nodo].proximo = aux;
-    lista->dados[anterior].proximo = nodo;
+    lista->dados[nodo].sucessor = aux;
+    lista->dados[anterior].sucessor = nodo;
   }
 
   return true;
@@ -104,13 +104,13 @@ void __imprime_lista(const LISTA *lista)
 
   for (i = 0; i < TAM_LISTA; i++)
   {
-    if (lista->dados[i].proximo == UINT_MAX)
+    if (lista->dados[i].sucessor == UINT_MAX)
     {
       printf("[%3u] -> [ -1]: %d\n", i, lista->dados[i].dado);
     }
     else
     {
-      printf("[%3u] -> [%3u]: %d\n", i, lista->dados[i].proximo,
+      printf("[%3u] -> [%3u]: %d\n", i, lista->dados[i].sucessor,
              lista->dados[i].dado);
     }
   }
@@ -153,17 +153,17 @@ bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
   while (contador < posicao)
   {
     anterior = aux;
-    aux = lista->dados[aux].proximo;
+    aux = lista->dados[aux].sucessor;
     contador++;
   }
 
   if (anterior == UINT_MAX)
   {
-    lista->inicioElementos = lista->dados[aux].proximo;
+    lista->inicioElementos = lista->dados[aux].sucessor;
   }
   else
   {
-    lista->dados[anterior].proximo = lista->dados[aux].proximo;
+    lista->dados[anterior].sucessor = lista->dados[aux].sucessor;
   }
 
   if (valor)
@@ -190,7 +190,7 @@ void imprime_lista(const LISTA *lista)
   while (i != UINT_MAX)
   {
     printf("[%03u]: %d\n", j, lista->dados[i].dado);
-    i = lista->dados[i].proximo;
+    i = lista->dados[i].sucessor;
     j++;
   }
 
@@ -211,7 +211,7 @@ bool consulta_lista(LISTA *lista, unsigned int posicao, TIPO_DADO *valor)
 
   while (contador < posicao)
   {
-    aux = lista->dados[aux].proximo;
+    aux = lista->dados[aux].sucessor;
     contador++;
   }
 
@@ -236,18 +236,18 @@ bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
   while ((aux != UINT_MAX) && (*valor > lista->dados[aux].dado))
   {
     anterior = aux;
-    aux = lista->dados[aux].proximo;
+    aux = lista->dados[aux].sucessor;
   }
 
   if (anterior == UINT_MAX)
   {
-    lista->dados[nodo].proximo = lista->inicioElementos;
+    lista->dados[nodo].sucessor = lista->inicioElementos;
     lista->inicioElementos = nodo;
   }
   else
   {
-    lista->dados[nodo].proximo = aux;
-    lista->dados[anterior].proximo = nodo;
+    lista->dados[nodo].sucessor = aux;
+    lista->dados[anterior].sucessor = nodo;
   }
 
   return true;
@@ -290,7 +290,7 @@ bool remove_chave(LISTA *lista, TIPO_DADO *valor)
   while ((aux != UINT_MAX) && (lista->dados[aux].dado != *valor))
   {
     anterior = aux;
-    aux = lista->dados[aux].proximo;
+    aux = lista->dados[aux].sucessor;
   }
 
   if (aux == UINT_MAX) // nao encontrou
@@ -300,11 +300,11 @@ bool remove_chave(LISTA *lista, TIPO_DADO *valor)
 
   if (anterior == UINT_MAX)
   {
-    lista->inicioElementos = lista->dados[aux].proximo;
+    lista->inicioElementos = lista->dados[aux].sucessor;
   }
   else
   {
-    lista->dados[anterior].proximo = lista->dados[aux].proximo;
+    lista->dados[anterior].sucessor = lista->dados[aux].sucessor;
   }
 
   if (!libera_no_lista(lista, aux))

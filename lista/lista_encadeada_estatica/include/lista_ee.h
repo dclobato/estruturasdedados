@@ -8,7 +8,7 @@ typedef int TIPO_DADO;
 typedef struct __st_reg
 {
   TIPO_DADO dado;
-  unsigned proximo;
+  unsigned sucessor;
 } NOH;
 
 typedef struct __st_listaee

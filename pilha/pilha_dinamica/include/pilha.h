@@ -7,7 +7,7 @@ typedef int TIPO_DADO;
 typedef struct __noh
 {
   TIPO_DADO dado;
-  struct __noh *prox;
+  struct __noh *sucessor;
 } NOH;
 
 typedef NOH *PILHA;

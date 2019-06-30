@@ -15,7 +15,7 @@ bool destroi_pilha(PILHA *pilha)
   while (pilha)
   {
     t = *pilha;
-    *pilha = (*pilha)->prox;
+    *pilha = (*pilha)->sucessor;
     free(t);
   }
 
@@ -33,7 +33,7 @@ bool PUSH(PILHA *pilha, const TIPO_DADO *valor)
   }
 
   t->dado = *valor;
-  t->prox = *pilha;
+  t->sucessor = *pilha;
   *pilha = t;
   return true;
 }
@@ -49,7 +49,7 @@ bool POP(PILHA *pilha, TIPO_DADO *valor)
 
   *valor = (*pilha)->dado;
   t = *pilha;
-  *pilha = t->prox;
+  *pilha = t->sucessor;
   free(t);
   return true;
 }
