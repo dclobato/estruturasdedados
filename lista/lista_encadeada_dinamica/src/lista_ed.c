@@ -162,15 +162,15 @@ bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
   }
   else
   {
+    q->prox = t;
+
     // Final da lista?
     if (p == NULL)
     {
-      q->prox = t;
       lista->final = t;
     }
     else
     {
-      q->prox = t;
       t->prox = p;
     }
   }
@@ -210,6 +210,11 @@ bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
   if (valor)
   {
     *valor = p->dado;
+  }
+
+  if (p->prox == NULL)
+  {
+    lista->final = q;
   }
 
   if (lista->dados == NULL)
@@ -326,6 +331,11 @@ bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
     q->prox = p->prox;
   }
 
+  if (p->prox == NULL)
+  {
+    lista->final = q;
+  }
+
   if (lista->dados == NULL)
   {
     lista->final = NULL;
@@ -335,3 +345,161 @@ bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
   lista->numElementos = lista->numElementos - 1;
   return true;
 }
+
+bool busca_lista(const LISTA *lista, const TIPO_DADO *valor, NOH **nodo)
+{
+  NOH *p;
+  p = lista->dados;
+
+  if (!valor)
+  {
+    return false;
+  }
+
+  while ((p != NULL) && (p->dado != *valor))
+  {
+    p = p->prox;
+  }
+
+  // Nao achou
+  if (p == NULL)
+  {
+    return false;
+  }
+
+  *nodo = p;
+  return true;
+}
+
+bool obtem_sucessor(const NOH *nodo, NOH **proximo)
+{
+  if ((nodo == NULL) || (nodo->prox == NULL))
+  {
+    return false;
+  }
+
+  *proximo = nodo->prox;
+  return true;
+}
+
+bool obtem_inicio(const LISTA *lista, NOH **nodo)
+{
+  if (tamanho_lista(lista) == 0)
+  {
+    return false;
+  }
+
+  *nodo = lista->dados;
+  return true;
+}
+
+bool obtem_final(const LISTA *lista, NOH **nodo)
+{
+  if (tamanho_lista(lista) == 0)
+  {
+    return false;
+  }
+
+  *nodo = lista->final;
+  return true;
+}
+
+bool remove_nodo(LISTA *lista, NOH **nodo)
+{
+  NOH *p, *q;
+
+  if (tamanho_lista(lista) == 0)
+  {
+    return false;
+  }
+
+  p = lista->dados;
+  q = NULL;
+
+  while ((p != NULL) && (p != *nodo))
+  {
+    q = p;
+    p = p->prox;
+  }
+
+  if (p == NULL)
+  {
+    return false;
+  }
+
+  if (q == NULL)
+  {
+    lista->dados = p->prox;
+  }
+  else
+  {
+    q->prox = p->prox;
+  }
+
+  if (p->prox == NULL)
+  {
+    lista->final = q;
+  }
+
+  if (lista->dados == NULL)
+  {
+    lista->final = NULL;
+  }
+
+  libera_no_lista(&p);
+  lista->numElementos = lista->numElementos - 1;
+  return true;
+}
+
+bool insere_antes_do_nodo(LISTA *lista, const NOH **nodo,
+                          const TIPO_DADO *valor)
+{
+  NOH *t;
+  NOH *p, *q;
+
+  if (!valor || !obtem_no_lista(&t))
+  {
+    return false;
+  }
+
+  t->dado = *valor;
+  t->prox = NULL;
+  p = lista->dados;
+  q = NULL;
+
+  while ((p != NULL) && (p != *nodo))
+  {
+    q = p;
+    p = p->prox;
+  }
+
+  // inicio da lista ou lista vazia?
+  if (q == NULL)
+  {
+    t->prox = lista->dados;
+    lista->dados = t;
+
+    if (!lista->final)
+    {
+      lista->final = t;
+    }
+  }
+  else
+  {
+    // Final da lista?
+    if (p == NULL)
+    {
+      q->prox = t;
+      lista->final = t;
+    }
+    else
+    {
+      q->prox = t;
+      t->prox = p;
+    }
+  }
+
+  lista->numElementos = lista->numElementos + 1;
+  return true;
+}
+

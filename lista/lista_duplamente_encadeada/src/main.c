@@ -2,19 +2,19 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include <lista_ed.h>
+#include <lista_ded.h>
 
 int
 main()
 {
-  LISTA l;
+  LISTA_DE l;
+  NOH_DE *p, *q;
   unsigned int i;
-  NOH *p, *q;
   TIPO_DADO v;
   srand(time(NULL));
   const unsigned int TAM_LISTA = 9;
 
-  if (!inicializa_lista(&l))
+  if (!inicializa_lista_de(&l))
   {
     return 1;
   }
@@ -23,7 +23,7 @@ main()
   {
     v = (TIPO_DADO)(rand() % 1000);
 
-    if (!insere_ordenado(&l, &v))
+    if (!insere_ordenado_de(&l, &v))
     {
       printf("Lista cheia\n");
     }
@@ -33,10 +33,10 @@ main()
     }
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo o inicio... ");
 
-  if (remove_inicio(&l, &v))
+  if (remove_inicio_de(&l, &v))
   {
     printf("valia %d\n", v);
   }
@@ -45,10 +45,10 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo o final... ");
 
-  if (remove_final(&l, &v))
+  if (remove_final_de(&l, &v))
   {
     printf("valia %d\n", v);
   }
@@ -57,10 +57,10 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo da posicao 3... ");
 
-  if (remove_lista(&l, &v, 3))
+  if (remove_lista_de(&l, &v, 3))
   {
     printf("valia %d\n", v);
   }
@@ -69,11 +69,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Inserindo '111' no final... ");
   v = 111;
 
-  if (insere_final(&l, &v))
+  if (insere_final_de(&l, &v))
   {
     printf("Foi\n");
   }
@@ -82,11 +82,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Inserindo '999' no inicio... ");
   v = 999;
 
-  if (insere_inicio(&l, &v))
+  if (insere_inicio_de(&l, &v))
   {
     printf("Foi\n");
   }
@@ -95,11 +95,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Inserindo '777' na posicao 1... ");
   v = 777;
 
-  if (insere_lista(&l, &v, 1))
+  if (insere_lista_de(&l, &v, 1))
   {
     printf("Foi\n");
   }
@@ -108,11 +108,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo chave '777'... ");
   v = 777;
 
-  if (remove_chave(&l, &v))
+  if (remove_chave_de(&l, &v))
   {
     printf("Foi\n");
   }
@@ -121,11 +121,11 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo chave '999'... ");
   v = 999;
 
-  if (remove_chave(&l, &v))
+  if (remove_chave_de(&l, &v))
   {
     printf("Foi\n");
   }
@@ -134,11 +134,11 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo chave '111'... ");
   v = 111;
 
-  if (remove_chave(&l, &v))
+  if (remove_chave_de(&l, &v))
   {
     printf("Foi\n");
   }
@@ -147,11 +147,11 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo chave '-1'... ");
   v = -1;
 
-  if (remove_chave(&l, &v))
+  if (remove_chave_de(&l, &v))
   {
     printf("Foi\n");
   }
@@ -160,10 +160,10 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Quem esta na posicao 5?  ");
 
-  if (consulta_lista(&l, 5, &v))
+  if (consulta_lista_de(&l, 5, &v))
   {
     printf("%d\n", v);
   }
@@ -172,58 +172,84 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
   printf("Indo para o inicio da lista... ");
 
-  if (!obtem_inicio(&l, &p))
+  if (!obtem_inicio_de(&l, &p))
   {
     printf("Lista nao tem inicio\n");
   }
   else
   {
-    if (obtem_sucessor(p, &q))
+    if (obtem_sucessor_de(p, &q))
     {
-      printf("Sucessor de %d eh %d\n", p->dado, q->dado);
+      printf("Depois de %d vem %d\n", p->dado, q->dado);
     }
     else
     {
-      printf("%d nao tem sucessor\n", p->dado);
+      printf("Depois de %d nao vem ninguem\n", p->dado);
+    }
+
+    if (obtem_predecessor_de(p, &q))
+    {
+      printf("Antes de %d vem %d\n", p->dado, q->dado);
+    }
+    else
+    {
+      printf("Antes de %d nao vem ninguem\n", p->dado);
     }
   }
 
   printf("Indo para o final da lista... ");
 
-  if (!obtem_final(&l, &p))
+  if (!obtem_final_de(&l, &p))
   {
     printf("Lista nao tem final\n");
   }
   else
   {
-    if (obtem_sucessor(p, &q))
+    if (obtem_sucessor_de(p, &q))
     {
-      printf("Sucessor de %d eh %d\n", p->dado, q->dado);
+      printf("Depois de %d vem %d\n", p->dado, q->dado);
     }
     else
     {
-      printf("%d nao tem sucessor\n", p->dado);
+      printf("Depois de %d nao vem ninguem\n", p->dado);
+    }
+
+    if (obtem_predecessor_de(p, &q))
+    {
+      printf("Antes de %d vem %d\n", p->dado, q->dado);
+    }
+    else
+    {
+      printf("Antes de %d nao vem ninguem\n", p->dado);
     }
   }
 
-  consulta_lista(&l, 3, &v);
-  busca_lista(&l, &v, &p);
+  consulta_lista_de(&l, 3, &v);
+  busca_lista_de(&l, &v, &p);
 
-  if (obtem_sucessor(p, &q))
+  if (obtem_sucessor_de(p, &q))
   {
-    printf("Sucessor de %d eh %d\n", p->dado, q->dado);
+    printf("Depois de %d vem %d\n", p->dado, q->dado);
   }
   else
   {
-    printf("%d nao tem sucessor\n", p->dado);
+    printf("Depois de %d nao vem ninguem\n", p->dado);
+  }
+
+  if (obtem_predecessor_de(p, &q))
+  {
+    printf("Antes de %d vem %d\n", p->dado, q->dado);
+  }
+  else
+  {
+    printf("Antes de %d nao vem ninguem\n", p->dado);
   }
 
   v = 1000;
 
-  if (!insere_antes_do_nodo(&l, (const NOH **) &p, &v))
+  if (!insere_antes_do_nodo_de(&l, (const NOH_DE **) &p, &v))
   {
     printf("Problemas para inserir antes de %d\n", p->dado);
   }
@@ -232,10 +258,10 @@ main()
     printf("Inserindo %d antes de %d\n", v, p->dado);
   }
 
-  __imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Removendo o nodo com %d... ", p->dado);
 
-  if (remove_nodo(&l, &p))
+  if (remove_nodo_de(&l, &p))
   {
     printf("Deu certo!\n");
   }
@@ -244,10 +270,10 @@ main()
     printf("Problemas para remover\n");
   }
 
-  __imprime_lista(&l);
+  __imprime_lista_de(&l);
   printf("Destruindo a lista\n");
-  destroi_lista(&l);
+  destroi_lista_de(&l);
   printf("Situacao final\n");
-  imprime_lista(&l);
+  imprime_lista_de(&l);
   return 0;
 }
