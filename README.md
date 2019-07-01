@@ -1,6 +1,6 @@
 # Implementações de referência
 
-Este repositório contém implementações de referência para algumas das estruturas de dados e algoritmos de ordenação e recuperação de informação discutidos durante as disciplinas de Estruturas de Dados I e Estruturas de Dados II do [IFSP, campus Catanduva][http://ctd.ifsp.edu.br/].
+Este repositório contém implementações de referência para algumas das estruturas de dados e algoritmos de ordenação e recuperação de informação discutidos durante as disciplinas de Estruturas de Dados I e Estruturas de Dados II do [IFSP, campus Catanduva](http://ctd.ifsp.edu.br/).
 
 Fazem parte do repositório, implementações para:
 
