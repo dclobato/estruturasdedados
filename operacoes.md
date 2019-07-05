@@ -155,22 +155,25 @@
   + Desenfileira chave
 
 ## Heap
-- [Inicialização, destruição e metadados][notyet]
+- Inicialização, destruição e metadados
   + Inicializa _heap_
   + Destrói _heap_
   + Constrói _heap_
   + Tamanho da _heap_
+  + Inverte _heap_
   + _Heap_ vazia?
+  + _Heap_ cheia?
+  + Qual o tipo da _heap_?
 
-- [Recuperação de informação][notyet]
+- Recuperação de informação
   + Encontrar maior/menor elemento
   + Extrair maior/menor elemento, mantendo a _heap_
   + Trocar raíz por nova chave, mantendo a _heap_
 
-- [Inserção de chaves][notyet]
+- Inserção de chaves
   + Insere chave, mantendo a _heap_
 
-- [Remoção de chaves][notyet]
+- Remoção de chaves
   + Remove chave, mantendo a _heap_
   + Remove maior/menor elemento, mantendo a _heap_
   
