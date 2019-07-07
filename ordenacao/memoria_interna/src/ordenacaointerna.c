@@ -2,9 +2,9 @@
 #include <stdbool.h>
 #include <ordenacaointerna.h>
 
-bool bubblesort(TIPO_DADO *arquivo, int tamanho)
+bool bubblesort (TIPO_DADO *arquivo, unsigned int tamanho)
 {
-  int i, j;
+  unsigned i, j;
 
   for (i = (tamanho - 1); i > 0; i--)
   {
@@ -20,14 +20,16 @@ bool bubblesort(TIPO_DADO *arquivo, int tamanho)
   return true;
 }
 
-bool heapsort_(TIPO_DADO *arquivo, int tamanho)
+bool heapsort_ (TIPO_DADO *arquivo, unsigned int tamanho)
 {
-  int inicio, fim;
+  unsigned int inicio, fim;
 
   /* heapify */
   for (inicio = (tamanho - 1) / 2; inicio >= 0; inicio--)
   {
     criaHeap(arquivo, inicio, tamanho);
+    if (inicio == 0)
+      break;
   }
 
   for (fim = tamanho - 1; fim > 0; fim--)
@@ -39,9 +41,9 @@ bool heapsort_(TIPO_DADO *arquivo, int tamanho)
   return true;
 }
 
-void criaHeap(TIPO_DADO *arquivo, int inicio, int final)
+void criaHeap (TIPO_DADO *arquivo, unsigned int inicio, unsigned int final)
 {
-  int raiz, filho;
+  unsigned int raiz, filho;
   raiz = inicio;
 
   while ((raiz * 2 + 1) < final)
@@ -65,9 +67,9 @@ void criaHeap(TIPO_DADO *arquivo, int inicio, int final)
   }
 }
 
-bool insertsort(int *arquivo, int tamanho)
+bool insertsort (int *arquivo, unsigned int tamanho)
 {
-  int i, j;
+  unsigned int i, j;
   TIPO_DADO t;
 
   for (i = 1; i < tamanho; i++)
@@ -87,15 +89,15 @@ bool insertsort(int *arquivo, int tamanho)
   return true;
 }
 
-bool quicksort(TIPO_DADO *arquivo, int tamanho)
+bool quicksort (TIPO_DADO *arquivo, unsigned int tamanho)
 {
   particao(arquivo, 0, tamanho - 1);
   return true;
 }
 
-void particao(TIPO_DADO *arquivo, int inicio, int final)
+void particao (TIPO_DADO *arquivo, unsigned int inicio, unsigned int final)
 {
-  int p, i, j;
+  unsigned p, i, j;
   p = arquivo[inicio + ((final - inicio) / 2)];
   i = inicio;
   j = final;
@@ -109,14 +111,16 @@ void particao(TIPO_DADO *arquivo, int inicio, int final)
 
     while (arquivo[j] > p)
     {
-      j--;
+      if (j != 0)
+        j--;
     }
 
     if (i <= j)
     {
       swap(arquivo[i], arquivo[j]);
       i++;
-      j--;
+      if (j != 0)
+        j--;
     }
   } while (i <= j);
 
@@ -131,9 +135,9 @@ void particao(TIPO_DADO *arquivo, int inicio, int final)
   }
 }
 
-bool selectsort(int *arquivo, int tamanho)
+bool selectsort (int *arquivo, unsigned int tamanho)
 {
-  int i, j, min;
+  unsigned i, j, min;
 
   for (i = 0; i < (tamanho - 1); i++)
   {
@@ -156,9 +160,9 @@ bool selectsort(int *arquivo, int tamanho)
   return true;
 }
 
-bool shellsort(int *arquivo, int tamanho)
+bool shellsort (int *arquivo, unsigned int tamanho)
 {
-  int h, i, j;
+  unsigned h, i, j;
   TIPO_DADO t;
   h = 1;
 
@@ -172,19 +176,31 @@ bool shellsort(int *arquivo, int tamanho)
     for (i = h; i < tamanho; i++)
     {
       t = arquivo[i];
-      j = i - h;
+      j = i;
 
-      while ((j >= 0) && (t < arquivo[j]))
+      while ((j >= h) && (arquivo[j - h] > t))
       {
-        arquivo[j + h] = arquivo[j];
+        arquivo[j] = arquivo[j - h];
         j = j - h;
       }
 
-      arquivo[j + h] = t;
+      arquivo[j] = t;
     }
 
     h /= 3;
   }
 
+  return true;
+}
+
+bool esta_ordenado (TIPO_DADO *arquivo, unsigned int tamanho)
+{
+  unsigned i;
+
+  for (i = 1; i < tamanho; i++)
+  {
+    if (arquivo[i] < arquivo[i - 1])
+      return false;
+  }
   return true;
 }

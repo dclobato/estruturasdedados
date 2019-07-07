@@ -10,21 +10,23 @@ int main()
   TIPO_DADO dado, dado2;
   tipoHeap tipo;
   unsigned limite;
-  HEAP h;
+  HEAP h, p;
   limite = 10;
   srand((unsigned)time(NULL));
   inicializa_heap(&h, limite + 1, MIN_HEAP);
+  inicializa_heap(&p, limite + 1, MIN_HEAP);
   printf("Dados originais\n");
 
   for (i = 0; i < limite; i++)
   {
     valores[i] = rand() % 100;
     printf("%d ", valores[i]);
+    push_heap(&p, &valores[i]);
   }
 
   printf("\n\n");
   constroi_heap(&h, valores, limite);
-  heap_tipo(&h, &tipo);
+  tipo_heap(&h, &tipo);
   limite = tamanho_heap(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
@@ -33,10 +35,19 @@ int main()
     printf("%d ", h.dados[i]);
   }
 
+  printf("\n");
+
+  for (i = 0; i < limite; i++)
+  {
+    printf("%d ", p.dados[i]);
+  }
+
+  destroi_heap(&p);
+
   printf("\n\n");
   printf("Invertendo heap...\n");
-  heap_inverte(&h);
-  heap_tipo(&h, &tipo);
+  inverte_heap(&h);
+  tipo_heap(&h, &tipo);
   limite = tamanho_heap(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
@@ -53,8 +64,7 @@ int main()
   pop_heap(&h, &dado);
   printf("Topo da heap: %d\n", dado);
   printf("\n");
-  printf("%d %d\n", h.ocupados, h.tamanhoMaximo);
-  heap_tipo(&h, &tipo);
+  tipo_heap(&h, &tipo);
   limite = tamanho_heap(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
@@ -66,7 +76,7 @@ int main()
   printf("\n\n");
   dado2 = 101;
   pop_push_heap(&h, &dado, &dado2);
-  heap_tipo(&h, &tipo);
+  tipo_heap(&h, &tipo);
   limite = tamanho_heap(&h);
   printf("Tirou %d, colocou %d e ficou uma heap tipo %d com %u elementos\n",
          dado, dado2, tipo, limite);
@@ -89,7 +99,7 @@ int main()
     printf("Fracasso\n");
   }
 
-  heap_tipo(&h, &tipo);
+  tipo_heap(&h, &tipo);
   limite = tamanho_heap(&h);
 
   for (i = 0; i < limite; i++)
@@ -110,7 +120,7 @@ int main()
     printf("Fracasso\n");
   }
 
-  heap_tipo(&h, &tipo);
+  tipo_heap(&h, &tipo);
   limite = tamanho_heap(&h);
 
   for (i = 0; i < limite; i++)
@@ -131,7 +141,7 @@ int main()
     printf("Fracasso\n");
   }
 
-  heap_tipo(&h, &tipo);
+  tipo_heap(&h, &tipo);
   limite = tamanho_heap(&h);
 
   for (i = 0; i < limite; i++)
@@ -163,8 +173,7 @@ int main()
   {
     pop_heap(&h, &dado);
     printf("%d ", dado);
-    limite = tamanho_heap(&h);
-  } while (limite > 0);
+  } while (!heap_vazia(&h));
 
   printf("\n\n");
   printf("Destruindo heap\n");

@@ -2,10 +2,6 @@
 #define DEF_HEAP
 #include <stdbool.h>
 
-#define PAI_HEAP(x) x == 0 ? 0 : ((x+1)>>1)-1
-#define FILHO_ESQUERDO_HEAP(x) (x<<1)+1
-#define FILHO_DIREITO_HEAP(x) (x<<1)+2
-
 // this snippet from stackoverflow
 // http://stackoverflow.com/questions/3982348/implement-generic-swap-macro-in-c
 #define swap(x,y) do \
@@ -39,15 +35,15 @@ bool constroi_heap(HEAP *heap, const TIPO_DADO *valores, unsigned tamanho);
 unsigned tamanho_heap(const HEAP *heap);
 bool heap_vazia(const HEAP *heap);
 bool heap_cheia(const HEAP *heap);
-bool heap_inverte(HEAP *heap);
-bool heap_tipo(const HEAP *heap, tipoHeap *tipo);
+bool inverte_heap (HEAP *heap);
+bool tipo_heap (const HEAP *heap, tipoHeap *tipo);
 
 // Recuperação de informação
 bool peek_heap(const HEAP *heap, TIPO_DADO *valor);
 bool pop_heap(HEAP *heap, TIPO_DADO *valor);
-bool pop_push_heap(HEAP *heap, TIPO_DADO *valor, const TIPO_DADO *entrando);
 
 // Inserção de chaves
+bool pop_push_heap(HEAP *heap, TIPO_DADO *valor, const TIPO_DADO *entrando);
 bool push_heap(HEAP *heap, const TIPO_DADO *valor);
 
 // Remoção de chaves
@@ -56,4 +52,7 @@ bool remove_chave_heap(HEAP *heap, const TIPO_DADO *valor);
 // Internos
 bool __heapfy(HEAP *heap, unsigned inicio, unsigned final);
 void dump_heap(const HEAP *heap);
+unsigned pai_nodo_heap(unsigned nodo);
+unsigned filho_esquerdo_nodo_heap(unsigned nodo);
+unsigned filho_direito_nodo_heap(unsigned nodo);
 #endif

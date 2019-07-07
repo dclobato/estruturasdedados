@@ -14,6 +14,27 @@ bool inicializa_heap(HEAP *heap, unsigned tamanhoMaximo, tipoHeap tipo)
   return true;
 }
 
+unsigned pai_nodo_heap(unsigned nodo)
+{
+  if (nodo == 0)
+  {
+    return 0;
+  }
+  else
+  {
+    return (((nodo + 1) / 2) - 1);
+  }
+}
+unsigned filho_esquerdo_nodo_heap(unsigned nodo)
+{
+  return ((nodo * 2) + 1);
+}
+
+unsigned filho_direito_nodo_heap(unsigned nodo)
+{
+  return ((nodo * 2) + 2);
+}
+
 bool destroi_heap(HEAP *heap)
 {
   heap->tamanhoMaximo = 0;
@@ -33,7 +54,7 @@ bool constroi_heap(HEAP *heap, const TIPO_DADO *valores, unsigned tamanho)
 {
   unsigned int inicio;
 
-  if ((!heap_vazia(heap)) || heap_cheia(heap) || (heap->dados != NULL))
+  if ((!heap_vazia(heap)) || (heap->dados != NULL))
   {
     return false;
   }
@@ -63,16 +84,16 @@ bool __heapfy(HEAP *heap, unsigned inicio, unsigned final)
   unsigned raiz, filho;
   raiz = inicio;
 
-  while (FILHO_ESQUERDO_HEAP(raiz) < final)
+  while (filho_esquerdo_nodo_heap(raiz) < final)
   {
-    filho = FILHO_ESQUERDO_HEAP(raiz);
+    filho = filho_esquerdo_nodo_heap(raiz);
 
     switch (heap->tipo)
     {
       case MAX_HEAP:
         if (((filho + 1) < final) && (heap->dados[filho + 1] > heap->dados[filho]))
         {
-          filho = FILHO_DIREITO_HEAP(raiz);
+          filho = filho_direito_nodo_heap(raiz);
         }
 
         break;
@@ -80,7 +101,7 @@ bool __heapfy(HEAP *heap, unsigned inicio, unsigned final)
       case MIN_HEAP:
         if (((filho + 1) < final) && (heap->dados[filho + 1] < heap->dados[filho]))
         {
-          filho = FILHO_DIREITO_HEAP(raiz);
+          filho = filho_direito_nodo_heap(raiz);
         }
 
         break;
@@ -135,13 +156,13 @@ bool heap_vazia(const HEAP *heap)
   return (heap->ocupados == 0);
 }
 
-bool heap_tipo(const HEAP *heap, tipoHeap *tipo)
+bool tipo_heap (const HEAP *heap, tipoHeap *tipo)
 {
   *tipo = heap->tipo;
   return true;
 }
 
-bool heap_inverte(HEAP *heap)
+bool inverte_heap (HEAP *heap)
 {
   unsigned inicio;
   heap->tipo = heap->tipo == MIN_HEAP ? MAX_HEAP : MIN_HEAP;
@@ -182,6 +203,8 @@ bool pop_heap(HEAP *heap, TIPO_DADO *valor)
   *valor = heap->dados[0];
   heap->ocupados = heap->ocupados - 1;
   heap->dados[0] = heap->dados[heap->ocupados];
+  heap->dados = (TIPO_DADO *) realloc(heap->dados,
+                                      heap->ocupados * sizeof(TIPO_DADO));
   __heapfy(heap, 0, heap->ocupados);
   return true;
 }
@@ -209,6 +232,8 @@ bool push_heap(HEAP *heap, const TIPO_DADO *valor)
     return false;
   }
 
+  heap->dados = (TIPO_DADO *) realloc(heap->dados,
+                                      (heap->ocupados + 1) * sizeof(TIPO_DADO));
   heap->dados[heap->ocupados] = *valor;
   heap->ocupados = heap->ocupados + 1;
   rearranjar = false;
@@ -216,8 +241,9 @@ bool push_heap(HEAP *heap, const TIPO_DADO *valor)
   switch (heap->tipo)
   {
     case MIN_HEAP:
-      if (heap->dados[PAI_HEAP(heap->ocupados - 1)] > heap->dados[heap->ocupados -
-          1])
+      if (heap->dados[pai_nodo_heap(heap->ocupados - 1)] >
+          heap->dados[heap->ocupados -
+                                     1])
       {
         rearranjar = true;
       }
@@ -225,8 +251,9 @@ bool push_heap(HEAP *heap, const TIPO_DADO *valor)
       break;
 
     case MAX_HEAP:
-      if (heap->dados[PAI_HEAP(heap->ocupados - 1)] < heap->dados[heap->ocupados -
-          1])
+      if (heap->dados[pai_nodo_heap(heap->ocupados - 1)] <
+          heap->dados[heap->ocupados -
+                                     1])
       {
         rearranjar = true;
       }
@@ -266,14 +293,13 @@ void dump_heap(const HEAP *heap)
 
   for (i = 0; i < tamanho; i++)
   {
-    e = FILHO_ESQUERDO_HEAP(i);
-    d = FILHO_DIREITO_HEAP(i);
+    e = filho_esquerdo_nodo_heap(i);
+    d = filho_direito_nodo_heap(i);
     printf("%3u %5d %3d %3d %3d\n", i, heap->dados[i], e > tamanho - 1 ? -1 : e,
-           d > tamanho - 1 ? -1 : d, i == 0 ? -1 : PAI_HEAP(i));
+           d > tamanho - 1 ? -1 : d, i == 0 ? -1 : pai_nodo_heap(i));
   }
 
   printf("========================\n\n");
-  return;
 }
 
 bool remove_chave_heap(HEAP *heap, const TIPO_DADO *valor)
@@ -302,6 +328,8 @@ bool remove_chave_heap(HEAP *heap, const TIPO_DADO *valor)
 
   heap->dados[i] = heap->dados[tamanho - 1];
   heap->ocupados = heap->ocupados - 1;
+  heap->dados = (TIPO_DADO *) realloc(heap->dados,
+                                      heap->ocupados * sizeof(TIPO_DADO));
 
   for (i = heap->ocupados / 2; i >= 0; i--)
   {
