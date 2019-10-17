@@ -23,34 +23,34 @@ typedef struct __st_listaee
 /*
  * Operacoes de inicializacao, destruicao e metadados
  */
-unsigned int tamanho_lista(const LISTA *lista);
-unsigned int livres_lista(const LISTA *lista);
-bool inicializa_lista(LISTA *lista);
-bool destroi_lista(LISTA *lista);
-bool obtem_no_lista(LISTA *lista, unsigned int *posicao);
-bool libera_no_lista(LISTA *lista, unsigned int posicao);
+bool lista_inicializa(LISTA *lista);
+bool lista_destroi(LISTA *lista);
+unsigned int lista_tamanho(const LISTA *lista);
+unsigned int lista_livres(const LISTA *lista);
+bool __lista_obtem_no(LISTA *lista, unsigned int *posicao);
+bool __lista_libera_no(LISTA *lista, unsigned int posicao);
 
 /*
  * Operacoes de recuperacao de dados
  */
-void __imprime_lista(const LISTA *lista);
-void imprime_lista(const LISTA *lista);
-bool consulta_lista(LISTA *lista, unsigned int posicao, TIPO_DADO *valor);
+void __lista_imprime(const LISTA *lista);
+void lista_imprime(const LISTA *lista);
+bool lista_consulta_posicao(LISTA *lista, unsigned int posicao, TIPO_DADO *valor);
 
 /*
  * Operacoes de insercao
  */
-bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
+bool lista_insere(LISTA *lista, const TIPO_DADO *valor,
                   unsigned int posicao);
-bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor);
-bool insere_final(LISTA *lista, const TIPO_DADO *valor);
-bool insere_inicio(LISTA *lista, const TIPO_DADO *valor);
+bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor);
+bool lista_insere_final(LISTA *lista, const TIPO_DADO *valor);
+bool lista_insere_inicio(LISTA *lista, const TIPO_DADO *valor);
 
 /*
  * Operacoes de remocao
  */
-bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao);
-bool remove_chave(LISTA *lista, TIPO_DADO *valor);
-bool remove_inicio(LISTA *lista, TIPO_DADO *valor);
-bool remove_final(LISTA *lista, TIPO_DADO *valor);
+bool lista_remove_posicao(LISTA *lista, TIPO_DADO *valor, unsigned int posicao);
+bool lista_remove_chave(LISTA *lista, TIPO_DADO *valor);
+bool lista_remove_inicio(LISTA *lista, TIPO_DADO *valor);
+bool lista_remove_final(LISTA *lista, TIPO_DADO *valor);
 #endif

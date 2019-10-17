@@ -13,21 +13,21 @@ int main()
   HEAP h, p;
   limite = 10;
   srand((unsigned)time(NULL));
-  inicializa_heap(&h, limite + 1, MIN_HEAP);
-  inicializa_heap(&p, limite + 1, MIN_HEAP);
+  heap_inicializa(&h, limite + 1, MIN_HEAP);
+  heap_inicializa(&p, limite + 1, MIN_HEAP);
   printf("Dados originais\n");
 
   for (i = 0; i < limite; i++)
   {
     valores[i] = rand() % 100;
     printf("%d ", valores[i]);
-    push_heap(&p, &valores[i]);
+    heap_push(&p, &valores[i]);
   }
 
   printf("\n\n");
-  constroi_heap(&h, valores, limite);
+  heap_constroi(&h, valores, limite);
   tipo_heap(&h, &tipo);
-  limite = tamanho_heap(&h);
+  limite = heap_tamanho(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
   for (i = 0; i < limite; i++)
@@ -42,13 +42,13 @@ int main()
     printf("%d ", p.dados[i]);
   }
 
-  destroi_heap(&p);
+  heap_destroi(&p);
 
   printf("\n\n");
   printf("Invertendo heap...\n");
-  inverte_heap(&h);
+  heap_inverte(&h);
   tipo_heap(&h, &tipo);
-  limite = tamanho_heap(&h);
+  limite = heap_tamanho(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
   for (i = 0; i < limite; i++)
@@ -57,15 +57,15 @@ int main()
   }
 
   printf("\n\n");
-  peek_heap(&h, &dado);
+  heap_peek(&h, &dado);
   printf("Topo da heap: %d\n", dado);
   printf("\n");
   printf("Tirando o topo da heap... ");
-  pop_heap(&h, &dado);
+  heap_pop(&h, &dado);
   printf("Topo da heap: %d\n", dado);
   printf("\n");
   tipo_heap(&h, &tipo);
-  limite = tamanho_heap(&h);
+  limite = heap_tamanho(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
   for (i = 0; i < limite; i++)
@@ -75,9 +75,9 @@ int main()
 
   printf("\n\n");
   dado2 = 101;
-  pop_push_heap(&h, &dado, &dado2);
+  heap_pop_push(&h, &dado, &dado2);
   tipo_heap(&h, &tipo);
-  limite = tamanho_heap(&h);
+  limite = heap_tamanho(&h);
   printf("Tirou %d, colocou %d e ficou uma heap tipo %d com %u elementos\n",
          dado, dado2, tipo, limite);
 
@@ -90,7 +90,7 @@ int main()
   dado = 120;
   printf("Adicionando %d aa heap... ", dado);
 
-  if (push_heap(&h, &dado))
+  if (heap_push(&h, &dado))
   {
     printf("Sucesso\n");
   }
@@ -100,7 +100,7 @@ int main()
   }
 
   tipo_heap(&h, &tipo);
-  limite = tamanho_heap(&h);
+  limite = heap_tamanho(&h);
 
   for (i = 0; i < limite; i++)
   {
@@ -111,7 +111,7 @@ int main()
   dado = 0;
   printf("Adicionando %d aa heap... ", dado);
 
-  if (push_heap(&h, &dado))
+  if (heap_push(&h, &dado))
   {
     printf("Sucesso\n");
   }
@@ -121,7 +121,7 @@ int main()
   }
 
   tipo_heap(&h, &tipo);
-  limite = tamanho_heap(&h);
+  limite = heap_tamanho(&h);
 
   for (i = 0; i < limite; i++)
   {
@@ -132,7 +132,7 @@ int main()
   dado = 110;
   printf("Adicionando %d aa heap... ", dado);
 
-  if (push_heap(&h, &dado))
+  if (heap_push(&h, &dado))
   {
     printf("Sucesso\n");
   }
@@ -142,7 +142,7 @@ int main()
   }
 
   tipo_heap(&h, &tipo);
-  limite = tamanho_heap(&h);
+  limite = heap_tamanho(&h);
 
   for (i = 0; i < limite; i++)
   {
@@ -155,11 +155,11 @@ int main()
   {
     dado = rand() % 100;
     printf("Tentando remover %d...\n", dado);
-  } while (!remove_chave_heap(&h, &dado));
+  } while (!heap_remove_chave(&h, &dado));
 
   printf("Removido %d\n", dado);
-  dump_heap(&h);
-  limite = tamanho_heap(&h);
+  __heap_dump(&h);
+  limite = heap_tamanho(&h);
 
   for (i = 0; i < limite; i++)
   {
@@ -171,12 +171,12 @@ int main()
 
   do
   {
-    pop_heap(&h, &dado);
+    heap_pop(&h, &dado);
     printf("%d ", dado);
   } while (!heap_vazia(&h));
 
   printf("\n\n");
   printf("Destruindo heap\n");
-  destroi_heap(&h);
+  heap_destroi(&h);
   return 0;
 }

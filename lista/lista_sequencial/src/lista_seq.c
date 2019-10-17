@@ -5,24 +5,24 @@
 /*
  * Operacoes de inicializacao, destruicao e metadados
  */
-bool inicializa_lista(LISTA *lista)
+bool lista_inicializa(LISTA *lista)
 {
   lista->numElementos = 0;
   return true;
 }
 
-bool destroi_lista(LISTA *lista)
+bool lista_destroi(LISTA *lista)
 {
   lista->numElementos = 0;
   return true;
 }
 
-unsigned tamanho_lista(LISTA *lista)
+unsigned lista_tamanho(LISTA *lista)
 {
   return (lista->numElementos);
 }
 
-unsigned livres_lista(LISTA *lista)
+unsigned lista_nos_livres(LISTA *lista)
 {
   return (TAM_LISTA - lista->numElementos);
 }
@@ -30,7 +30,7 @@ unsigned livres_lista(LISTA *lista)
 /*
  * Operacoes de recuperacao de dados
  */
-void imprime_lista(const LISTA *lista)
+void lista_imprime(const LISTA *lista)
 {
   unsigned int i;
   printf("Lista com %u elementos usados de %u disponiveis\n",
@@ -46,7 +46,7 @@ void imprime_lista(const LISTA *lista)
   }
 }
 
-bool consulta_lista(LISTA *lista, unsigned posicao, TIPO_DADO *valor)
+bool lista_consulta_posicao(LISTA *lista, unsigned posicao, TIPO_DADO *valor)
 {
   if ((lista->numElementos == 0) || (posicao > lista->numElementos - 1) ||
       (posicao < 0))
@@ -61,7 +61,7 @@ bool consulta_lista(LISTA *lista, unsigned posicao, TIPO_DADO *valor)
 /*
  * Operacoes de insercao
  */
-bool insere_lista(LISTA *lista, const TIPO_DADO *valor, unsigned posicao)
+bool lista_insere_posicao(LISTA *lista, const TIPO_DADO *valor, unsigned posicao)
 {
   unsigned int i;
 
@@ -80,7 +80,7 @@ bool insere_lista(LISTA *lista, const TIPO_DADO *valor, unsigned posicao)
   return true;
 }
 
-bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
+bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
 {
   unsigned int i;
 
@@ -100,9 +100,9 @@ bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
   return true;
 }
 
-bool insere_inicio(LISTA *lista, const TIPO_DADO *valor)
+bool lista_insere_inicio(LISTA *lista, const TIPO_DADO *valor)
 {
-  return insere_lista(lista, valor, 0);
+  return lista_insere_posicao(lista, valor, 0);
   //  unsigned i;
   //
   //  if (lista->numElementos == TAM_LISTA)
@@ -120,9 +120,9 @@ bool insere_inicio(LISTA *lista, const TIPO_DADO *valor)
   //  return true;
 }
 
-bool insere_final(LISTA *lista, const TIPO_DADO *valor)
+bool lista_insere_final(LISTA *lista, const TIPO_DADO *valor)
 {
-  return insere_lista(lista, valor, tamanho_lista(lista));
+  return lista_insere_posicao(lista, valor, lista_tamanho(lista));
   //  if (lista->numElementos == TAM_LISTA)
   //  {
   //    return false;
@@ -136,7 +136,7 @@ bool insere_final(LISTA *lista, const TIPO_DADO *valor)
 /*
  * Operacoes de remocao
  */
-bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned posicao)
+bool lista_remove_posicao(LISTA *lista, TIPO_DADO *valor, unsigned posicao)
 {
   unsigned int i;
 
@@ -160,7 +160,7 @@ bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned posicao)
   return true;
 }
 
-bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
+bool lista_remove_chave(LISTA *lista, const TIPO_DADO *valor)
 {
   unsigned int i;
 
@@ -173,20 +173,20 @@ bool remove_chave(LISTA *lista, const TIPO_DADO *valor)
   {
     if (lista->elementos[i] == *valor)
     {
-      return remove_lista(lista, NULL, i);
+      return lista_remove_posicao(lista, NULL, i);
     }
   }
 
   return false;
 }
 
-bool remove_inicio(LISTA *lista, TIPO_DADO *valor)
+bool lista_remove_inicio(LISTA *lista, TIPO_DADO *valor)
 {
-  return remove_lista(lista, valor, 0);
+  return lista_remove_posicao(lista, valor, 0);
 }
 
-bool remove_final(LISTA *lista, TIPO_DADO *valor)
+bool lista_remove_final(LISTA *lista, TIPO_DADO *valor)
 {
-  return remove_lista(lista, valor, tamanho_lista(lista) - 1);
+  return lista_remove_posicao(lista, valor, lista_tamanho(lista) - 1);
 }
 

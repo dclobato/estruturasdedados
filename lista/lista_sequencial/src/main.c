@@ -12,19 +12,19 @@ main()
   TIPO_DADO v;
   srand(time(NULL));
 
-  if (!inicializa_lista(&l))
+  if (!lista_inicializa(&l))
   {
     return 1;
   }
 
   printf("A lista tem %d itens armazenados, e %d posicoes estao livres\n",
-         tamanho_lista(&l), livres_lista(&l));
+         lista_tamanho(&l), lista_nos_livres(&l));
 
   for (i = 0 ; i < TAM_LISTA + 2; i++)
   {
     v = (TIPO_DADO)(rand() % 1000);
 
-    if (!insere_ordenado(&l, &v))
+    if (!lista_insere_ordenado(&l, &v))
     {
       printf("Lista cheia\n");
     }
@@ -34,10 +34,10 @@ main()
     }
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo o inicio... ");
 
-  if (remove_inicio(&l, &v))
+  if (lista_remove_inicio(&l, &v))
   {
     printf("valia %d\n", v);
   }
@@ -46,10 +46,10 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo o final... ");
 
-  if (remove_final(&l, &v))
+  if (lista_remove_final(&l, &v))
   {
     printf("valia %d\n", v);
   }
@@ -58,10 +58,10 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo da posicao 3... ");
 
-  if (remove_lista(&l, &v, 3))
+  if (lista_remove_posicao(&l, &v, 3))
   {
     printf("valia %d\n", v);
   }
@@ -70,11 +70,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Inserindo '111' no final... ");
   v = 111;
 
-  if (insere_final(&l, &v))
+  if (lista_insere_final(&l, &v))
   {
     printf("Foi\n");
   }
@@ -83,11 +83,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Inserindo '999' no inicio... ");
   v = 999;
 
-  if (insere_inicio(&l, &v))
+  if (lista_insere_inicio(&l, &v))
   {
     printf("Foi\n");
   }
@@ -96,11 +96,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Inserindo '777' na posicao 1... ");
   v = 777;
 
-  if (insere_lista(&l, &v, 1))
+  if (lista_insere_posicao(&l, &v, 1))
   {
     printf("Foi\n");
   }
@@ -109,11 +109,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo chave '777'... ");
   v = 777;
 
-  if (remove_chave(&l, &v))
+  if (lista_remove_chave(&l, &v))
   {
     printf("Foi\n");
   }
@@ -122,11 +122,11 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo chave '-1'... ");
   v = -1;
 
-  if (remove_chave(&l, &v))
+  if (lista_remove_chave(&l, &v))
   {
     printf("Foi\n");
   }
@@ -135,10 +135,10 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Quem esta na posicao 5?  ");
 
-  if (consulta_lista(&l, 5, &v))
+  if (lista_consulta_posicao(&l, 5, &v))
   {
     printf("%d\n", v);
   }
@@ -147,10 +147,10 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Destruindo a lista\n");
-  destroi_lista(&l);
+  lista_destroi(&l);
   printf("Situacao final\n");
-  imprime_lista(&l);
+  lista_imprime(&l);
   return 0;
 }

@@ -4,17 +4,17 @@
 #include <limits.h>
 #include <lista_ee.h>
 
-unsigned int tamanho_lista(const LISTA *lista)
+unsigned int lista_tamanho(const LISTA *lista)
 {
   return (lista->numElementos);
 }
 
-unsigned int livres_lista(const LISTA *lista)
+unsigned int lista_livres(const LISTA *lista)
 {
   return (lista->numLivres);
 }
 
-bool inicializa_lista(LISTA *lista)
+bool lista_inicializa(LISTA *lista)
 {
   unsigned i, limite;
   lista->numElementos = 0;
@@ -32,12 +32,12 @@ bool inicializa_lista(LISTA *lista)
   return true;
 }
 
-bool destroi_lista(LISTA *lista)
+bool lista_destroi(LISTA *lista)
 {
-  return (inicializa_lista(lista));
+  return (lista_inicializa(lista));
 }
 
-bool obtem_no_lista(LISTA *lista, unsigned int *posicao)
+bool __lista_obtem_no(LISTA *lista, unsigned int *posicao)
 {
   if (lista->numLivres == 0)
   {
@@ -51,7 +51,7 @@ bool obtem_no_lista(LISTA *lista, unsigned int *posicao)
   return true;
 }
 
-bool libera_no_lista(LISTA *lista, unsigned int posicao)
+bool __lista_libera_no(LISTA *lista, unsigned int posicao)
 {
   lista->dados[posicao].sucessor = lista->inicioLivres;
   lista->inicioLivres = posicao;
@@ -60,14 +60,14 @@ bool libera_no_lista(LISTA *lista, unsigned int posicao)
   return true;
 }
 
-bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
+bool lista_insere(LISTA *lista, const TIPO_DADO *valor,
                   unsigned int posicao)
 {
   unsigned int nodo, aux;
   unsigned int contador, anterior;
 
   if ((posicao < 0) || (posicao > lista->numElementos) ||
-      !obtem_no_lista(lista, &nodo))
+      !__lista_obtem_no(lista, &nodo))
   {
     return false;
   }
@@ -98,7 +98,7 @@ bool insere_lista(LISTA *lista, const TIPO_DADO *valor,
   return true;
 }
 
-void __imprime_lista(const LISTA *lista)
+void __lista_imprime(const LISTA *lista)
 {
   int i;
 
@@ -137,11 +137,11 @@ void __imprime_lista(const LISTA *lista)
   return;
 }
 
-bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
+bool lista_remove_posicao(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
 {
-  int contador, anterior, aux;
+  unsigned int contador, anterior, aux;
 
-  if ((posicao < 0) || (posicao > (tamanho_lista(lista) - 1)))
+  if ((posicao < 0) || (posicao > (lista_tamanho(lista) - 1)))
   {
     return false;
   }
@@ -171,7 +171,7 @@ bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
     *valor = lista->dados[aux].dado;
   }
 
-  if (!libera_no_lista(lista, aux))
+  if (!__lista_libera_no(lista, aux))
   {
     return false;
   }
@@ -179,11 +179,11 @@ bool remove_lista(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
   return true;
 }
 
-void imprime_lista(const LISTA *lista)
+void lista_imprime(const LISTA *lista)
 {
   unsigned i, j;
-  printf("Posicoes ocupadas: %u\n", tamanho_lista(lista));
-  printf("Posicoes livres: %u\n", livres_lista(lista));
+  printf("Posicoes ocupadas: %u\n", lista_tamanho(lista));
+  printf("Posicoes livres: %u\n", lista_livres(lista));
   i = lista->inicioElementos;
   j = 0;
 
@@ -197,7 +197,7 @@ void imprime_lista(const LISTA *lista)
   return;
 }
 
-bool consulta_lista(LISTA *lista, unsigned int posicao, TIPO_DADO *valor)
+bool lista_consulta_posicao(LISTA *lista, unsigned int posicao, TIPO_DADO *valor)
 {
   unsigned int aux, contador;
 
@@ -219,12 +219,12 @@ bool consulta_lista(LISTA *lista, unsigned int posicao, TIPO_DADO *valor)
   return true;
 }
 
-bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
+bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
 {
   unsigned int nodo;
   unsigned int aux, anterior;
 
-  if (!obtem_no_lista(lista, &nodo))
+  if (!__lista_obtem_no(lista, &nodo))
   {
     return false;
   }
@@ -253,29 +253,29 @@ bool insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
   return true;
 }
 
-bool remove_inicio(LISTA *lista, TIPO_DADO *valor)
+bool lista_remove_inicio(LISTA *lista, TIPO_DADO *valor)
 {
-  return remove_lista(lista, valor, 0);
+  return lista_remove_posicao(lista, valor, 0);
 }
 
-bool remove_final(LISTA *lista, TIPO_DADO *valor)
+bool lista_remove_final(LISTA *lista, TIPO_DADO *valor)
 {
-  return remove_lista(lista, valor, tamanho_lista(lista) - 1);
-}
-
-
-bool insere_inicio(LISTA *lista, const TIPO_DADO *valor)
-{
-  return insere_lista(lista, valor, 0);
-}
-
-bool insere_final(LISTA *lista, const TIPO_DADO *valor)
-{
-  return insere_lista(lista, valor, tamanho_lista(lista));
+  return lista_remove_posicao(lista, valor, lista_tamanho(lista) - 1);
 }
 
 
-bool remove_chave(LISTA *lista, TIPO_DADO *valor)
+bool lista_insere_inicio(LISTA *lista, const TIPO_DADO *valor)
+{
+  return lista_insere(lista, valor, 0);
+}
+
+bool lista_insere_final(LISTA *lista, const TIPO_DADO *valor)
+{
+  return lista_insere(lista, valor, lista_tamanho(lista));
+}
+
+
+bool lista_remove_chave(LISTA *lista, TIPO_DADO *valor)
 {
   unsigned int anterior, aux;
 
@@ -307,7 +307,7 @@ bool remove_chave(LISTA *lista, TIPO_DADO *valor)
     lista->dados[anterior].sucessor = lista->dados[aux].sucessor;
   }
 
-  if (!libera_no_lista(lista, aux))
+  if (!__lista_libera_no(lista, aux))
   {
     printf("Problema da devolucao da memoria\n");
     exit(1);

@@ -11,8 +11,11 @@ typedef struct __pilha
   unsigned int topo;
 } PILHA;
 
-bool inicializa_pilha(PILHA *pilha);
-bool PUSH(PILHA *pilha, const TIPO_DADO *valor);
-bool POP(PILHA *pilha, TIPO_DADO *valor);
-bool destroi_pilha(PILHA *pilha);
+bool pilha_inicializa(PILHA *pilha);
+bool pilha_PUSH(PILHA *pilha, const TIPO_DADO *valor);
+bool pilha_POP(PILHA *pilha, TIPO_DADO *valor);
+bool pilha_destroi(PILHA *pilha);
+bool pilha_estavazia (const PILHA *pilha);
+bool pilha_estacheia (const PILHA *pilha);
+unsigned int pilha_numelementos (const PILHA *pilha);
 #endif

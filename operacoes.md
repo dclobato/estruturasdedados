@@ -128,6 +128,9 @@
 - Inicialização, destruição e metadados
   + Inicializa pilha
   + Destrói pilha
+  + Pilha vazia?
+  + Pilha cheia?
+  + Número de elementos na pilha
 
 - Inserção de chaves
   + _Push_ chave
@@ -143,6 +146,7 @@
   + Destrói nodo de fila
   + Tamanho da fila
   + Fila vazia?
+  + Fila cheia?
 
 - Recuperação de informação  
   + Mostrar a fila (simples e _debug_)
@@ -168,15 +172,13 @@
 - Recuperação de informação
   + Encontrar maior/menor elemento
   + Extrair maior/menor elemento, mantendo a _heap_
-  + Trocar raíz por nova chave, mantendo a _heap_
 
 - Inserção de chaves
   + Insere chave, mantendo a _heap_
+  + Trocar raíz por nova chave, mantendo a _heap_
 
 - Remoção de chaves
-  + Remove chave, mantendo a _heap_
-  + Remove maior/menor elemento, mantendo a _heap_
-  
+  + Remove chave, mantendo a _heap_  
 
 ## Grafo (representado como matriz de adjacência)
 - Inicialização, destruição e metadados

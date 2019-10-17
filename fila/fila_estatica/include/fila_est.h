@@ -16,21 +16,22 @@ typedef struct __fila
 /*
  * Operacoes de inicializacao, destruicao e metadados
  */
-bool inicializa_fila(FILA *fila);
-bool destroi_fila(FILA *fila);
-unsigned int tamanho_fila(const FILA *fila);
+bool fila_inicializa(FILA *fila);
+bool fila_destroi(FILA *fila);
+unsigned int fila_tamanho(const FILA *fila);
 bool fila_vazia(const FILA *fila);
-void imprime_fila(const FILA *fila);
+bool fila_cheia(const FILA *fila);
+void fila_imprime(const FILA *fila);
 
 /*
  * Insercao e remocao
  */
-bool enfileira(FILA *fila, const TIPO_DADO *valor);
-bool desenfileira(FILA *fila, TIPO_DADO *valor);
+bool fila_enfileira(FILA *fila, const TIPO_DADO *valor);
+bool fila_desenfileira(FILA *fila, TIPO_DADO *valor);
 
 /*
  * Fila de prioridade implementada SEM uso de heap
  */
-bool enfileira_prioridade(FILA *fila, const TIPO_DADO *valor);
+bool fila_enfileira_prioridade(FILA *fila, const TIPO_DADO *valor);
 
 #endif

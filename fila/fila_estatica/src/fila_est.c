@@ -2,19 +2,19 @@
 #include <stdbool.h>
 #include <fila_est.h>
 
-bool inicializa_fila(FILA *fila)
+bool fila_inicializa(FILA *fila)
 {
   fila->inicio = fila->final = 0;
   return true;
 }
 
-bool destroi_fila(FILA *fila)
+bool fila_destroi(FILA *fila)
 {
   fila->inicio = fila->final = 0;
   return true;
 }
 
-unsigned int tamanho_fila(const FILA *fila)
+unsigned int fila_tamanho(const FILA *fila)
 {
   unsigned int final;
   final = fila->final + (fila->final < fila->inicio ? TAM_FILA : 0);
@@ -26,7 +26,12 @@ bool fila_vazia(const FILA *fila)
   return (fila->inicio == fila->final);
 }
 
-void imprime_fila(const FILA *fila)
+bool fila_cheia(const FILA *fila)
+{
+  return (((fila->final + 1) % TAM_FILA) == fila->inicio);
+}
+
+void fila_imprime(const FILA *fila)
 {
   unsigned int i;
 
@@ -48,7 +53,7 @@ void imprime_fila(const FILA *fila)
   }
 }
 
-bool enfileira(FILA *fila, const TIPO_DADO *valor)
+bool fila_enfileira(FILA *fila, const TIPO_DADO *valor)
 {
   if ((!valor) || (((fila->final + 1) % TAM_FILA) == fila->inicio))
   {
@@ -60,24 +65,24 @@ bool enfileira(FILA *fila, const TIPO_DADO *valor)
   return true;
 }
 
-bool enfileira_prioridade(FILA *fila, const TIPO_DADO *valor)
+bool fila_enfileira_prioridade(FILA *fila, const TIPO_DADO *valor)
 {
   unsigned int in, i;
   unsigned int limite;
 
-  if ((!valor) || (tamanho_fila(fila) == TAM_FILA - 1))
+  if ((!valor) || (fila_tamanho(fila) == TAM_FILA - 1))
   {
     return false;
   }
 
   if (fila_vazia(fila))
   {
-    return enfileira(fila, valor);
+    return fila_enfileira(fila, valor);
   }
 
   in = (fila->final - 1 + TAM_FILA) % TAM_FILA;
   i = 0;
-  limite = tamanho_fila(fila);
+  limite = fila_tamanho(fila);
 
   while (i < limite)
   {
@@ -96,7 +101,7 @@ bool enfileira_prioridade(FILA *fila, const TIPO_DADO *valor)
   return true;
 }
 
-bool desenfileira(FILA *fila, TIPO_DADO *valor)
+bool fila_desenfileira(FILA *fila, TIPO_DADO *valor)
 {
   if (fila->inicio == fila->final)
   {

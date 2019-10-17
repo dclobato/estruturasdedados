@@ -12,18 +12,22 @@ main()
   TIPO_DADO v;
   srand(time(NULL));
 
-  if (!inicializa_fila(&f))
+  if (!fila_inicializa(&f))
   {
     return 1;
   }
 
-  printf("A fila tem %d itens armazenados\n", tamanho_fila(&f));
+  printf("A fila tem %d itens armazenados\n", fila_tamanho(&f));
+  if (fila_vazia(&f))
+    printf("Fila esta vazia\n");
+  else
+    printf("Fila nao esta vazia\n");
 
   for (i = 0 ; i < TAM_FILA ; i++)
   {
     v = (TIPO_DADO) rand() % 1000;
 
-    if (!enfileira_prioridade(&f, &v))
+    if (!fila_enfileira_prioridade(&f, &v))
     {
       printf("Fila cheia\n");
     }
@@ -33,11 +37,17 @@ main()
     }
   }
 
-  imprime_fila(&f);
+  if (fila_cheia(&f))
+    printf("Fila esta cheia\n");
+  else
+    printf("Fila nao esta cheia\n");
+
+  fila_imprime(&f);
+  printf("A fila tem %d itens armazenados\n", fila_tamanho(&f));
 
   for (i = 0; i < TAM_FILA - 2; i++)
   {
-    if (!desenfileira(&f, &v))
+    if (!fila_desenfileira(&f, &v))
     {
       printf("Fila vazia\n");
     }
@@ -47,14 +57,14 @@ main()
     }
   }
 
-  imprime_fila(&f);
+  fila_imprime(&f);
   v = 999;
-  enfileira(&f, &v);
+  fila_enfileira(&f, &v);
   printf("Inserido %d\n", v);
-  imprime_fila(&f);
+  fila_imprime(&f);
   v = 111;
 
-  if (!enfileira_prioridade(&f, &v))
+  if (!fila_enfileira_prioridade(&f, &v))
   {
     printf("Fila cheia\n");
   }
@@ -63,10 +73,10 @@ main()
     printf("Inserido ordenado\n");
   }
 
-  imprime_fila(&f);
+  fila_imprime(&f);
   printf("Destruindo a fila\n");
-  destroi_fila(&f);
+  fila_destroi(&f);
   printf("Situacao final\n");
-  imprime_fila(&f);
+  fila_imprime(&f);
   return 0;
 }

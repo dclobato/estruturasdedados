@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <time.h>
 #include <lista_ed.h>
 
@@ -14,7 +13,7 @@ main()
   srand(time(NULL));
   const unsigned int TAM_LISTA = 9;
 
-  if (!inicializa_lista(&l))
+  if (!lista_inicializa(&l))
   {
     return 1;
   }
@@ -23,7 +22,7 @@ main()
   {
     v = (TIPO_DADO)(rand() % 1000);
 
-    if (!insere_ordenado(&l, &v))
+    if (!lista_insere_ordenado(&l, &v))
     {
       printf("Lista cheia\n");
     }
@@ -33,10 +32,10 @@ main()
     }
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo o inicio... ");
 
-  if (remove_inicio(&l, &v))
+  if (lista_remove_inicio(&l, &v))
   {
     printf("valia %d\n", v);
   }
@@ -45,10 +44,10 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo o final... ");
 
-  if (remove_final(&l, &v))
+  if (lista_remove_final(&l, &v))
   {
     printf("valia %d\n", v);
   }
@@ -57,10 +56,10 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo da posicao 3... ");
 
-  if (remove_lista(&l, &v, 3))
+  if (lista_remove_posicao(&l, &v, 3))
   {
     printf("valia %d\n", v);
   }
@@ -69,11 +68,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Inserindo '111' no final... ");
   v = 111;
 
-  if (insere_final(&l, &v))
+  if (lista_insere_final(&l, &v))
   {
     printf("Foi\n");
   }
@@ -82,11 +81,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Inserindo '999' no inicio... ");
   v = 999;
 
-  if (insere_inicio(&l, &v))
+  if (lista_insere_inicio(&l, &v))
   {
     printf("Foi\n");
   }
@@ -95,11 +94,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Inserindo '777' na posicao 1... ");
   v = 777;
 
-  if (insere_lista(&l, &v, 1))
+  if (lista_insere(&l, &v, 1))
   {
     printf("Foi\n");
   }
@@ -108,11 +107,11 @@ main()
     printf("Nao deu certo!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo chave '777'... ");
   v = 777;
 
-  if (remove_chave(&l, &v))
+  if (lista_remove_chave(&l, &v))
   {
     printf("Foi\n");
   }
@@ -121,11 +120,11 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo chave '999'... ");
   v = 999;
 
-  if (remove_chave(&l, &v))
+  if (lista_remove_chave(&l, &v))
   {
     printf("Foi\n");
   }
@@ -134,11 +133,11 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo chave '111'... ");
   v = 111;
 
-  if (remove_chave(&l, &v))
+  if (lista_remove_chave(&l, &v))
   {
     printf("Foi\n");
   }
@@ -147,11 +146,11 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Removendo chave '-1'... ");
   v = -1;
 
-  if (remove_chave(&l, &v))
+  if (lista_remove_chave(&l, &v))
   {
     printf("Foi\n");
   }
@@ -160,10 +159,10 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Quem esta na posicao 5?  ");
 
-  if (consulta_lista(&l, 5, &v))
+  if (lista_consulta_posicao(&l, 5, &v))
   {
     printf("%d\n", v);
   }
@@ -172,16 +171,16 @@ main()
     printf("Nao existe!\n");
   }
 
-  imprime_lista(&l);
+  lista_imprime(&l);
   printf("Indo para o inicio da lista... ");
 
-  if (!obtem_inicio(&l, &p))
+  if (!lista_obtem_inicio(&l, &p))
   {
     printf("Lista nao tem inicio\n");
   }
   else
   {
-    if (obtem_sucessor(p, &q))
+    if (lista_obtem_sucessor(p, &q))
     {
       printf("Sucessor de %d eh %d\n", p->dado, q->dado);
     }
@@ -193,13 +192,13 @@ main()
 
   printf("Indo para o final da lista... ");
 
-  if (!obtem_final(&l, &p))
+  if (!lista_obtem_final(&l, &p))
   {
     printf("Lista nao tem final\n");
   }
   else
   {
-    if (obtem_sucessor(p, &q))
+    if (lista_obtem_sucessor(p, &q))
     {
       printf("Sucessor de %d eh %d\n", p->dado, q->dado);
     }
@@ -209,10 +208,10 @@ main()
     }
   }
 
-  consulta_lista(&l, 3, &v);
-  busca_lista(&l, &v, &p);
+  lista_consulta_posicao(&l, 3, &v);
+  lista_busca_chave(&l, &v, &p);
 
-  if (obtem_sucessor(p, &q))
+  if (lista_obtem_sucessor(p, &q))
   {
     printf("Sucessor de %d eh %d\n", p->dado, q->dado);
   }
@@ -223,7 +222,7 @@ main()
 
   v = 1000;
 
-  if (!insere_antes_do_nodo(&l, (const NOH **) &p, &v))
+  if (!lista_insere_antes_do_nodo(&l, (const NOH **) &p, &v))
   {
     printf("Problemas para inserir antes de %d\n", p->dado);
   }
@@ -232,10 +231,10 @@ main()
     printf("Inserindo %d antes de %d\n", v, p->dado);
   }
 
-  __imprime_lista(&l);
+  __lista_imprime(&l);
   printf("Removendo o nodo com %d... ", p->dado);
 
-  if (remove_nodo(&l, &p))
+  if (lista_remove_nodo(&l, &p))
   {
     printf("Deu certo!\n");
   }
@@ -244,10 +243,10 @@ main()
     printf("Problemas para remover\n");
   }
 
-  __imprime_lista(&l);
+  __lista_imprime(&l);
   printf("Destruindo a lista\n");
-  destroi_lista(&l);
+  lista_destroi(&l);
   printf("Situacao final\n");
-  imprime_lista(&l);
+  lista_imprime(&l);
   return 0;
 }
