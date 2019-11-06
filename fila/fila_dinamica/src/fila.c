@@ -87,12 +87,12 @@ bool fila_enfileira(FILA *fila, const TIPO_DADO *valor)
   if (fila_vazia(fila))
   {
     fila->dados = t;
-    fila->final = t;
   }
   else
   {
     fila->final->prox = t;
   }
+  fila->final = t;
 
   return true;
 }
