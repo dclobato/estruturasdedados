@@ -82,7 +82,6 @@ bool fila_enfileira(FILA *fila, const TIPO_DADO *valor)
 
   t->dado = *valor;
   t->prox = NULL;
-  fila->numElementos = fila->numElementos + 1;
 
   if (fila_vazia(fila))
   {
@@ -94,6 +93,7 @@ bool fila_enfileira(FILA *fila, const TIPO_DADO *valor)
   }
   fila->final = t;
 
+  fila->numElementos = fila->numElementos + 1;
   return true;
 }
 
