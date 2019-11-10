@@ -37,6 +37,16 @@ bool lista_destroi(LISTA *lista)
   return (lista_inicializa(lista));
 }
 
+bool lista_cheia(const LISTA *lista)
+{
+  return (lista->numLivres == 0);
+}
+
+bool lista_vazia(const LISTA *lista)
+{
+  return (lista->numElementos == 0);
+}
+
 bool __lista_obtem_no(LISTA *lista, unsigned int *posicao)
 {
   if (lista->numLivres == 0)
@@ -60,14 +70,12 @@ bool __lista_libera_no(LISTA *lista, unsigned int posicao)
   return true;
 }
 
-bool lista_insere(LISTA *lista, const TIPO_DADO *valor,
-                  unsigned int posicao)
+bool lista_insere(LISTA *lista, const TIPO_DADO *valor, unsigned int posicao)
 {
   unsigned int nodo, aux;
   unsigned int contador, anterior;
 
-  if ((posicao < 0) || (posicao > lista->numElementos) ||
-      !__lista_obtem_no(lista, &nodo))
+  if ((posicao < 0) || (posicao > lista->numElementos) || !__lista_obtem_no(lista, &nodo))
   {
     return false;
   }
@@ -110,8 +118,7 @@ void __lista_imprime(const LISTA *lista)
     }
     else
     {
-      printf("[%3u] -> [%3u]: %d\n", i, lista->dados[i].sucessor,
-             lista->dados[i].dado);
+      printf("[%3u] -> [%3u]: %d\n", i, lista->dados[i].sucessor, lista->dados[i].dado);
     }
   }
 

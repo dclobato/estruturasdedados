@@ -1,5 +1,6 @@
 #ifndef DEF_FILA_DINAMICA
 #define DEF_FILA_DINAMICA
+
 #include <stdbool.h>
 
 typedef int TIPO_DADO;

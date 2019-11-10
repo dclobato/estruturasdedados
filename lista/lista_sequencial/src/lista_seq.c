@@ -17,16 +17,25 @@ bool lista_destroi(LISTA *lista)
   return true;
 }
 
-unsigned lista_tamanho(LISTA *lista)
+unsigned lista_tamanho(const LISTA *lista)
 {
   return (lista->numElementos);
 }
 
-unsigned lista_nos_livres(LISTA *lista)
+unsigned lista_nos_livres(const LISTA *lista)
 {
   return (TAM_LISTA - lista->numElementos);
 }
 
+bool lista_vazia (const LISTA *lista)
+{
+  return (lista->numElementos == 0);
+}
+
+bool lista_cheia (const LISTA *lista)
+{
+  return (lista->numElementos == TAM_LISTA);
+}
 /*
  * Operacoes de recuperacao de dados
  */
@@ -46,7 +55,7 @@ void lista_imprime(const LISTA *lista)
   }
 }
 
-bool lista_consulta_posicao(LISTA *lista, unsigned posicao, TIPO_DADO *valor)
+bool lista_consulta_posicao(const LISTA *lista, unsigned posicao, TIPO_DADO *valor)
 {
   if ((lista->numElementos == 0) || (posicao > lista->numElementos - 1) ||
       (posicao < 0))

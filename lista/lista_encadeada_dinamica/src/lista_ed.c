@@ -13,7 +13,7 @@ bool lista_inicializa(LISTA *lista)
 
 void lista_imprime(const LISTA *lista)
 {
-  NOH *p;
+  NOH_LISTA *p;
   unsigned int i;
   printf("Posicoes ocupadas: %u\n", lista_tamanho(lista));
   p = lista->inicio;
@@ -31,7 +31,7 @@ void lista_imprime(const LISTA *lista)
 
 void __lista_imprime(const LISTA *lista)
 {
-  NOH *p;
+  NOH_LISTA *p;
   unsigned int i;
   printf("Posicoes ocupadas........: %u\n", lista_tamanho(lista));
   printf("Posicao primeiro elemento: %p\n", lista->inicio);
@@ -56,7 +56,7 @@ unsigned int lista_tamanho(const LISTA *lista)
 
 bool lista_destroi(LISTA *lista)
 {
-  NOH *p, *q;
+  NOH_LISTA *p, *q;
   lista->numElementos = 0;
   p = lista->inicio;
 
@@ -72,10 +72,22 @@ bool lista_destroi(LISTA *lista)
   return true;
 }
 
-bool __lista_obtem_no(NOH **nodo)
+bool lista_vazia (const LISTA *lista)
 {
-  NOH *p;
-  p = (NOH *) malloc(sizeof(NOH));
+  return (lista->inicio == NULL);
+}
+
+bool lista_cheia (const LISTA *lista)
+{
+  // Como estamos com alocacao dinamica, nao ha como saber se a lista
+  // esta cheia antes de tentar inserir um novo elemento
+  return false;
+}
+
+bool __lista_obtem_no(NOH_LISTA **nodo)
+{
+  NOH_LISTA *p;
+  p = (NOH_LISTA *) malloc(sizeof(NOH_LISTA));
 
   if (!p)
   {
@@ -87,7 +99,7 @@ bool __lista_obtem_no(NOH **nodo)
   return true;
 }
 
-bool lista_libera_no(NOH **nodo)
+bool lista_libera_no(NOH_LISTA **nodo)
 {
   if (!*nodo)
   {
@@ -122,8 +134,8 @@ bool lista_remove_final(LISTA *lista, TIPO_DADO *valor)
 bool lista_insere(LISTA *lista, const TIPO_DADO *valor,
                   unsigned int posicao)
 {
-  NOH *t;
-  NOH *p, *q;
+  NOH_LISTA *t;
+  NOH_LISTA *p, *q;
   unsigned int contador;
 
   if ((posicao < 0) || (posicao > lista_tamanho(lista)))
@@ -181,7 +193,7 @@ bool lista_insere(LISTA *lista, const TIPO_DADO *valor,
 
 bool lista_remove_posicao(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
 {
-  NOH *p, *q;
+  NOH_LISTA *p, *q;
   unsigned int contador;
 
   if ((posicao < 0) || (posicao > (lista_tamanho(lista) - 1)))
@@ -230,7 +242,7 @@ bool lista_remove_posicao(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
 bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao,
                             TIPO_DADO *valor)
 {
-  NOH *p;
+  NOH_LISTA *p;
   int contador;
 
   if ((posicao < 0) || (posicao > (lista_tamanho(lista) - 1)))
@@ -251,8 +263,8 @@ bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao,
 
 bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
 {
-  NOH *t;
-  NOH *p, *q;
+  NOH_LISTA *t;
+  NOH_LISTA *p, *q;
 
   if (!valor || !__lista_obtem_no(&t))
   {
@@ -302,7 +314,7 @@ bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
 
 bool lista_remove_chave(LISTA *lista, const TIPO_DADO *valor)
 {
-  NOH *p, *q;
+  NOH_LISTA *p, *q;
   p = lista->inicio;
   q = NULL;
 
@@ -346,9 +358,9 @@ bool lista_remove_chave(LISTA *lista, const TIPO_DADO *valor)
   return true;
 }
 
-bool lista_busca_chave(const LISTA *lista, const TIPO_DADO *valor, NOH **nodo)
+bool lista_busca_chave(const LISTA *lista, const TIPO_DADO *valor, NOH_LISTA **nodo)
 {
-  NOH *p;
+  NOH_LISTA *p;
   p = lista->inicio;
 
   if (!valor)
@@ -371,7 +383,7 @@ bool lista_busca_chave(const LISTA *lista, const TIPO_DADO *valor, NOH **nodo)
   return true;
 }
 
-bool lista_obtem_sucessor(const NOH *nodo, NOH **proximo)
+bool lista_obtem_sucessor(const NOH_LISTA *nodo, NOH_LISTA **proximo)
 {
   if ((nodo == NULL) || (nodo->sucessor == NULL))
   {
@@ -382,7 +394,7 @@ bool lista_obtem_sucessor(const NOH *nodo, NOH **proximo)
   return true;
 }
 
-bool lista_obtem_inicio(const LISTA *lista, NOH **nodo)
+bool lista_obtem_inicio(const LISTA *lista, NOH_LISTA **nodo)
 {
   if (lista_tamanho(lista) == 0)
   {
@@ -393,7 +405,7 @@ bool lista_obtem_inicio(const LISTA *lista, NOH **nodo)
   return true;
 }
 
-bool lista_obtem_final(const LISTA *lista, NOH **nodo)
+bool lista_obtem_final(const LISTA *lista, NOH_LISTA **nodo)
 {
   if (lista_tamanho(lista) == 0)
   {
@@ -404,9 +416,9 @@ bool lista_obtem_final(const LISTA *lista, NOH **nodo)
   return true;
 }
 
-bool lista_remove_nodo(LISTA *lista, NOH **nodo)
+bool lista_remove_nodo(LISTA *lista, NOH_LISTA **nodo)
 {
-  NOH *p, *q;
+  NOH_LISTA *p, *q;
 
   if (lista_tamanho(lista) == 0)
   {
@@ -451,11 +463,11 @@ bool lista_remove_nodo(LISTA *lista, NOH **nodo)
   return true;
 }
 
-bool lista_insere_antes_do_nodo(LISTA *lista, const NOH **nodo,
+bool lista_insere_antes_do_nodo(LISTA *lista, const NOH_LISTA **nodo,
                                 const TIPO_DADO *valor)
 {
-  NOH *t;
-  NOH *p, *q;
+  NOH_LISTA *t;
+  NOH_LISTA *p, *q;
 
   if (!valor || !__lista_obtem_no(&t))
   {

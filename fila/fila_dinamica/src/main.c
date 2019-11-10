@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <time.h>
 #include <fila.h>
 
@@ -20,11 +19,15 @@ int main()
   printf("A fila tem %u itens armazenados\n", fila_tamanho(&fila));
 
   if (fila_vazia(&fila))
+  {
     printf("A fila esta vazia\n");
+  }
   else
+  {
     printf("A fila nao esta vazia\n");
+  }
 
-  for (i = 0 ; i < TAM_FILA ; i++)
+  for (i = 0; i < TAM_FILA; i++)
   {
     v = (TIPO_DADO) rand() % 1000;
 
@@ -39,9 +42,13 @@ int main()
   }
 
   if (fila_cheia(&fila))
+  {
     printf("A fila esta cheia\n");
+  }
   else
+  {
     printf("A fila nao esta cheia\n");
+  }
 
 
   fila_imprime(&fila);

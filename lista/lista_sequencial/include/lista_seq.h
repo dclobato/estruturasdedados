@@ -1,7 +1,10 @@
 #ifndef __LISTA__
 #define __LISTA__
 #include <stdbool.h>
-static const unsigned int TAM_LISTA = 100;
+
+// static const unsigned int TAM_LISTA = 100;
+#define TAM_LISTA 100
+
 typedef int TIPO_DADO;
 
 typedef struct
@@ -15,14 +18,17 @@ typedef struct
  */
 bool lista_inicializa(LISTA *lista);
 bool lista_destroi(LISTA *lista);
-unsigned int lista_tamanho(LISTA *lista);
-unsigned int lista_nos_livres(LISTA *lista);
+unsigned int lista_tamanho(const LISTA *lista);
+unsigned int lista_nos_livres(const LISTA *lista);
+bool lista_vazia (const LISTA *lista);
+bool lista_cheia (const LISTA *lista);
+
 
 /*
  * Operacoes de recuperacao de dados
  */
 void lista_imprime(const LISTA *lista);
-bool lista_consulta_posicao(LISTA *lista, unsigned int posicao, TIPO_DADO *valor);
+bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao, TIPO_DADO *valor);
 
 /*
  * Operacoes de insercao

@@ -2,7 +2,9 @@
 #define DEF_PILHA_ESTATICA
 #include <stdbool.h>
 
-static const unsigned int TAM_PILHA = 10; // Capacidade de pilha
+// static const unsigned int TAM_PILHA = 10; // Capacidade de pilha
+#define TAM_PILHA 10
+
 typedef int TIPO_DADO;
 
 typedef struct __pilha

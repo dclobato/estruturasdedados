@@ -17,6 +17,7 @@ bool fila_destroi(FILA *fila)
 unsigned int fila_tamanho(const FILA *fila)
 {
   unsigned int final;
+  // Garantir que o final é sempre maior que o início por causa do buffer circular
   final = fila->final + (fila->final < fila->inicio ? TAM_FILA : 0);
   return (final - fila->inicio);
 }

@@ -41,6 +41,8 @@ bool fila_vazia(const FILA *fila)
 
 bool fila_cheia(const FILA *fila)
 {
+  // Como estamos com alocacao dinamica, nao ha como saber se a pilha
+  // esta cheia antes de tentar enfileirar um novo elemento
   return false;
 }
 

@@ -4,8 +4,7 @@
 #include <time.h>
 #include <fila_est.h>
 
-int
-main()
+int main ()
 {
   FILA f;
   int i;
@@ -19,11 +18,15 @@ main()
 
   printf("A fila tem %d itens armazenados\n", fila_tamanho(&f));
   if (fila_vazia(&f))
+  {
     printf("Fila esta vazia\n");
+  }
   else
+  {
     printf("Fila nao esta vazia\n");
+  }
 
-  for (i = 0 ; i < TAM_FILA ; i++)
+  for (i = 0; i < TAM_FILA; i++)
   {
     v = (TIPO_DADO) rand() % 1000;
 
@@ -38,9 +41,13 @@ main()
   }
 
   if (fila_cheia(&f))
+  {
     printf("Fila esta cheia\n");
+  }
   else
+  {
     printf("Fila nao esta cheia\n");
+  }
 
   fila_imprime(&f);
   printf("A fila tem %d itens armazenados\n", fila_tamanho(&f));

@@ -3,12 +3,11 @@
 #include <time.h>
 #include <lista_ed.h>
 
-int
-main()
+int main()
 {
   LISTA l;
   unsigned int i;
-  NOH *p, *q;
+  NOH_LISTA *p, *q;
   TIPO_DADO v;
   srand(time(NULL));
   const unsigned int TAM_LISTA = 9;
@@ -18,9 +17,19 @@ main()
     return 1;
   }
 
-  for (i = 0 ; i < TAM_LISTA; i++)
+  if (lista_vazia(&l))
   {
-    v = (TIPO_DADO)(rand() % 1000);
+    printf("Lista esta vazia\n");
+  }
+  else
+  {
+    printf("Lista nao esta vazia\n");
+  }
+
+
+  for (i = 0; i < TAM_LISTA; i++)
+  {
+    v = (TIPO_DADO) (rand() % 1000);
 
     if (!lista_insere_ordenado(&l, &v))
     {
@@ -222,7 +231,7 @@ main()
 
   v = 1000;
 
-  if (!lista_insere_antes_do_nodo(&l, (const NOH **) &p, &v))
+  if (!lista_insere_antes_do_nodo(&l, (const NOH_LISTA **) &p, &v))
   {
     printf("Problemas para inserir antes de %d\n", p->dado);
   }
@@ -241,6 +250,15 @@ main()
   else
   {
     printf("Problemas para remover\n");
+  }
+
+  if (lista_cheia(&l))
+  {
+    printf("Lista esta cheia\n");
+  }
+  else
+  {
+    printf("Lista nao esta cheia\n");
   }
 
   __lista_imprime(&l);

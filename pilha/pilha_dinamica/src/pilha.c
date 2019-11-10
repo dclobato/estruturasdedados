@@ -62,6 +62,8 @@ bool pilha_estavazia (const PILHA *pilha)
 
 bool pilha_estacheia (const PILHA *pilha)
 {
+  // Como estamos com alocacao dinamica, nao ha como saber se a pilha
+  // esta cheia antes de tentar fazer um novo PUSH
   return false;
 }
 
@@ -82,14 +84,14 @@ unsigned int pilha_numelementos (const PILHA *pilha)
   return (elementos);
 }
 
-bool pilha_descritor_inicializa (PILHA_DESCRITOR *pilha)
+bool pilhadescritor_inicializa (PILHA_DESCRITOR *pilha)
 {
   pilha->numelementos = 0;
   pilha->elementos_da_pilha = NULL;
   return true;
 }
 
-bool pilha_descritor_destroi (PILHA_DESCRITOR *pilha)
+bool pilhadescritor_destroi (PILHA_DESCRITOR *pilha)
 {
   NOH_PILHA *ponteiro_auxiliar;
   ponteiro_auxiliar = pilha->elementos_da_pilha;
@@ -105,7 +107,7 @@ bool pilha_descritor_destroi (PILHA_DESCRITOR *pilha)
   return true;
 }
 
-bool pilha_descritor_PUSH (PILHA_DESCRITOR *pilha, const TIPO_DADO *valor)
+bool pilhadescritor_PUSH (PILHA_DESCRITOR *pilha, const TIPO_DADO *valor)
 {
   NOH_PILHA *novo_noh;
 
@@ -124,7 +126,7 @@ bool pilha_descritor_PUSH (PILHA_DESCRITOR *pilha, const TIPO_DADO *valor)
   return true;
 }
 
-bool pilha_descritor_POP (PILHA_DESCRITOR *pilha, TIPO_DADO *valor)
+bool pilhadescritor_POP (PILHA_DESCRITOR *pilha, TIPO_DADO *valor)
 {
   NOH_PILHA *ponteiro_auxiliar;
 
@@ -142,17 +144,19 @@ bool pilha_descritor_POP (PILHA_DESCRITOR *pilha, TIPO_DADO *valor)
   return true;
 }
 
-bool pilha_descritor_estavazia (const PILHA_DESCRITOR *pilha)
+bool pilhadescritor_estavazia (const PILHA_DESCRITOR *pilha)
 {
   return (pilha->numelementos == 0);
 }
 
-bool pilha_descritor_estacheia (const PILHA_DESCRITOR *pilha)
+bool pilhadescritor_estacheia (const PILHA_DESCRITOR *pilha)
 {
+  // Como estamos com alocacao dinamica, nao ha como saber se a pilha
+  // esta cheia antes de tentar fazer um novo PUSH
   return false;
 }
 
-unsigned int pilha_descritor_numelementos (const PILHA_DESCRITOR *pilha)
+unsigned int pilhadescritor_numelementos (const PILHA_DESCRITOR *pilha)
 {
   return pilha->numelementos;
 }

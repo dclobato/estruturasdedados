@@ -4,8 +4,7 @@
 #include <time.h>
 #include <lista_seq.h>
 
-int
-main()
+int main()
 {
   LISTA l;
   int i;
@@ -17,12 +16,20 @@ main()
     return 1;
   }
 
-  printf("A lista tem %d itens armazenados, e %d posicoes estao livres\n",
-         lista_tamanho(&l), lista_nos_livres(&l));
+  printf("A lista tem %d itens armazenados, e %d posicoes estao livres\n", lista_tamanho(&l), lista_nos_livres(&l));
 
-  for (i = 0 ; i < TAM_LISTA + 2; i++)
+  if (lista_vazia(&l))
   {
-    v = (TIPO_DADO)(rand() % 1000);
+    printf("Lista esta vazia\n");
+  }
+  else
+  {
+    printf("Lista nao esta vazia\n");
+  }
+
+  for (i = 0; i < TAM_LISTA + 2; i++)
+  {
+    v = (TIPO_DADO) (rand() % 1000);
 
     if (!lista_insere_ordenado(&l, &v))
     {
@@ -145,6 +152,15 @@ main()
   else
   {
     printf("Nao existe!\n");
+  }
+
+  if (lista_cheia(&l))
+  {
+    printf("Lista esta cheia\n");
+  }
+  else
+  {
+    printf("Lista nao esta cheia\n");
   }
 
   lista_imprime(&l);

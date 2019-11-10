@@ -4,8 +4,7 @@
 #include <time.h>
 #include <lista_ee.h>
 
-int
-main()
+int main()
 {
   LISTA l;
   unsigned int i;
@@ -17,9 +16,18 @@ main()
     return 1;
   }
 
-  for (i = 0 ; i < TAM_LISTA + 2; i++)
+  if (lista_vazia(&l))
   {
-    v = (TIPO_DADO)(rand() % 1000);
+    printf("Lista esta vazia\n");
+  }
+  else
+  {
+    printf("Lista nao esta vazia\n");
+  }
+
+  for (i = 0; i < TAM_LISTA + 2; i++)
+  {
+    v = (TIPO_DADO) (rand() % 1000);
 
     if (!lista_insere_ordenado(&l, &v))
     {
@@ -142,6 +150,15 @@ main()
   else
   {
     printf("Nao existe!\n");
+  }
+
+  if (lista_cheia(&l))
+  {
+    printf("Lista esta cheia\n");
+  }
+  else
+  {
+    printf("Lista nao esta cheia\n");
   }
 
   lista_imprime(&l);

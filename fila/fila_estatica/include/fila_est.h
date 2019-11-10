@@ -1,8 +1,10 @@
 #ifndef DEF_FILA_ESTATICA
 #define DEF_FILA_ESTATICA
+
 #include <stdbool.h>
 
-static const unsigned int TAM_FILA = 10; // Capacidade da fila
+// static const unsigned int TAM_FILA = 10; // Capacidade da fila
+#define TAM_FILA 10
 
 typedef int TIPO_DADO;
 

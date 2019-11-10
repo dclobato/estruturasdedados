@@ -7,6 +7,8 @@
   + Inicializa nodo de lista
   + Destrói nodo de lista
   + Tamanho da lista
+	+ Lista vazia?
+	+ Lista cheia?
 
 - Recuperação de informação  
   + Mostrar a lista (simples e _debug_)
@@ -37,6 +39,8 @@
   + Inicializa nodo de lista
   + Destrói nodo de lista
   + Tamanho da lista
+	+ Lista vazia?
+	+ Lista cheia?
 
 - Recuperação de informação  
   + Mostrar a lista (simples e _debug_)
