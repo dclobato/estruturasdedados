@@ -102,16 +102,25 @@ int main()
   }
 
   lista_imprime(&l);
-  printf("Inserindo '777' na posicao 1... ");
+  printf("Inserindo '777' na posicao 3... ");
   v = 777;
 
-  if (lista_insere(&l, &v, 1))
+  if (lista_insere(&l, &v, 3))
   {
     printf("Foi\n");
   }
   else
   {
     printf("Nao deu certo!\n");
+  }
+
+  if (lista_busca_chave(&l, &v, &i))
+  {
+    printf("O valor %d esta na posicao %lu\n", v, i);
+  }
+  else
+  {
+    printf("O valor &d nao existe\n, v");
   }
 
   lista_imprime(&l);
@@ -140,6 +149,17 @@ int main()
     printf("Nao existe!\n");
   }
 
+  printf("Colocando 1001 na posicao 4...");
+  v = 1001;
+  if (lista_definir_valor_posicao(&l, 4, &v))
+  {
+    printf("Foi\n");
+  }
+  else
+  {
+    printf("Nao foi\n");
+  }
+
   lista_imprime(&l);
   printf("Quem esta na posicao 5?  ");
 
@@ -159,6 +179,16 @@ int main()
   else
   {
     printf("Lista nao esta cheia\n");
+  }
+
+  if (lista_obtem_inicio(&l, &v))
+  {
+    printf("O inicio da lista vale %d\n", v);
+  }
+
+  if (lista_obtem_final(&l, &v))
+  {
+    printf("O final da lista vale %d\n", v);
   }
 
   lista_imprime(&l);

@@ -8,7 +8,7 @@ int main()
   LISTA l;
   unsigned int i;
   NOH_LISTA *p, *q;
-  TIPO_DADO v;
+  TIPO_DADO v, r;
   srand(time(NULL));
   const unsigned int TAM_LISTA = 9;
 
@@ -171,8 +171,10 @@ int main()
   lista_imprime(&l);
   printf("Quem esta na posicao 5?  ");
 
-  if (lista_consulta_posicao(&l, 5, &v))
+
+  if (lista_consulta_posicao(&l, 5, &p))
   {
+    lista_obtem_valor_no(p, &v);
     printf("%d\n", v);
   }
   else
@@ -217,17 +219,24 @@ int main()
     }
   }
 
-  lista_consulta_posicao(&l, 3, &v);
+  lista_consulta_posicao(&l, 3, &p);
+  lista_obtem_valor_no(p, &v);
   lista_busca_chave(&l, &v, &p);
 
   if (lista_obtem_sucessor(p, &q))
   {
-    printf("Sucessor de %d eh %d\n", p->dado, q->dado);
+    lista_obtem_valor_no(p, &v);
+    lista_obtem_valor_no(q, &r);
+    printf("Sucessor de %d eh %d\n", v, r);
   }
   else
   {
     printf("%d nao tem sucessor\n", p->dado);
   }
+
+  printf("Mudando o valor do sucesso de %d para %d\n", v, r+1);
+  r++;
+  lista_definir_valor_no(q, &r);
 
   v = 1000;
 

@@ -1,22 +1,49 @@
 # Operações
 
-## Lista encadeada
+## Lista sequencial
+- Inicialização, destruição e metadados
+  + Inicializa lista
+  + Destrói lista
+  + Tamanho da lista
+  + Número de nodos disponíveis
+  + Lista vazia?
+  + Lista cheia?
+
+- Recuperação de informação  
+  + Mostrar a lista)
+  + Recupera chave em posição específica
+
+- Inserção de chaves
+  + Insere chave em posição específica
+  + Insere chave ordenado
+  + Insere chave no início da lista
+  + Insere chave no final da lista
+  + Definir o valor da chave de uma posição específica
+
+- Remoção de chaves
+  + Remove nodo em posição específica
+  + Remove nodo com determinada chave
+  + Remove o início da lista
+  + Remove o final da lista
+
+## Lista encadeada com alocações estática e dinâmica
 - Inicialização, destruição e metadados
   + Inicializa lista
   + Destrói lista
   + Inicializa nodo de lista
   + Destrói nodo de lista
   + Tamanho da lista
+  + Número de nodos disponíveis
   + Lista vazia?
   + Lista cheia?
 
 - Recuperação de informação  
   + Mostrar a lista (simples e _debug_)
-  + Recupera chave em posicao especifica
+  + Recupera chave em posição específica
   + Busca por chave em lista e retorna o nodo
   + Obtém nodo sucessor de nodo
   + Obtém nodo início de lista
-  + Obtém nodo final de lista
+  + Obter o valor da chave em um nó específico
 
 - Inserção de chaves
   + Insere chave em posição específica
@@ -24,6 +51,7 @@
   + Insere chave antes de um nodo
   + Insere chave no início da lista
   + Insere chave no final da lista
+  + Definir o valor da chave em um nó específico
 
 - Remoção de chaves
   + Remove nodo em posição específica
@@ -32,7 +60,7 @@
   + Remove o início da lista
   + Remove o final da lista
 
-## Lista duplamente encadeada
+## Lista duplamente encadeada com alocação dinâmica
 - Inicialização, destruição e metadados
   + Inicializa lista
   + Destrói lista
@@ -44,12 +72,13 @@
 
 - Recuperação de informação  
   + Mostrar a lista (simples e _debug_)
-  + Recupera chave em posicao especifica
+  + Recupera chave em posição específica
   + Busca por chave em lista e retorna o nodo
   + Obtém nodo sucessor de nodo
   + Obtém nodo predecessor de nodo
   + Obtém nodo início de lista
   + Obtém nodo final de lista
+  + Obter o valor da chave em um nó específico
 
 - Inserção de chaves
   + Insere chave em posição específica
@@ -57,6 +86,7 @@
   + Insere chave antes de um nodo
   + Insere chave no início da lista
   + Insere chave no final da lista
+  + Definir o valor da chave em um nó específico
 
 - Remoção de chaves
   + Remove nodo em posição específica
@@ -65,37 +95,39 @@
   + Remove o início da lista
   + Remove o final da lista
 
-## Lista encadeada circular
-- [Inicialização, destruição e metadados][notyet]
+## Lista encadeada circular com alocação dinâmica
+- Inicialização, destruição e metadados
   + Inicializa lista
   + Destrói lista
   + Inicializa nodo de lista
   + Destrói nodo de lista
   + Tamanho da lista
-  + Avança início da lista em sentido horário
+  + Avança início da lista em sentido horário ( _shift right_ )
 
-- [Recuperação de informação][notyet]
+- Recuperação de informação
   + Mostrar a lista (simples e _debug_)
-  + Recupera chave em posicao especifica
+  + Recupera chave em posição específica
   + Busca por chave em lista e retorna o nodo
   + Obtém nodo sucessor de nodo
   + Obtém nodo início de lista
+  + Obter o valor da chave em um nó específico
 
-- [Inserção de chaves][notyet]
-  + Insere chave em posição específica
-  + Insere chave ordenado
-  + Insere chave antes de um nodo
+- Inserção de chaves
+  + [Insere chave em posição específica][notyet]
+  + [Insere chave ordenado][notyet]
+  + [Insere chave antes de um nodo][notyet]
   + Insere chave no início da lista
   + Insere chave no final da lista
+  + Definir o valor da chave em um nó específico
 
-- [Remoção de chaves][notyet]
-  + Remove nodo em posição específica
-  + Remove nodo com determinada chave
-  + Remove nodo indicado
+- Remoção de chaves
+  + [Remove nodo em posição específica][notyet]
+  + [Remove nodo com determinada chave][notyet]
+  + [Remove nodo indicado][notyet]
   + Remove o início da lista
   + Remove o final da lista
 
-## Lista duplamente encadeada circular
+## Lista duplamente encadeada circular com alocação dinâmica
 - [Inicialização, destruição e metadados][notyet]
   + Inicializa lista
   + Destrói lista
@@ -107,7 +139,7 @@
 
 - [Recuperação de informação][notyet]
   + Mostrar a lista (simples e _debug_)
-  + Recupera chave em posicao especifica
+  + Recupera chave em posição específica
   + Busca por chave em lista e retorna o nodo
   + Obtém nodo sucessor de nodo
   + Obtém nodo predecessor de nodo
@@ -128,7 +160,7 @@
   + Remove o início da lista
   + Remove o final da lista
 
-## Pilha
+## Pilha com alocações estática e dinâmica
 - Inicialização, destruição e metadados
   + Inicializa pilha
   + Destrói pilha
@@ -142,7 +174,7 @@
 - Remoção de chaves
   + _Pop_ chave
 
-## Fila
+## Fila com alocações estática e dinâmica
 - Inicialização, destruição e metadados
   + Inicializa fila
   + Destrói fila

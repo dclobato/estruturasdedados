@@ -38,6 +38,7 @@ bool lista_insere_posicao(LISTA *lista, const TIPO_DADO *valor,
 bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor);
 bool lista_insere_inicio(LISTA *lista, const TIPO_DADO *valor);
 bool lista_insere_final(LISTA *lista, const TIPO_DADO *valor);
+bool lista_definir_valor_posicao(LISTA* lista, const TIPO_DADO *valor, unsigned int posicao);
 
 /*
  * Operacoes de remocao

@@ -1,5 +1,6 @@
 #ifndef DEF_LISTA_DED
 #define DEF_LISTA_DED
+#include <stdbool.h>
 
 typedef int TIPO_DADO;
 
@@ -25,6 +26,8 @@ bool destroi_lista_de(LISTA_DE *lista);
 bool obtem_no_lista_de(NOH_DE **nodo);
 bool libera_no_lista_de(NOH_DE **nodo);
 unsigned int tamanho_lista_de(const LISTA_DE *lista);
+bool lista_vazia (const LISTA_DE *lista);
+bool lista_cheia (const LISTA_DE *lista);
 
 /*
  * Operacoes de recuperacao de dados
@@ -39,7 +42,7 @@ bool obtem_sucessor_de(const NOH_DE *nodo, NOH_DE **sucessor);
 bool obtem_predecessor_de(const NOH_DE *nodo, NOH_DE **predecessor);
 bool obtem_inicio_de(const LISTA_DE *lista, NOH_DE **nodo);
 bool obtem_final_de(const LISTA_DE *lista, NOH_DE **nodo);
-
+bool obtem_valor_no(const NOH_DE *nodo, TIPO_DADO *valor);
 
 /*
  * Operacoes de insercao
@@ -51,6 +54,7 @@ bool insere_antes_do_nodo_de(LISTA_DE *lista, const NOH_DE **nodo,
                              const TIPO_DADO *valor);
 bool insere_inicio_de(LISTA_DE *lista, const TIPO_DADO *valor);
 bool insere_final_de(LISTA_DE *lista, const TIPO_DADO *valor);
+bool definir_valor_no(NOH_DE *nodo, const TIPO_DADO *valor);
 
 /*
  * Operacoes de remocao

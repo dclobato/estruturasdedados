@@ -322,3 +322,80 @@ bool lista_remove_chave(LISTA *lista, TIPO_DADO *valor)
 
   return true;
 }
+
+
+bool lista_busca_chave(const LISTA *lista, const TIPO_DADO *valor, unsigned int *posicao)
+{
+  unsigned int p;
+
+  *posicao = 0;
+  p = lista->inicioElementos;
+
+  if (!valor)
+  {
+    return false;
+  }
+
+  while ((p != UINT_MAX) && (lista->dados[p].dado != *valor))
+  {
+    p = lista->dados[p].sucessor;
+    *posicao = *posicao + 1;
+  }
+
+  return (p != UINT_MAX);
+}
+
+bool lista_obtem_inicio(const LISTA *lista, TIPO_DADO *valor)
+{
+  if (lista_tamanho(lista) == 0)
+  {
+    return false;
+  }
+
+  *valor = lista->dados[lista->inicioElementos].dado;
+  return true;
+}
+
+bool lista_obtem_final(const LISTA *lista, TIPO_DADO *valor)
+{
+  unsigned int aux, anterior;
+
+  if (lista_tamanho(lista) == 0)
+  {
+    return false;
+  }
+
+  anterior = UINT_MAX;
+  aux = lista->inicioElementos;
+
+  while (aux != UINT_MAX)
+  {
+    anterior = aux;
+    aux = lista->dados[aux].sucessor;
+  }
+
+  *valor = lista->dados[anterior].dado;
+  return true;
+}
+
+bool lista_definir_valor_posicao (LISTA *lista, unsigned int posicao, const TIPO_DADO *valor)
+{
+  unsigned int aux, contador;
+
+  if ((posicao < 0) || (posicao > lista->numElementos))
+  {
+    return false;
+  }
+
+  contador = 0;
+  aux = lista->inicioElementos;
+
+  while (contador < posicao)
+  {
+    aux = lista->dados[aux].sucessor;
+    contador++;
+  }
+
+  lista->dados[aux].dado = *valor;
+  return true;
+}

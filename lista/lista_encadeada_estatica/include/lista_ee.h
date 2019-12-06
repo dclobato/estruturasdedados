@@ -42,6 +42,9 @@ bool lista_vazia(const LISTA *lista);
 void __lista_imprime(const LISTA *lista);
 void lista_imprime(const LISTA *lista);
 bool lista_consulta_posicao(LISTA *lista, unsigned int posicao, TIPO_DADO *valor);
+bool lista_busca_chave(const LISTA *lista, const TIPO_DADO *valor, unsigned int *posicao);
+bool lista_obtem_inicio(const LISTA *lista, TIPO_DADO *valor);
+bool lista_obtem_final(const LISTA *lista, TIPO_DADO *valor);
 
 /*
  * Operacoes de insercao
@@ -50,6 +53,7 @@ bool lista_insere(LISTA *lista, const TIPO_DADO *valor, unsigned int posicao);
 bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor);
 bool lista_insere_final(LISTA *lista, const TIPO_DADO *valor);
 bool lista_insere_inicio(LISTA *lista, const TIPO_DADO *valor);
+bool lista_definir_valor_posicao (LISTA *lista, unsigned int posicao, const TIPO_DADO *valor);
 
 /*
  * Operacoes de remocao

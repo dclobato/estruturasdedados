@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <time.h>
 #include <lista_ded.h>
 
-int
-main()
+int main()
 {
   LISTA_DE l;
   NOH_DE *p, *q;
   unsigned int i;
-  TIPO_DADO v;
+  TIPO_DADO v, r;
   srand(time(NULL));
   const unsigned int TAM_LISTA = 9;
 
@@ -19,9 +17,9 @@ main()
     return 1;
   }
 
-  for (i = 0 ; i < TAM_LISTA; i++)
+  for (i = 0; i < TAM_LISTA; i++)
   {
-    v = (TIPO_DADO)(rand() % 1000);
+    v = (TIPO_DADO) (rand() % 1000);
 
     if (!insere_ordenado_de(&l, &v))
     {
@@ -182,20 +180,32 @@ main()
   {
     if (obtem_sucessor_de(p, &q))
     {
-      printf("Depois de %d vem %d\n", p->dado, q->dado);
+      if (obtem_valor_no(p, &v) && obtem_valor_no(q, &r))
+      {
+        printf("Depois de %d vem %d\n", v, r);
+      }
     }
     else
     {
-      printf("Depois de %d nao vem ninguem\n", p->dado);
+      obtem_valor_no(p, &v);
+      printf("Depois de %d nao vem ninguem\n", v);
     }
+
+    printf("Mudando o valor de %d para %d\n", v, v+1);
+    v++;
+    definir_valor_no(p, &v);
 
     if (obtem_predecessor_de(p, &q))
     {
-      printf("Antes de %d vem %d\n", p->dado, q->dado);
+      if (obtem_valor_no(p, &v) && obtem_valor_no(q, &r))
+      {
+        printf("Antes de %d vem %d\n", v, r);
+      }
     }
     else
     {
-      printf("Antes de %d nao vem ninguem\n", p->dado);
+      obtem_valor_no(p, &v);
+      printf("Antes de %d nao vem ninguem\n", v);
     }
   }
 
@@ -209,20 +219,28 @@ main()
   {
     if (obtem_sucessor_de(p, &q))
     {
-      printf("Depois de %d vem %d\n", p->dado, q->dado);
+      if (obtem_valor_no(p, &v) && obtem_valor_no(q, &r))
+      {
+        printf("Depois de %d vem %d\n", v, r);
+      }
     }
     else
     {
-      printf("Depois de %d nao vem ninguem\n", p->dado);
+      obtem_valor_no(p, &v);
+      printf("Depois de %d nao vem ninguem\n", v);
     }
 
     if (obtem_predecessor_de(p, &q))
     {
-      printf("Antes de %d vem %d\n", p->dado, q->dado);
+      if (obtem_valor_no(p, &v) && obtem_valor_no(q, &r))
+      {
+        printf("Antes de %d vem %d\n", v, r);
+      }
     }
     else
     {
-      printf("Antes de %d nao vem ninguem\n", p->dado);
+      obtem_valor_no(p, &v);
+      printf("Antes de %d nao vem ninguem\n", v);
     }
   }
 
@@ -231,20 +249,28 @@ main()
 
   if (obtem_sucessor_de(p, &q))
   {
-    printf("Depois de %d vem %d\n", p->dado, q->dado);
+    if (obtem_valor_no(p, &v) && obtem_valor_no(q, &r))
+    {
+      printf("Depois de %d vem %d\n", v, r);
+    }
   }
   else
   {
-    printf("Depois de %d nao vem ninguem\n", p->dado);
+    obtem_valor_no(p, &v);
+    printf("Depois de %d nao vem ninguem\n", v);
   }
 
   if (obtem_predecessor_de(p, &q))
   {
-    printf("Antes de %d vem %d\n", p->dado, q->dado);
+    if (obtem_valor_no(p, &v) && obtem_valor_no(q, &r))
+    {
+      printf("Antes de %d vem %d\n", v, r);
+    }
   }
   else
   {
-    printf("Antes de %d nao vem ninguem\n", p->dado);
+    obtem_valor_no(p, &v);
+    printf("Antes de %d nao vem ninguem\n", v);
   }
 
   v = 1000;

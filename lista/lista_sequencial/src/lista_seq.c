@@ -27,12 +27,12 @@ unsigned lista_nos_livres(const LISTA *lista)
   return (TAM_LISTA - lista->numElementos);
 }
 
-bool lista_vazia (const LISTA *lista)
+bool lista_vazia(const LISTA *lista)
 {
   return (lista->numElementos == 0);
 }
 
-bool lista_cheia (const LISTA *lista)
+bool lista_cheia(const LISTA *lista)
 {
   return (lista->numElementos == TAM_LISTA);
 }
@@ -42,9 +42,7 @@ bool lista_cheia (const LISTA *lista)
 void lista_imprime(const LISTA *lista)
 {
   unsigned int i;
-  printf("Lista com %u elementos usados de %u disponiveis\n",
-         lista->numElementos,
-         TAM_LISTA);
+  printf("Lista com %u elementos usados de %u disponiveis\n", lista->numElementos, TAM_LISTA);
   /* Faca o que for necessario aqui para mostrar o seu tipo de dado.
    * Por exemplo, se o TIPO_DADO for int, algo do tipo abaixo resolve
    */
@@ -57,8 +55,7 @@ void lista_imprime(const LISTA *lista)
 
 bool lista_consulta_posicao(const LISTA *lista, unsigned posicao, TIPO_DADO *valor)
 {
-  if ((lista->numElementos == 0) || (posicao > lista->numElementos - 1) ||
-      (posicao < 0))
+  if ((lista->numElementos == 0) || (posicao > lista->numElementos - 1) || (posicao < 0))
   {
     return false;
   }
@@ -98,8 +95,7 @@ bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor)
     return false;
   }
 
-  for (i = lista->numElementos; ((i > 0) &&
-                                 (*valor < lista->elementos[i - 1])); i--)
+  for (i = lista->numElementos; ((i > 0) && (*valor < lista->elementos[i - 1])); i--)
   {
     lista->elementos[i] = lista->elementos[i - 1];
   }
@@ -149,8 +145,7 @@ bool lista_remove_posicao(LISTA *lista, TIPO_DADO *valor, unsigned posicao)
 {
   unsigned int i;
 
-  if ((lista->numElementos == 0) || (posicao > lista->numElementos - 1) ||
-      (posicao < 0))
+  if ((lista->numElementos == 0) || (posicao > lista->numElementos - 1) || (posicao < 0))
   {
     return false;
   }
@@ -199,3 +194,15 @@ bool lista_remove_final(LISTA *lista, TIPO_DADO *valor)
   return lista_remove_posicao(lista, valor, lista_tamanho(lista) - 1);
 }
 
+bool lista_definir_valor_posicao(LISTA *lista, const TIPO_DADO *valor, unsigned int posicao)
+{
+  unsigned int i;
+
+  if (posicao > lista->numElementos)
+  {
+    return false;
+  }
+
+  lista->elementos[posicao] = *valor;
+  return true;
+}

@@ -72,12 +72,12 @@ bool lista_destroi(LISTA *lista)
   return true;
 }
 
-bool lista_vazia (const LISTA *lista)
+bool lista_vazia(const LISTA *lista)
 {
   return (lista->inicio == NULL);
 }
 
-bool lista_cheia (const LISTA *lista)
+bool lista_cheia(const LISTA *lista)
 {
   // Como estamos com alocacao dinamica, nao ha como saber se a lista
   // esta cheia antes de tentar inserir um novo elemento
@@ -131,8 +131,7 @@ bool lista_remove_final(LISTA *lista, TIPO_DADO *valor)
   return lista_remove_posicao(lista, valor, lista_tamanho(lista) - 1);
 }
 
-bool lista_insere(LISTA *lista, const TIPO_DADO *valor,
-                  unsigned int posicao)
+bool lista_insere(LISTA *lista, const TIPO_DADO *valor, unsigned int posicao)
 {
   NOH_LISTA *t;
   NOH_LISTA *p, *q;
@@ -239,11 +238,10 @@ bool lista_remove_posicao(LISTA *lista, TIPO_DADO *valor, unsigned int posicao)
   return true;
 }
 
-bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao,
-                            TIPO_DADO *valor)
+bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao, NOH_LISTA **nodo)
 {
   NOH_LISTA *p;
-  int contador;
+  unsigned int contador;
 
   if ((posicao < 0) || (posicao > (lista_tamanho(lista) - 1)))
   {
@@ -257,7 +255,7 @@ bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao,
     p = p->sucessor;
   }
 
-  *valor = p->dado;
+  *nodo = p;
   return true;
 }
 
@@ -463,8 +461,7 @@ bool lista_remove_nodo(LISTA *lista, NOH_LISTA **nodo)
   return true;
 }
 
-bool lista_insere_antes_do_nodo(LISTA *lista, const NOH_LISTA **nodo,
-                                const TIPO_DADO *valor)
+bool lista_insere_antes_do_nodo(LISTA *lista, const NOH_LISTA **nodo, const TIPO_DADO *valor)
 {
   NOH_LISTA *t;
   NOH_LISTA *p, *q;
@@ -515,3 +512,22 @@ bool lista_insere_antes_do_nodo(LISTA *lista, const NOH_LISTA **nodo,
   return true;
 }
 
+bool lista_obtem_valor_no(const NOH_LISTA *nodo, TIPO_DADO *valor)
+{
+  if (nodo == NULL)
+  {
+    return false;
+  }
+  *valor = nodo->dado;
+  return true;
+}
+
+bool lista_definir_valor_no(NOH_LISTA *nodo, const TIPO_DADO *valor)
+{
+  if (nodo == NULL)
+  {
+    return false;
+  }
+  nodo->dado = *valor;
+  return true;
+}

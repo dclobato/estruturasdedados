@@ -34,11 +34,12 @@ bool lista_cheia (const LISTA *lista);
  */
 void lista_imprime(const LISTA *lista);
 void __lista_imprime(const LISTA *lista);
-bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao, TIPO_DADO *valor);
+bool lista_consulta_posicao(const LISTA *lista, unsigned int posicao, NOH_LISTA **nodo);
 bool lista_busca_chave(const LISTA *lista, const TIPO_DADO *valor, NOH_LISTA **nodo);
 bool lista_obtem_sucessor(const NOH_LISTA *nodo, NOH_LISTA **proximo);
 bool lista_obtem_inicio(const LISTA *lista, NOH_LISTA **nodo);
 bool lista_obtem_final(const LISTA *lista, NOH_LISTA **nodo);
+bool lista_obtem_valor_no(const NOH_LISTA *nodo, TIPO_DADO *valor);
 
 
 /*
@@ -49,6 +50,7 @@ bool lista_insere_ordenado(LISTA *lista, const TIPO_DADO *valor);
 bool lista_insere_antes_do_nodo(LISTA *lista, const NOH_LISTA **nodo, const TIPO_DADO *valor);
 bool lista_insere_inicio(LISTA *lista, const TIPO_DADO *valor);
 bool lista_insere_final(LISTA *lista, const TIPO_DADO *valor);
+bool lista_definir_valor_no(NOH_LISTA *nodo, const TIPO_DADO *valor);
 
 /*
  * Operacoes de remocao

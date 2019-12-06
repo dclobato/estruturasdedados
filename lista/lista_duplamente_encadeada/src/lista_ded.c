@@ -12,6 +12,16 @@ bool inicializa_lista_de(LISTA_DE *lista)
   return true;
 }
 
+bool lista_vazia (const LISTA_DE *lista)
+{
+  return (lista->numElementos == 0);
+}
+
+bool lista_cheia (const LISTA_DE *lista)
+{
+  return false;
+}
+
 void imprime_lista_de(const LISTA_DE *lista)
 {
   NOH_DE *p;
@@ -42,8 +52,7 @@ void __imprime_lista_de(const LISTA_DE *lista)
 
   while (p != NULL)
   {
-    printf("[%03u]: %5d   (predecessor: %14p, p: %14p, sucessor: %14p)\n", i,
-           p->dado, p->predecessor, p, p->sucessor);
+    printf("[%03u]: %5d   (predecessor: %14p, p: %14p, sucessor: %14p)\n", i, p->dado, p->predecessor, p, p->sucessor);
     p = p->sucessor;
     i++;
   }
@@ -226,8 +235,7 @@ bool remove_final_de(LISTA_DE *lista, TIPO_DADO *valor)
   return true;
 }
 
-bool insere_lista_de(LISTA_DE *lista, const TIPO_DADO *valor,
-                     unsigned int posicao)
+bool insere_lista_de(LISTA_DE *lista, const TIPO_DADO *valor, unsigned int posicao)
 {
   NOH_DE *t;
   NOH_DE *p, *q;
@@ -289,8 +297,7 @@ bool insere_lista_de(LISTA_DE *lista, const TIPO_DADO *valor,
   return true;
 }
 
-bool remove_lista_de(LISTA_DE *lista, TIPO_DADO *valor,
-                     unsigned int posicao)
+bool remove_lista_de(LISTA_DE *lista, TIPO_DADO *valor, unsigned int posicao)
 {
   NOH_DE *p, *q;
   unsigned int contador;
@@ -350,11 +357,10 @@ bool remove_lista_de(LISTA_DE *lista, TIPO_DADO *valor,
   return true;
 }
 
-bool consulta_lista_de(const LISTA_DE *lista, unsigned int posicao,
-                       TIPO_DADO *valor)
+bool consulta_lista_de(const LISTA_DE *lista, unsigned int posicao, TIPO_DADO *valor)
 {
   NOH_DE *p;
-  int contador;
+  unsigned int contador;
 
   if ((posicao < 0) || (posicao > (tamanho_lista_de(lista) - 1)))
   {
@@ -533,8 +539,7 @@ bool obtem_final_de(const LISTA_DE *lista, NOH_DE **nodo)
   return true;
 }
 
-bool busca_lista_de(const LISTA_DE *lista, const TIPO_DADO *valor,
-                    NOH_DE **nodo)
+bool busca_lista_de(const LISTA_DE *lista, const TIPO_DADO *valor, NOH_DE **nodo)
 {
   NOH_DE *p;
   p = lista->inicio;
@@ -560,8 +565,7 @@ bool busca_lista_de(const LISTA_DE *lista, const TIPO_DADO *valor,
 }
 
 // TODO: implementar insercao antes do nodo
-bool insere_antes_do_nodo_de(LISTA_DE *lista, const NOH_DE **nodo,
-                             const TIPO_DADO *valor)
+bool insere_antes_do_nodo_de(LISTA_DE *lista, const NOH_DE **nodo, const TIPO_DADO *valor)
 {
   NOH_DE *t;
   NOH_DE *p, *q;
@@ -671,5 +675,25 @@ bool remove_nodo_de(LISTA_DE *lista, NOH_DE **nodo)
 
   libera_no_lista_de(&p);
   lista->numElementos = lista->numElementos - 1;
+  return true;
+}
+
+bool obtem_valor_no(const NOH_DE *nodo, TIPO_DADO *valor)
+{
+  if (nodo == NULL)
+  {
+    return false;
+  }
+  *valor = nodo->dado;
+  return true;
+}
+
+bool definir_valor_no(NOH_DE *nodo, const TIPO_DADO *valor)
+{
+  if (nodo == NULL)
+  {
+    return false;
+  }
+  nodo->dado = *valor;
   return true;
 }
