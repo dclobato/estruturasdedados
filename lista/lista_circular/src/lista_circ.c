@@ -98,7 +98,6 @@ void imprime_lista_circ(const LISTA_CIRC *lista)
   printf("\n");
 }
 
-
 void __imprime_lista_circ(const LISTA_CIRC *lista)
 {
   NOH_CIRC *p;
@@ -183,7 +182,7 @@ bool obtem_sucessor_circ(const NOH_CIRC *nodo, NOH_CIRC **sucessor)
 
 bool obtem_inicio_circ(const LISTA_CIRC *lista, NOH_CIRC **nodo)
 {
-  if (lista->final != NULL)
+  if (lista->final == NULL)
   {
     return false;
   }
@@ -193,7 +192,7 @@ bool obtem_inicio_circ(const LISTA_CIRC *lista, NOH_CIRC **nodo)
 
 bool obtem_final_circ(const LISTA_CIRC *lista, NOH_CIRC **nodo)
 {
-  if (lista->final != NULL)
+  if (lista->final == NULL)
   {
     return false;
   }
@@ -228,8 +227,6 @@ bool insere_inicio_circ(LISTA_CIRC *lista, const TIPO_DADO *valor)
 
 bool insere_final_circ(LISTA_CIRC *lista, const TIPO_DADO *valor)
 {
-  NOH_CIRC *t;
-
   if (!insere_inicio_circ(lista, valor))
   {
     return false;
@@ -237,7 +234,6 @@ bool insere_final_circ(LISTA_CIRC *lista, const TIPO_DADO *valor)
 
   lista->final = lista->final->sucessor;
   return true;
-
 }
 
 bool obtem_valor_no(const NOH_CIRC *nodo, TIPO_DADO *valor)
@@ -260,7 +256,7 @@ bool definir_valor_no(NOH_CIRC *nodo, const TIPO_DADO *valor)
   return true;
 }
 
-bool shift_right_lista_circ(LISTA_CIRC *lista)
+bool shift_left_lista_circ(LISTA_CIRC *lista)
 {
   if (lista->final == NULL)
   {
@@ -268,6 +264,29 @@ bool shift_right_lista_circ(LISTA_CIRC *lista)
   }
 
   lista->final = lista->final->sucessor;
+  return true;
+}
+
+bool shift_right_lista_circ(LISTA_CIRC *lista)
+{
+  NOH_CIRC *aux, *ant;
+
+  if (lista->final == NULL)
+  {
+    return false;
+  }
+
+  ant = lista->final;
+  aux = lista->final->sucessor;
+
+  while (aux != lista->final)
+  {
+    ant = aux;
+    aux = aux->sucessor;
+  }
+
+  lista->final = ant;
+
   return true;
 }
 
@@ -290,7 +309,7 @@ bool remove_inicio_circ(LISTA_CIRC *lista, TIPO_DADO *valor)
   }
 
   *valor = aux->dado;
-  libera_no_lista_circ (&aux);
+  libera_no_lista_circ(&aux);
   lista->numElementos--;
   return true;
 }
@@ -316,12 +335,134 @@ bool remove_final_circ(LISTA_CIRC *lista, TIPO_DADO *valor)
   ant->sucessor = aux->sucessor;
 
   if (ant == aux)
+  {
     lista->final = NULL;
+  }
   else
+  {
     lista->final = ant;
+  }
 
   *valor = aux->dado;
-  libera_no_lista_circ (&aux);
+  libera_no_lista_circ(&aux);
   lista->numElementos--;
   return true;
 }
+
+bool insere_lista_circ(LISTA_CIRC *lista, const TIPO_DADO *valor, unsigned int posicao)
+{
+  NOH_CIRC *t;
+  NOH_CIRC *aux;
+  NOH_CIRC *ant;
+  unsigned int i;
+
+  if ((posicao < 0) || (posicao > tamanho_lista_circ(lista)))
+  {
+    return false;
+  }
+
+  if (!valor || !obtem_no_lista_circ(&t))
+  {
+    return false;
+  }
+
+  t->dado = *valor;
+  t->sucessor = t;
+
+  // Lista vazia
+  if (lista->final == NULL)
+  {
+    lista->final = t;
+  }
+  else
+  {
+    // Inicio da lista
+    if (posicao == 0)
+    {
+      t->sucessor = lista->final->sucessor;
+      lista->final->sucessor = t;
+    }
+      // Procurar a posicao
+    else
+    {
+      ant = lista->final;
+      aux = ant->sucessor;
+      for (i = 0; i < posicao; i++)
+      {
+        ant = aux;
+        aux = aux->sucessor;
+      }
+      // No meio da lista
+      if (i < tamanho_lista_circ(lista))
+      {
+        t->sucessor = aux;
+        ant->sucessor = t;
+      }
+        // No final da lista
+      else
+      {
+        t->sucessor = aux->sucessor;
+        aux->sucessor = t;
+        lista->final = t;
+      }
+    }
+  }
+  lista->numElementos++;
+  return true;
+}
+
+bool insere_ordenado_circ(LISTA_CIRC *lista, const TIPO_DADO *valor)
+{
+  NOH_CIRC *t;
+  NOH_CIRC *aux, *ant;
+
+  if (!valor || !obtem_no_lista_circ(&t))
+  {
+    return false;
+  }
+
+  t->dado = *valor;
+  t->sucessor = t;
+
+  // Lista vazia
+  if (lista->final == NULL)
+  {
+    lista->final = t;
+  }
+  else
+  {
+    ant = lista->final;
+    aux = lista->final->sucessor;
+    // Eh o menor valor
+    if (aux->dado > *valor)
+    {
+      ant->sucessor = t;
+      t->sucessor = aux;
+    }
+      // Procurar a posicao
+    else
+    {
+      while ((aux->dado < *valor) && (aux != lista->final))
+      {
+        ant = aux;
+        aux = aux->sucessor;
+      }
+      // No meio da lista
+      if (aux->dado >= *valor)
+      {
+        t->sucessor = aux;
+        ant->sucessor = t;
+      }
+        // No final da lista
+      else
+      {
+        t->sucessor = aux->sucessor;
+        aux->sucessor = t;
+        lista->final = t;
+      }
+    }
+  }
+  lista->numElementos++;
+  return true;
+}
+

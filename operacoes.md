@@ -103,18 +103,20 @@
   + Destrói nodo de lista
   + Tamanho da lista
   + Avança início da lista em sentido horário ( _shift right_ )
+  + Avança início da lista em sentido anti-horário ( _shift left_ )
 
 - Recuperação de informação
   + Mostrar a lista (simples e _debug_)
   + Recupera chave em posição específica
   + Busca por chave em lista e retorna o nodo
   + Obtém nodo sucessor de nodo
-  + Obtém nodo início de lista
+  + Obtém nodo inicial de lista
+  + Obtém nodo final de lista
   + Obter o valor da chave em um nó específico
 
 - Inserção de chaves
-  + [Insere chave em posição específica][notyet]
-  + [Insere chave ordenado][notyet]
+  + Insere chave em posição específica
+  + Insere chave ordenado
   + [Insere chave antes de um nodo][notyet]
   + Insere chave no início da lista
   + Insere chave no final da lista

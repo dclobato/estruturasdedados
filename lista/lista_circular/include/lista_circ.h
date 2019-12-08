@@ -31,6 +31,7 @@ bool destroi_lista_circ(LISTA_CIRC *lista);
 bool obtem_no_lista_circ(NOH_CIRC **nodo);
 bool libera_no_lista_circ(NOH_CIRC **nodo);
 bool shift_right_lista_circ (LISTA_CIRC *lista);
+bool shift_left_lista_circ (LISTA_CIRC *lista);
 unsigned int tamanho_lista_circ(const LISTA_CIRC *lista);
 
 /*
@@ -54,8 +55,8 @@ bool obtem_valor_no(const NOH_CIRC *nodo, TIPO_DADO *valor);
 bool insere_lista_circ(LISTA_CIRC *lista, const TIPO_DADO *valor,
                        unsigned int posicao);
 bool insere_ordenado_circ(LISTA_CIRC *lista, const TIPO_DADO *valor);
-bool insere_depois_do_nodo_circ(LISTA_CIRC *lista, const NOH_CIRC **nodo,
-                                const TIPO_DADO *valor);
+bool insere_antes_do_nodo_circ(LISTA_CIRC *lista, const NOH_CIRC *nodo,
+                               const TIPO_DADO *valor);
 bool insere_inicio_circ(LISTA_CIRC *lista, const TIPO_DADO *valor);
 bool insere_final_circ(LISTA_CIRC *lista, const TIPO_DADO *valor);
 bool definir_valor_no(NOH_CIRC *nodo, const TIPO_DADO *valor);
