@@ -4,21 +4,24 @@
 - Inicialização, destruição e metadados
   + Inicializa lista
   + Destrói lista
-  + Tamanho da lista
+  + Número de elementos na lista
   + Número de nodos disponíveis
   + Lista vazia?
   + Lista cheia?
 
 - Recuperação de informação  
-  + Mostrar a lista)
-  + Recupera chave em posição específica
+  + Mostrar a lista
+  + Recupera chave em posição específica (_getter_)
+  + Obter chave do primeiro nó
+  + Obter chave do último nó
+  + Obter posição da chave
 
 - Inserção de chaves
   + Insere chave em posição específica
   + Insere chave ordenado
   + Insere chave no início da lista
   + Insere chave no final da lista
-  + Definir o valor da chave de uma posição específica
+  + Definir o valor da chave de uma posição específica (_setter_)
 
 - Remoção de chaves
   + Remove nodo em posição específica
@@ -32,7 +35,7 @@
   + Destrói lista
   + Inicializa nodo de lista
   + Destrói nodo de lista
-  + Tamanho da lista
+  + Número de elementos na lista
   + Número de nodos disponíveis
   + Lista vazia?
   + Lista cheia?
@@ -66,7 +69,7 @@
   + Destrói lista
   + Inicializa nodo de lista
   + Destrói nodo de lista
-  + Tamanho da lista
+  + Número de elementos na lista
   + Lista vazia?
   + Lista cheia?
 
@@ -101,7 +104,7 @@
   + Destrói lista
   + Inicializa nodo de lista
   + Destrói nodo de lista
-  + Tamanho da lista
+  + Número de elementos na lista
   + Avança início da lista em sentido horário ( _shift right_ )
   + Avança início da lista em sentido anti-horário ( _shift left_ )
 
@@ -135,7 +138,7 @@
   + Destrói lista
   + Inicializa nodo de lista
   + Destrói nodo de lista
-  + Tamanho da lista
+  + Número de elementos na lista
   + Avança início da lista em sentido horário
   + Avança início da lista em sentido anti-horário
 
@@ -169,6 +172,7 @@
   + Pilha vazia?
   + Pilha cheia?
   + Número de elementos na pilha
+  + Topo da pilha
 
 - Inserção de chaves
   + _Push_ chave
@@ -182,12 +186,15 @@
   + Destrói fila
   + Inicializa nodo de fila
   + Destrói nodo de fila
-  + Tamanho da fila
+  + Número de elementos na fila
+  + Número de nodos disponíveis
   + Fila vazia?
   + Fila cheia?
 
 - Recuperação de informação  
   + Mostrar a fila (simples e _debug_)
+  + Obtém cabeça da fila
+  + Obtém cauda da fila
 
 - Inserção de chaves
   + Enfileira chave
@@ -201,7 +208,7 @@
   + Inicializa _heap_
   + Destrói _heap_
   + Constrói _heap_
-  + Tamanho da _heap_
+  + Número de elementos na _heap_
   + Inverte _heap_
   + _Heap_ vazia?
   + _Heap_ cheia?

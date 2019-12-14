@@ -5,6 +5,11 @@ Este repositório contém implementações de referência para algumas das estru
 Fazem parte do repositório, implementações para:
 
 - Listas
+  + Sequencial
+  + Encadeada
+  + Duplamente encadeada
+  + Circular
+  + Circular duplamente encadeada
 - Pilhas
 - Filas
 - Heap
@@ -25,5 +30,3 @@ Há, também, a implementação de aplicações que utilizam algumas das estrutu
 Importante observar que a motivação para essas implementações é o uso didático, e não ter implementações necessariamente eficientes. Algumas implementações são as mais eficientes, mas outras perdem propositalmente na eficiência para favorecer a didática. Na maior parte desses casos, isso está explícito no código.
 
 Se você for aluno, pode tomar essas implementações como ponto de partida para seus trabalhos. Elas são iguais (ou em alguns casos, equivalentes) às implementações feitas em sala/laboratório.
-
-**Não use essas implementações** ou programas de teste disponíveis aqui como solução para os trabalhos das disciplinas: você pode se _inspirar_ nesses códigos, mas se alguma atividade pedir que você "implemente" algo, por favor **implemente e não copie**.
