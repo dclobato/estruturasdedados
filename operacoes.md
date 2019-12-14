@@ -120,15 +120,15 @@
 - Inserção de chaves
   + Insere chave em posição específica
   + Insere chave ordenado
-  + [Insere chave antes de um nodo][notyet]
+  + Insere chave antes de um nodo
   + Insere chave no início da lista
   + Insere chave no final da lista
   + Definir o valor da chave em um nó específico
 
 - Remoção de chaves
-  + [Remove nodo em posição específica][notyet]
-  + [Remove nodo com determinada chave][notyet]
-  + [Remove nodo indicado][notyet]
+  + Remove nodo em posição específica
+  + Remove nodo com determinada chave
+  + Remove nodo indicado
   + Remove o início da lista
   + Remove o final da lista
 
