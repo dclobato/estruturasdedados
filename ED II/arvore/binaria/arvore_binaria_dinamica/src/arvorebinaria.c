@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "arvorebinaria.h"
+#include <arvorebinaria.h>
 
-bool inicializa_arvore(ARVORE *arvore)
+bool arvore_binaria_inicializar(ARVORE *arvore)
 {
   *arvore = NULL;
   return true;
 }
 
-bool destroi_arvore(ARVORE *arvore)
+bool arvore_binaria_destruir(ARVORE *arvore)
 {
   if (*arvore == NULL)
   {
@@ -18,20 +18,20 @@ bool destroi_arvore(ARVORE *arvore)
 
   if ((*arvore)->esq != NULL)
   {
-    destroi_arvore(&((*arvore)->esq));
+    arvore_binaria_destruir(&((*arvore)->esq));
   }
 
   if ((*arvore)->dir != NULL)
   {
-    destroi_arvore(&((*arvore)->dir));
+    arvore_binaria_destruir(&((*arvore)->dir));
   }
 
-  destroi_nodo_arvore(arvore);
+  arvore_binaria_liberar_no(arvore);
   *arvore = NULL;
   return true;
 }
 
-bool cria_nodo_arvore(ARVORE *arvore)
+bool arvore_binaria_obter_no(ARVORE *arvore)
 {
   ARVORE p;
   p = (ARVORE) malloc(sizeof(NO_ARVORE));
@@ -47,7 +47,7 @@ bool cria_nodo_arvore(ARVORE *arvore)
   return true;
 }
 
-bool destroi_nodo_arvore(ARVORE *arvore)
+bool arvore_binaria_liberar_no(ARVORE *arvore)
 {
   if (*arvore == NULL)
   {
@@ -63,7 +63,7 @@ bool destroi_nodo_arvore(ARVORE *arvore)
   return true;
 }
 
-bool insere_na_arvore(ARVORE *arvore, TipoNo tipo, const TIPO_DADO *valor)
+bool arvore_binaria_inserir_chave(ARVORE *arvore, TipoNo tipo, const TIPO_DADO *valor)
 {
   ARVORE p;
 
@@ -72,7 +72,7 @@ bool insere_na_arvore(ARVORE *arvore, TipoNo tipo, const TIPO_DADO *valor)
     return false;
   }
 
-  if (!cria_nodo_arvore(&p))
+  if (!arvore_binaria_obter_no(&p))
   {
     return false;
   }
@@ -113,7 +113,7 @@ bool insere_na_arvore(ARVORE *arvore, TipoNo tipo, const TIPO_DADO *valor)
   }
 }
 
-void imprime_arvore(const ARVORE *arvore)
+void arvore_binaria_imprimir(const ARVORE *arvore)
 {
   unsigned int linha = 0;
   __imprime_arvore(arvore, &linha);
@@ -130,7 +130,7 @@ void __imprime_arvore(const ARVORE *arvore, unsigned int *linha)
 
     for (i = 0; i < (3 * (*linha)); i++)
     {
-      printf("  ");
+      printf("   ");
     }
 
     printf("%d\n", (*arvore)->dado);
@@ -139,11 +139,11 @@ void __imprime_arvore(const ARVORE *arvore, unsigned int *linha)
   }
 }
 
-bool insere_arvore_binaria_busca(ARVORE *arvore, const TIPO_DADO *valor)
+bool arvore_binaria_busca_inserir_chave(ARVORE *arvore, const TIPO_DADO *valor)
 {
   if (*arvore == NULL)
   {
-    insere_na_arvore(arvore, RAIZ, valor);
+    arvore_binaria_inserir_chave(arvore, RAIZ, valor);
     return true;
   }
 
@@ -159,11 +159,11 @@ bool insere_arvore_binaria_busca(ARVORE *arvore, const TIPO_DADO *valor)
     // esta na folha
     if ((*arvore)->esq == NULL)
     {
-      return (insere_na_arvore(arvore, ESQ, valor));
+      return (arvore_binaria_inserir_chave(arvore, ESQ, valor));
     }
     else
     {
-      return (insere_arvore_binaria_busca(&((*arvore)->esq), valor));
+      return (arvore_binaria_busca_inserir_chave(&((*arvore)->esq), valor));
     }
   }
   else     // insere na direita
@@ -171,16 +171,16 @@ bool insere_arvore_binaria_busca(ARVORE *arvore, const TIPO_DADO *valor)
     // esta na folha
     if ((*arvore)->dir == NULL)
     {
-      return (insere_na_arvore(arvore, DIR, valor));
+      return (arvore_binaria_inserir_chave(arvore, DIR, valor));
     }
     else
     {
-      return (insere_arvore_binaria_busca(&((*arvore)->dir), valor));
+      return (arvore_binaria_busca_inserir_chave(&((*arvore)->dir), valor));
     }
   }
 }
 
-bool pesquisa_abb(ARVORE *arvore, const TIPO_DADO *valor, ARVORE *nodo)
+bool arvore_binaria_busca_pesquisar_chave(ARVORE *arvore, const TIPO_DADO *valor, ARVORE *nodo)
 {
   if (*arvore == NULL)
   {
@@ -189,21 +189,21 @@ bool pesquisa_abb(ARVORE *arvore, const TIPO_DADO *valor, ARVORE *nodo)
 
   if ((*arvore)->dado == *valor)
   {
-    nodo = arvore;
+    *nodo = *arvore;
     return true;
   }
 
   if ((*arvore)->dado > *valor)
   {
-    return pesquisa_abb(&(*arvore)->esq, valor, nodo);
+    return arvore_binaria_busca_pesquisar_chave(&(*arvore)->esq, valor, nodo);
   }
   else
   {
-    return pesquisa_abb(&(*arvore)->dir, valor, nodo);
+    return arvore_binaria_busca_pesquisar_chave(&(*arvore)->dir, valor, nodo);
   }
 }
 
-bool percurso(ARVORE *arvore, TipoPercurso tipo, PERCURSO *percurso)
+bool arvore_binaria_percorrer(const ARVORE *arvore, TipoPercurso tipo, PERCURSO *percurso)
 {
   if (*arvore == NULL)
   {
@@ -216,25 +216,23 @@ bool percurso(ARVORE *arvore, TipoPercurso tipo, PERCURSO *percurso)
   switch (tipo)
   {
     case PRE:
-      return (percurso_pre(arvore, percurso));
+      return (__percurso_pre((const ARVORE *) arvore, percurso));
 
     case IN:
-      return (percurso_in(arvore, percurso));
+      return (__percurso_in((const ARVORE *) arvore, percurso));
 
     case POS:
-      return (percurso_pos(arvore, percurso));
+      return (__percurso_pos((const ARVORE *) arvore, percurso));
 
     case LARGURA:
-      return (percurso_largura(arvore, percurso));
+      return (__percurso_largura((const ARVORE *) arvore, percurso));
 
     default:
-      break;
+      return false;
   }
-
-  return false;
 }
 
-bool destroi_percurso(PERCURSO *percurso)
+bool arvore_binaria_destruir_percurso(PERCURSO *percurso)
 {
   percurso->tamanho = 0;
 
@@ -246,70 +244,64 @@ bool destroi_percurso(PERCURSO *percurso)
   return true;
 }
 
-bool percurso_pre(ARVORE *arvore, PERCURSO *percurso)
+bool __percurso_pre(const ARVORE *arvore, PERCURSO *percurso)
 {
   if (*arvore == NULL)
   {
     return true;
   }
 
-  percurso->nodos = (TIPO_DADO *) realloc(percurso->nodos,
-                                          (percurso->tamanho + 1) * sizeof(TIPO_DADO));
-
+  percurso->nodos = realloc(percurso->nodos, (percurso->tamanho + 1) * sizeof(TIPO_DADO));
   if (percurso->nodos == NULL)
   {
     return false;
   }
-
-  percurso->nodos[percurso->tamanho++] = (*arvore)->dado;
-  percurso_pre(&(*arvore)->esq, percurso);
-  percurso_pre(&(*arvore)->dir, percurso);
+  *(percurso->nodos + percurso->tamanho) = (*arvore)->dado;
+  percurso->tamanho = percurso->tamanho + 1;
+  __percurso_pre((const ARVORE *) &(*arvore)->esq, percurso);
+  __percurso_pre((const ARVORE *) &(*arvore)->dir, percurso);
   return true;
 }
 
-bool percurso_in(ARVORE *arvore, PERCURSO *percurso)
+bool __percurso_in(const ARVORE *arvore, PERCURSO *percurso)
 {
   if (*arvore == NULL)
   {
     return true;
   }
 
-  percurso->nodos = (TIPO_DADO *) realloc(percurso->nodos,
-                                          (percurso->tamanho + 1) * sizeof(TIPO_DADO));
-
+  __percurso_in((const ARVORE *) &(*arvore)->esq, percurso);
+  percurso->nodos = realloc(percurso->nodos, (percurso->tamanho + 1) * sizeof(TIPO_DADO));
   if (percurso->nodos == NULL)
   {
     return false;
   }
-
-  percurso_in(&(*arvore)->esq, percurso);
-  percurso->nodos[percurso->tamanho++] = (*arvore)->dado;
-  percurso_in(&(*arvore)->dir, percurso);
+  *(percurso->nodos + percurso->tamanho) = (*arvore)->dado;
+  percurso->tamanho = percurso->tamanho + 1;
+  __percurso_in((const ARVORE *) &(*arvore)->dir, percurso);
   return true;
 }
 
-bool percurso_pos(ARVORE *arvore, PERCURSO *percurso)
+bool __percurso_pos(const ARVORE *arvore, PERCURSO *percurso)
 {
   if (*arvore == NULL)
   {
     return true;
   }
 
-  percurso->nodos = (TIPO_DADO *) realloc(percurso->nodos,
-                                          (percurso->tamanho + 1) * sizeof(TIPO_DADO));
-
+  __percurso_pos((const ARVORE *) &(*arvore)->esq, percurso);
+  __percurso_pos((const ARVORE *) &(*arvore)->dir, percurso);
+  percurso->nodos = realloc(percurso->nodos, (percurso->tamanho + 1) * sizeof(TIPO_DADO));
   if (percurso->nodos == NULL)
   {
     return false;
   }
-
-  percurso_pos(&(*arvore)->esq, percurso);
-  percurso_pos(&(*arvore)->dir, percurso);
-  percurso->nodos[percurso->tamanho++] = (*arvore)->dado;
+  *(percurso->nodos + percurso->tamanho) = (*arvore)->dado;
+  percurso->tamanho = percurso->tamanho + 1;
   return true;
 }
 
-bool percurso_largura(ARVORE *arvore, PERCURSO *percurso)
+bool __percurso_largura(const ARVORE *arvore, PERCURSO *percurso)
 {
   FILA fila;
   ARVORE temp;
@@ -319,41 +311,45 @@ bool percurso_largura(ARVORE *arvore, PERCURSO *percurso)
     return true;
   }
 
-  cria_fila(&fila);
-  insere_fila(&fila, *arvore);
+  __cria_fila(&fila);
+  __insere_fila(&fila, *arvore);
   percurso->tamanho = 0;
 
   while (fila != NULL)
   {
-    remove_fila(&fila, &temp);
-    percurso->nodos = (TIPO_DADO *) realloc(percurso->nodos,
-                                            (percurso->tamanho + 1) * sizeof(TIPO_DADO));
-    percurso->nodos[percurso->tamanho++] = temp->dado;
+    __remove_fila(&fila, &temp);
+    percurso->nodos = realloc(percurso->nodos, (percurso->tamanho + 1) * sizeof(TIPO_DADO));
+    if (percurso->nodos == NULL)
+    {
+      return false;
+    }
+    *(percurso->nodos + percurso->tamanho) = temp->dado;
+    percurso->tamanho = percurso->tamanho + 1;
 
     if (temp->esq != NULL)
     {
-      insere_fila(&fila, temp->esq);
+      __insere_fila(&fila, temp->esq);
     }
 
     if (temp->dir != NULL)
     {
-      insere_fila(&fila, temp->dir);
+      __insere_fila(&fila, temp->dir);
     }
   }
 
   return true;
 }
 
-bool cria_fila(FILA *fila)
+bool __cria_fila(FILA *fila)
 {
   *fila = NULL;
   return true;
 }
 
-bool insere_fila(FILA *fila, ARVORE nodo)
+bool __insere_fila(FILA *fila, ARVORE nodo)
 {
   FILA p, novo;
-  novo = (FILA) malloc(sizeof(struct NOH_FILA));
+  novo = (FILA) malloc(sizeof(struct __NOH_FILA_AB));
 
   if (novo == NULL)
   {
@@ -382,7 +378,7 @@ bool insere_fila(FILA *fila, ARVORE nodo)
   return true;
 }
 
-bool remove_fila(FILA *fila, ARVORE *nodo)
+bool __remove_fila(FILA *fila, ARVORE *nodo)
 {
   FILA temp;
 
@@ -399,7 +395,7 @@ bool remove_fila(FILA *fila, ARVORE *nodo)
   return true;
 }
 
-unsigned altura_da_arvore(const ARVORE *arvore)
+unsigned arvore_binaria_altura(const ARVORE *arvore)
 {
   unsigned alturaEsquerda, alturaDireita;
 
@@ -408,24 +404,23 @@ unsigned altura_da_arvore(const ARVORE *arvore)
     return 0;
   }
 
-  alturaEsquerda = altura_da_arvore((const ARVORE *) & (*arvore)->esq);
-  alturaDireita = altura_da_arvore((const ARVORE *) & (*arvore)->dir);
-  return alturaEsquerda > alturaDireita ? alturaEsquerda + 1 : alturaDireita +
-         1;
+  alturaEsquerda = arvore_binaria_altura((const ARVORE *) &(*arvore)->esq);
+  alturaDireita = arvore_binaria_altura((const ARVORE *) &(*arvore)->dir);
+  return alturaEsquerda > alturaDireita ? alturaEsquerda + 1 : alturaDireita + 1;
 }
 
-unsigned numero_de_nodos(const ARVORE *arvore)
+unsigned arvore_binaria_numero_nodos(const ARVORE *arvore)
 {
   if (*arvore == NULL)
   {
     return 0;
   }
 
-  return numero_de_nodos((const ARVORE *) & (*arvore)->esq) + 1 +
-         numero_de_nodos((const ARVORE *) & (*arvore)->dir);
+  return arvore_binaria_numero_nodos((const ARVORE *) &(*arvore)->esq) + 1 +
+         arvore_binaria_numero_nodos((const ARVORE *) &(*arvore)->dir);
 }
 
-unsigned nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor)
+unsigned arvore_binaria_nivel_nodo(const ARVORE *arvore, const TIPO_DADO *valor)
 {
   if (((*arvore) == NULL) || (valor == NULL))
   {
@@ -435,8 +430,7 @@ unsigned nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor)
   return __nivel_do_nodo(arvore, valor, 1);
 }
 
-unsigned __nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor,
-                         unsigned nivel)
+unsigned __nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor, unsigned nivel)
 {
   unsigned nivel_para_baixo;
 
@@ -450,15 +444,160 @@ unsigned __nivel_do_nodo(const ARVORE *arvore, const TIPO_DADO *valor,
     return nivel;
   }
 
-  nivel_para_baixo = __nivel_do_nodo((const ARVORE *) & (*arvore)->esq, valor,
-                                     nivel + 1);
+  nivel_para_baixo = __nivel_do_nodo((const ARVORE *) &(*arvore)->esq, valor, nivel + 1);
 
   if (nivel_para_baixo != 0)
   {
     return nivel_para_baixo;
   }
 
-  nivel_para_baixo = __nivel_do_nodo((const ARVORE *) & (*arvore)->dir, valor,
-                                     nivel + 1);
+  nivel_para_baixo = __nivel_do_nodo((const ARVORE *) &(*arvore)->dir, valor, nivel + 1);
   return nivel_para_baixo;
+}
+
+bool arvore_binaria_sucessor_in_ordem(const ARVORE *raiz, ARVORE *sucessor, ARVORE *pai_sucessor)
+{
+  ARVORE temp;
+
+  if (*raiz == NULL)
+  { // arvore vazia
+    return false;
+  }
+
+  if ((*raiz)->dir == NULL)
+  { // nao possui filhos a direita
+    return false;
+  }
+
+  // segue para a direita e, depois, pega o filho mais a esquerda
+  *pai_sucessor = *raiz;
+  *sucessor = (*raiz)->dir;
+  temp = (*sucessor)->esq;
+  while (temp != NULL)
+  {
+    *pai_sucessor = *sucessor;
+    *sucessor = temp;
+    temp = temp->esq;
+  }
+
+  return true;
+}
+
+bool arvore_binaria_busca_remover_chave(ARVORE *arvore, const TIPO_DADO *valor)
+{
+  ARVORE temp, ant, sucessor, pai_sucessor;
+  TipoNo saiu_pela;
+
+  if ((*arvore == NULL) || (valor == NULL))
+  {
+    return false;
+  }
+
+  temp = *arvore;
+  ant = NULL;
+  saiu_pela = RAIZ;
+  while ((temp != NULL) && (temp->dado != *valor))
+  {
+    ant = temp;
+    if (*valor > temp->dado)
+    {
+      temp = temp->dir;
+      saiu_pela = DIR;
+    }
+    else
+    {
+      temp = temp->esq;
+      saiu_pela = ESQ;
+    }
+  }
+
+  if (temp == NULL)
+  {
+    return false;
+  }
+
+  // Primeiro caso: folha
+  if ((temp->esq == NULL) && (temp->dir == NULL))
+  {
+    switch (saiu_pela) // NOLINT(hicpp-multiway-paths-covered)
+    {
+      case RAIZ:
+        *arvore = NULL;
+        break;
+      case ESQ:
+        ant->esq = NULL;
+        break;
+      case DIR:
+        ant->dir = NULL;
+        break;
+    }
+    return (arvore_binaria_liberar_no(&temp));
+  }
+
+  // Segundo caso: no com apenas um filho (XOR)
+  if (((temp->esq == NULL) || (temp->dir == NULL)) && !((temp->esq == NULL) && (temp->dir == NULL)))
+  {
+    switch (saiu_pela) // NOLINT(hicpp-multiway-paths-covered)
+    {
+      case RAIZ:
+        if (temp->esq == NULL)
+        {
+          *arvore = temp->dir;
+          temp->dir = NULL;
+        }
+        else
+        {
+          *arvore = temp->esq;
+          temp->esq = NULL;
+        }
+        break;
+      case ESQ:
+        if (temp->esq == NULL)
+        {
+          ant->esq = temp->dir;
+          temp->dir = NULL;
+        }
+        else
+        {
+          ant->esq = temp->esq;
+          temp->esq = NULL;
+        }
+        break;
+      case DIR:
+        if (temp->esq == NULL)
+        {
+          ant->dir = temp->dir;
+          temp->dir = NULL;
+        }
+        else
+        {
+          ant->dir = temp->esq;
+          temp->esq = NULL;
+        }
+        break;
+    }
+    return (arvore_binaria_liberar_no(&temp));
+  }
+
+  // Terceiro caso: no com dois filhos
+  if ((temp->esq != NULL) && (temp->dir != NULL))
+  {
+    if (!arvore_binaria_sucessor_in_ordem(&temp, &sucessor, &pai_sucessor))
+    {
+      return false;
+    }
+
+    swap(temp->dado, sucessor->dado);
+    if (temp == pai_sucessor)
+    {
+      temp->dir = sucessor->dir;
+    }
+    else
+    {
+      pai_sucessor->esq = sucessor->dir;
+    }
+    sucessor->dir = NULL;
+    return (arvore_binaria_liberar_no(&sucessor));
+  }
+  return false;
 }
