@@ -127,13 +127,11 @@ void __imprime_arvore(const ARVORE *arvore, unsigned int *linha)
   {
     (*linha)++;
     __imprime_arvore(&((*arvore)->dir), linha);
-
     for (i = 0; i < (3 * (*linha)); i++)
     {
-      printf("   ");
+      printf("%s", "   ");
     }
-
-    printf("%d\n", (*arvore)->dado);
+    printf("%6d\n", (*arvore)->dado);
     __imprime_arvore(&((*arvore)->esq), linha);
     (*linha)--;
   }
@@ -303,95 +301,65 @@ bool __percurso_pos(const ARVORE *arvore, PERCURSO *percurso)
 
 bool __percurso_largura(const ARVORE *arvore, PERCURSO *percurso)
 {
-  FILA fila;
-  ARVORE temp;
+  ARVORE *fila;
+  NO_ARVORE temp;
+  unsigned int cabeca, cauda;
 
   if (*arvore == NULL)
   {
     return true;
   }
 
-  __cria_fila(&fila);
-  __insere_fila(&fila, *arvore);
-  percurso->tamanho = 0;
-
-  while (fila != NULL)
+  fila = NULL;
+  fila = (ARVORE *) realloc(fila, sizeof(NO_ARVORE));
+  cabeca = 0;
+  cauda = 0;
+  if (fila == NULL)
   {
-    __remove_fila(&fila, &temp);
+    printf("[AB:PL] Falha na alocacao de memoria\n");
+    exit(1);
+  }
+  *(fila + cauda) = *arvore;
+  cauda++;
+
+  while (cauda != cabeca)
+  {
+    temp = **(fila + cabeca);
+    cabeca++;
+
     percurso->nodos = realloc(percurso->nodos, (percurso->tamanho + 1) * sizeof(TIPO_DADO));
     if (percurso->nodos == NULL)
     {
-      return false;
+      printf("[AB:PL] Falha na alocacao de memoria\n");
+      exit(1);
     }
-    *(percurso->nodos + percurso->tamanho) = temp->dado;
+    *(percurso->nodos + percurso->tamanho) = temp.dado;
     percurso->tamanho = percurso->tamanho + 1;
 
-    if (temp->esq != NULL)
+    if (temp.esq != NULL)
     {
-      __insere_fila(&fila, temp->esq);
+      fila = realloc(fila, (cauda + 1) * sizeof(NO_ARVORE));
+      if (fila == NULL)
+      {
+        return false;
+      }
+      *(fila + cauda) = temp.esq;
+      cauda++;
     }
 
-    if (temp->dir != NULL)
+    if (temp.dir != NULL)
     {
-      __insere_fila(&fila, temp->dir);
+      fila = realloc(fila, (cauda + 1) * sizeof(NO_ARVORE));
+      if (fila == NULL)
+      {
+        return false;
+      }
+      *(fila + cauda) = temp.dir;
+      cauda++;
     }
   }
 
-  return true;
-}
-
-bool __cria_fila(FILA *fila)
-{
-  *fila = NULL;
-  return true;
-}
-
-bool __insere_fila(FILA *fila, ARVORE nodo)
-{
-  FILA p, novo;
-  novo = (FILA) malloc(sizeof(struct __NOH_FILA_AB));
-
-  if (novo == NULL)
-  {
-    printf("Sem memoria para alocar\n");
-    exit(1);
-  }
-
-  novo->item = nodo;
-  novo->prox = NULL;
-  p = *fila;
-
-  while ((p != NULL) && (p->prox != NULL))
-  {
-    p = p->prox;
-  }
-
-  if (p == NULL)
-  {
-    *fila = novo;
-  }
-  else
-  {
-    p->prox = novo;
-  }
-
-  return true;
-}
-
-bool __remove_fila(FILA *fila, ARVORE *nodo)
-{
-  FILA temp;
-
-  if (*fila == NULL)
-  {
-    *nodo = NULL;
-    return false;
-  }
-
-  temp = *fila;
-  *nodo = (*fila)->item;
-  *fila = (*fila)->prox;
-  free(temp);
+  free(fila);
   return true;
 }
 

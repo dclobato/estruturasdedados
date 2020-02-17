@@ -1,5 +1,6 @@
 #ifndef DEF_ARVORE_BINARIA
 #define DEF_ARVORE_BINARIA
+
 #include <stdbool.h>
 #include <string.h>
 
@@ -84,20 +85,4 @@ bool __percurso_in(const ARVORE *arvore, PERCURSO *percurso);
 bool __percurso_pos(const ARVORE *arvore, PERCURSO *percurso);
 bool __percurso_largura(const ARVORE *arvore, PERCURSO *percurso);
 
-/*
- * Estrutura de dados auxiliar para percurso em largura
- * Eh possivel fazer sem ela, com vetor, mas ja que esta pronta,
- * ficamos com ela
- */
-struct __NOH_FILA_AB
-{
-  ARVORE item;
-  struct __NOH_FILA_AB *prox;
-};
-
-typedef struct __NOH_FILA_AB *FILA;
-
-bool __cria_fila(FILA *fila);
-bool __insere_fila(FILA *fila, ARVORE nodo);
-bool __remove_fila(FILA *fila, ARVORE *nodo);
 #endif
