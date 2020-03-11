@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-redundant-control-flow"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,14 +20,14 @@ int main(int argc, char *argv[])
   char buffer[256];
   char codificado[1024];
   char decodificado[256];
-  int tamanho, i, status;
-  inicializa_lista(&simbolos);
+  unsigned long tamanho, i;
+    inicializa_lista(&simbolos);
   const char *cadeia = "o rato roeu a roupa do rei de roma";
   tamanho = strlen(cadeia);
 
   for (i = 0; i < tamanho; i++)
   {
-    frequencia[(int)cadeia[i]] = frequencia[(int)cadeia[i]] + 1;
+    frequencia[(int) cadeia[i]] = frequencia[(int) cadeia[i]] + 1;
   }
 
   for (i = 0; i < 256; i++)
@@ -37,7 +39,7 @@ int main(int argc, char *argv[])
 
       if (!insere_ordenado(&simbolos, buffer, frequencia[i], NULL, NULL, true))
       {
-        printf("Problemas em [%c]\n", (char)i);
+        printf("Problemas em [%c]\n", (char) i);
         exit(1);
       }
     }
@@ -51,7 +53,7 @@ int main(int argc, char *argv[])
   imprime_arvore(simbolos);
   mostra_freq(folhas, true);
 
-  if (!codifica(folhas, (char *)cadeia, codificado))
+  if (!codifica(folhas, (char *) cadeia, codificado))
   {
     printf("Achei um simbolo que nao tem codigo!\n");
   }
@@ -71,13 +73,12 @@ void mostra_freq(LISTA l, bool mostraCodigo)
 {
   int t = 0;
   printf("--------+------+%s\n", mostraCodigo ? "-------------" : "");
-  printf("Simbolo | Freq |%s\n", mostraCodigo ? " Codigo"       : "");
+  printf("Simbolo | Freq |%s\n", mostraCodigo ? " Codigo" : "");
   printf("--------+------+%s\n", mostraCodigo ? "-------------" : "");
 
   while (l != NULL)
   {
-    printf("  [%s]   |  %3d | %s\n", l->simbolo, l->freq,
-           mostraCodigo ? l->codigo : "");
+    printf("  [%s]   |  %3d | %s\n", l->simbolo, l->freq, mostraCodigo ? l->codigo : "");
     t = t + l->freq;
 
     if (mostraCodigo)
@@ -97,7 +98,6 @@ void mostra_freq(LISTA l, bool mostraCodigo)
 }
 
 
-
 void cria_arvore(ARVORE *t)
 {
   ARVORE t1, t2;
@@ -115,8 +115,7 @@ void cria_arvore(ARVORE *t)
 
     if (!insere_ordenado(t, buffer, ftotal, t1, t2, false))
     {
-      printf("Problemas na insercao do combinado de frequencia total %d\n",
-             ftotal);
+      printf("Problemas na insercao do combinado de frequencia total %d\n", ftotal);
       exit(1);
     }
 
@@ -155,7 +154,7 @@ void pp(ARVORE t, int posicao, char *prefixo)
 
 bool codifica(LISTA l, char *in, char *out)
 {
-  int tamanho, i;
+  unsigned long tamanho, i;
   LISTA t;
   tamanho = strlen(in);
 
@@ -188,7 +187,7 @@ bool codifica(LISTA l, char *in, char *out)
 
 bool decodifica(ARVORE simbolos, char *in, char *out)
 {
-  int pin, pout, tam;
+  unsigned long pin, pout, tam;
   ARVORE t;
   pin = 0;
   pout = 0;
@@ -233,7 +232,7 @@ bool decodifica(ARVORE simbolos, char *in, char *out)
 
   // acabou a arvore e ainda tem codigo
   // parou no meio da arvore
-  if ((t == NULL) || ((t->esq !=  NULL) || (t->dir != NULL)))
+  if ((t == NULL) || ((t->esq != NULL) || (t->dir != NULL)))
   {
     return false;
   }

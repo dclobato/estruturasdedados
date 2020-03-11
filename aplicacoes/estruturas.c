@@ -10,8 +10,7 @@ bool inicializa_lista(LISTA *l)
   return true;
 }
 
-bool insere_ordenado(LISTA *l, char *s, int f, ARVORE t1, ARVORE t2,
-                     bool atualizaBaseProx)
+bool insere_ordenado(LISTA *l, char *s, int f, ARVORE t1, ARVORE t2, bool atualizaBaseProx)
 {
   LISTA tmp, aux, anterior;
   tmp = aloca_noh();
@@ -36,7 +35,7 @@ bool insere_ordenado(LISTA *l, char *s, int f, ARVORE t1, ARVORE t2,
 
   if (anterior == NULL)
   {
-    * l = tmp;
+    *l = tmp;
   }
   else
   {
