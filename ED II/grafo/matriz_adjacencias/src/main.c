@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 #include <string.h>
 #include <grafo.h>
 #include <stdbool.h>
@@ -9,10 +8,13 @@ int main(int argc, char *argv[])
 {
   TipoGrafo grafo;
   unsigned *cores;
-  char rotulo[20];
+  char rotulo[MAXTAMROTULO];
   unsigned from, to, nv, i;
   int weight;
   int dirigido;
+  int ponderado;
+
+  printf("Numero de vertices: ");
   scanf("%u", &nv);
 
   if (nv > MAXNUMVERTICES)
@@ -21,9 +23,12 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
+  printf("Dirigido? ");
   scanf("%d", &dirigido);
+  printf("Ponderado? ");
+  scanf("%d", &ponderado);
 
-  if (!cria_grafo(&grafo, nv, (bool) dirigido))
+  if (!cria_grafo(&grafo, nv, (bool) dirigido, ponderado))
   {
     printf("Problemas para criar o grafo\n");
     exit(1);
@@ -31,11 +36,13 @@ int main(int argc, char *argv[])
 
   // limpa buffer dos inteiros
   scanf("%*c");
-  
+
   for (i = 0; i < nv; i++)
   {
-    memset(rotulo, '\0', sizeof(rotulo));
-    scanf("%19[^\n]\n", rotulo);
+    printf("Rotulo do vertice %d: ", i);
+    memset(rotulo, '\0', MAXTAMROTULO);
+    fgets(rotulo, (int) MAXTAMROTULO, stdin);
+    rotulo[strcspn(rotulo, "\n")] = '\0';
 
     if (!insere_vertice(&grafo, rotulo, strlen(rotulo), &to))
     {
@@ -49,6 +56,7 @@ int main(int argc, char *argv[])
 
   while (true)
   {
+    printf("origem destino peso: ");
     scanf("%u %u %d", &from, &to, &weight);
 
     if ((from == -1) || (to == -1))
@@ -62,7 +70,8 @@ int main(int argc, char *argv[])
     }
   }
 
-  imprime_grafo(&grafo);
+  //imprime_grafo(&grafo);
+  gera_graphviz(&grafo);
   colorir_grafo(&grafo, &cores);
   printf("V C\n");
 
@@ -73,5 +82,6 @@ int main(int argc, char *argv[])
 
   free(cores);
   destroi_grafo(&grafo);
+  printf("Final\n");
   return true;
 }
