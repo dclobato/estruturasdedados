@@ -5,19 +5,18 @@
 
 int main()
 {
-  int i;
+  unsigned limite = 10;
   TIPO_DADO valores[25];
   TIPO_DADO dado, dado2;
   tipoHeap tipo;
-  unsigned limite;
   HEAP h, p;
-  limite = 10;
-  srand((unsigned)time(NULL));
+
+  srand((unsigned) time(NULL));
   heap_inicializa(&h, limite + 1, MIN_HEAP);
   heap_inicializa(&p, limite + 1, MIN_HEAP);
   printf("Dados originais\n");
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     valores[i] = rand() % 100;
     printf("%d ", valores[i]);
@@ -30,14 +29,14 @@ int main()
   limite = heap_tamanho(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }
 
   printf("\n");
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", p.dados[i]);
   }
@@ -51,7 +50,7 @@ int main()
   limite = heap_tamanho(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }
@@ -68,7 +67,7 @@ int main()
   limite = heap_tamanho(&h);
   printf("Heap tipo %d com %u elementos\n", tipo, limite);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }
@@ -78,10 +77,9 @@ int main()
   heap_pop_push(&h, &dado, &dado2);
   tipo_heap(&h, &tipo);
   limite = heap_tamanho(&h);
-  printf("Tirou %d, colocou %d e ficou uma heap tipo %d com %u elementos\n",
-         dado, dado2, tipo, limite);
+  printf("Tirou %d, colocou %d e ficou uma heap tipo %d com %u elementos\n", dado, dado2, tipo, limite);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }
@@ -102,7 +100,7 @@ int main()
   tipo_heap(&h, &tipo);
   limite = heap_tamanho(&h);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }
@@ -123,7 +121,7 @@ int main()
   tipo_heap(&h, &tipo);
   limite = heap_tamanho(&h);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }
@@ -144,7 +142,7 @@ int main()
   tipo_heap(&h, &tipo);
   limite = heap_tamanho(&h);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }
@@ -158,10 +156,10 @@ int main()
   } while (!heap_remove_chave(&h, &dado));
 
   printf("Removido %d\n", dado);
-  __heap_dump(&h);
+  heapDump(&h);
   limite = heap_tamanho(&h);
 
-  for (i = 0; i < limite; i++)
+  for (int i = 0; i < limite; i++)
   {
     printf("%d ", h.dados[i]);
   }

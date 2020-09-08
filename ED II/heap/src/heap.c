@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <heap.h>
-#include <limits.h>
 
 bool heap_inicializa(HEAP *heap, unsigned tamanhoMaximo, tipoHeap tipo)
 {
@@ -12,27 +11,6 @@ bool heap_inicializa(HEAP *heap, unsigned tamanhoMaximo, tipoHeap tipo)
   heap->tipo = tipo;
   heap->dados = NULL;
   return true;
-}
-
-unsigned __heap_pai_nodo(unsigned nodo)
-{
-  if (nodo == 0)
-  {
-    return 0;
-  }
-  else
-  {
-    return (((nodo + 1) / 2) - 1);
-  }
-}
-unsigned __heap_filho_esquerdo_nodo(unsigned nodo)
-{
-  return ((nodo * 2) + 1);
-}
-
-unsigned __heap_filho_direito_nodo(unsigned nodo)
-{
-  return ((nodo * 2) + 2);
 }
 
 bool heap_destroi(HEAP *heap)
@@ -52,25 +30,21 @@ bool heap_destroi(HEAP *heap)
 
 bool heap_constroi(HEAP *heap, const TIPO_DADO *valores, unsigned tamanho)
 {
-  unsigned int inicio;
-
   if ((!heap_vazia(heap)) || (heap->dados != NULL))
   {
     return false;
   }
 
   heap->ocupados = tamanho;
-  heap->dados = (TIPO_DADO *) realloc(heap->dados,
-                                      tamanho * sizeof(TIPO_DADO));
+  heap->dados = (TIPO_DADO *) realloc(heap->dados, tamanho * sizeof(TIPO_DADO));
   memcpy(heap->dados, valores, tamanho * sizeof(TIPO_DADO));
 
   /* heapify */
-  for (inicio = (tamanho - 1) / 2; inicio >= 0; inicio--)
+  for (unsigned inicio = (tamanho - 1) / 2; inicio >= 0; inicio--)
   {
-    __heapfy(heap, inicio, tamanho);
+    heapfy(heap, inicio, tamanho);
 
-    if (inicio ==
-        0) // Para evitar o underflow do unsigned que seria causado pelo inicio--
+    if (inicio == 0) // Para evitar o underflow do unsigned que seria causado pelo inicio--
     {
       break;
     }
@@ -79,21 +53,21 @@ bool heap_constroi(HEAP *heap, const TIPO_DADO *valores, unsigned tamanho)
   return true;
 }
 
-bool __heapfy(HEAP *heap, unsigned inicio, unsigned final)
+bool heapfy(HEAP *heap, unsigned inicio, unsigned final)
 {
   unsigned raiz, filho;
   raiz = inicio;
 
-  while (__heap_filho_esquerdo_nodo(raiz) < final)
+  while (FILHO_ESQUERDO_NODO(raiz) < final)
   {
-    filho = __heap_filho_esquerdo_nodo(raiz);
+    filho = FILHO_ESQUERDO_NODO(raiz);
 
     switch (heap->tipo)
     {
       case MAX_HEAP:
         if (((filho + 1) < final) && (heap->dados[filho + 1] > heap->dados[filho]))
         {
-          filho = __heap_filho_direito_nodo(raiz);
+          filho = FILHO_DIREITO_NODO(raiz);
         }
 
         break;
@@ -101,7 +75,7 @@ bool __heapfy(HEAP *heap, unsigned inicio, unsigned final)
       case MIN_HEAP:
         if (((filho + 1) < final) && (heap->dados[filho + 1] < heap->dados[filho]))
         {
-          filho = __heap_filho_direito_nodo(raiz);
+          filho = FILHO_DIREITO_NODO(raiz);
         }
 
         break;
@@ -156,24 +130,22 @@ bool heap_vazia(const HEAP *heap)
   return (heap->ocupados == 0);
 }
 
-bool tipo_heap (const HEAP *heap, tipoHeap *tipo)
+bool tipo_heap(const HEAP *heap, tipoHeap *tipo)
 {
   *tipo = heap->tipo;
   return true;
 }
 
-bool heap_inverte (HEAP *heap)
+bool heap_inverte(HEAP *heap)
 {
-  unsigned inicio;
   heap->tipo = heap->tipo == MIN_HEAP ? MAX_HEAP : MIN_HEAP;
 
   /* heapify */
-  for (inicio = (heap->ocupados - 1) / 2; inicio >= 0; inicio--)
+  for (unsigned inicio = (heap->ocupados - 1) / 2; inicio >= 0; inicio--)
   {
-    __heapfy(heap, inicio, heap->ocupados);
+    heapfy(heap, inicio, heap->ocupados);
 
-    if (inicio ==
-        0) // Para evitar o underflow do unsigned que seria causado pelo inicio--
+    if (inicio == 0) // Para evitar o underflow do unsigned que seria causado pelo inicio--
     {
       break;
     }
@@ -203,9 +175,8 @@ bool heap_pop(HEAP *heap, TIPO_DADO *valor)
   *valor = heap->dados[0];
   heap->ocupados = heap->ocupados - 1;
   heap->dados[0] = heap->dados[heap->ocupados];
-  heap->dados = (TIPO_DADO *) realloc(heap->dados,
-                                      heap->ocupados * sizeof(TIPO_DADO));
-  __heapfy(heap, 0, heap->ocupados);
+  heap->dados = (TIPO_DADO *) realloc(heap->dados, heap->ocupados * sizeof(TIPO_DADO));
+  heapfy(heap, 0, heap->ocupados);
   return true;
 }
 
@@ -218,7 +189,7 @@ bool heap_pop_push(HEAP *heap, TIPO_DADO *valor, const TIPO_DADO *entrando)
 
   *valor = heap->dados[0];
   heap->dados[0] = *entrando;
-  __heapfy(heap, 0, heap->ocupados);
+  heapfy(heap, 0, heap->ocupados);
   return true;
 }
 
@@ -232,8 +203,7 @@ bool heap_push(HEAP *heap, const TIPO_DADO *valor)
     return false;
   }
 
-  heap->dados = (TIPO_DADO *) realloc(heap->dados,
-                                      (heap->ocupados + 1) * sizeof(TIPO_DADO));
+  heap->dados = (TIPO_DADO *) realloc(heap->dados, (heap->ocupados + 1) * sizeof(TIPO_DADO));
   heap->dados[heap->ocupados] = *valor;
   heap->ocupados = heap->ocupados + 1;
   rearranjar = false;
@@ -241,9 +211,7 @@ bool heap_push(HEAP *heap, const TIPO_DADO *valor)
   switch (heap->tipo)
   {
     case MIN_HEAP:
-      if (heap->dados[__heap_pai_nodo(heap->ocupados - 1)] >
-          heap->dados[heap->ocupados -
-                                     1])
+      if (heap->dados[NODO_PAI(heap->ocupados - 1)] > heap->dados[heap->ocupados - 1])
       {
         rearranjar = true;
       }
@@ -251,9 +219,7 @@ bool heap_push(HEAP *heap, const TIPO_DADO *valor)
       break;
 
     case MAX_HEAP:
-      if (heap->dados[__heap_pai_nodo(heap->ocupados - 1)] <
-          heap->dados[heap->ocupados -
-                                     1])
+      if (heap->dados[NODO_PAI(heap->ocupados - 1)] < heap->dados[heap->ocupados - 1])
       {
         rearranjar = true;
       }
@@ -266,10 +232,9 @@ bool heap_push(HEAP *heap, const TIPO_DADO *valor)
     /* heapify */
     for (inicio = heap->ocupados / 2; inicio >= 0; inicio--)
     {
-      __heapfy(heap, inicio, heap->ocupados);
+      heapfy(heap, inicio, heap->ocupados);
 
-      if (inicio ==
-          0) // Para evitar o underflow do unsigned que seria causado pelo inicio--
+      if (inicio == 0) // Para evitar o underflow do unsigned que seria causado pelo inicio--
       {
         break;
       }
@@ -279,9 +244,9 @@ bool heap_push(HEAP *heap, const TIPO_DADO *valor)
   return true;
 }
 
-void __heap_dump(const HEAP *heap)
+void heapDump(const HEAP *heap)
 {
-  unsigned tamanho, i;
+  unsigned tamanho;
   unsigned e, d;
   tamanho = heap_tamanho(heap);
   printf("========================\n");
@@ -291,12 +256,12 @@ void __heap_dump(const HEAP *heap)
   printf("Pos Chave Esq Dir Pai\n");
   printf("-----------------------\n");
 
-  for (i = 0; i < tamanho; i++)
+  for (int nodo = 0; nodo < tamanho; nodo++)
   {
-    e = __heap_filho_esquerdo_nodo(i);
-    d = __heap_filho_direito_nodo(i);
-    printf("%3u %5d %3d %3d %3d\n", i, heap->dados[i], e > tamanho - 1 ? -1 : e,
-           d > tamanho - 1 ? -1 : d, i == 0 ? -1 : __heap_pai_nodo(i));
+    e = FILHO_ESQUERDO_NODO(nodo);
+    d = FILHO_DIREITO_NODO(nodo);
+    printf("%3u %5d %3d %3d %3d\n", nodo, heap->dados[nodo], e > tamanho - 1 ? -1 : e, d > tamanho - 1 ? -1 : d,
+           nodo == 0 ? -1 : NODO_PAI(nodo));
   }
 
   printf("========================\n\n");
@@ -328,12 +293,11 @@ bool heap_remove_chave(HEAP *heap, const TIPO_DADO *valor)
 
   heap->dados[i] = heap->dados[tamanho - 1];
   heap->ocupados = heap->ocupados - 1;
-  heap->dados = (TIPO_DADO *) realloc(heap->dados,
-                                      heap->ocupados * sizeof(TIPO_DADO));
+  heap->dados = (TIPO_DADO *) realloc(heap->dados, heap->ocupados * sizeof(TIPO_DADO));
 
   for (i = heap->ocupados / 2; i >= 0; i--)
   {
-    __heapfy(heap, i, heap->ocupados);
+    heapfy(heap, i, heap->ocupados);
 
     if (i == 0) // Para evitar o underflow do unsigned que seria causado pelo inicio--
     {
