@@ -1,87 +1,118 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <grafo.h>
-#include <stdbool.h>
+#include "grafo.h"
+#include "utilitarios.h"
 
-int main(int argc, char *argv[])
+int main()
 {
-  TipoGrafo grafo;
-  unsigned *cores;
-  char rotulo[MAXTAMROTULO];
-  unsigned from, to, nv, i;
-  int weight;
-  int dirigido;
-  int ponderado;
+  GRAFO grafo;
+  char rotulo[80];
+  RSLT_BUSCA RsltBusca;
+  unsigned int num_vertices;
+  unsigned int de, para;
+  bool direcionado;
+  bool ponderado;
+  int peso;
+  ArvoreGeradoraMinima arvore;
+  CAMINHO *caminho;
+  unsigned int *cores;
 
-  printf("Numero de vertices: ");
-  scanf("%u", &nv);
+  ler_InteiroLongoSemSinal((unsigned long *) &num_vertices, "Digite o numero de vertices", 1, 100);
+  direcionado = ler_SimNao("Direcionado?");
+  ponderado = ler_SimNao("Ponderado?");
 
-  if (nv > MAXNUMVERTICES)
+  if (!criar_grafo(&grafo, num_vertices, direcionado, ponderado))
   {
-    printf("Numero de vertices maior que a capacidade\n");
+    printf("Nao deu para criar o grafo\n");
     exit(1);
   }
-
-  printf("Dirigido? ");
-  scanf("%d", &dirigido);
-  printf("Ponderado? ");
-  scanf("%d", &ponderado);
-
-  if (!cria_grafo(&grafo, nv, (bool) dirigido, ponderado))
+  else
   {
-    printf("Problemas para criar o grafo\n");
-    exit(1);
+    printf("Criado um grafo %s %s\n", direcionado ? "direcionado" : "nao direcionado",
+           ponderado ? "ponderado" : "nao ponderado");
   }
 
-  // limpa buffer dos inteiros
-  scanf("%*c");
-
-  for (i = 0; i < nv; i++)
+  for (unsigned int vertice = 0; vertice < num_vertices; ++vertice)
   {
-    printf("Rotulo do vertice %d: ", i);
-    memset(rotulo, '\0', MAXTAMROTULO);
-    fgets(rotulo, (int) MAXTAMROTULO, stdin);
-    rotulo[strcspn(rotulo, "\n")] = '\0';
-
-    if (!insere_vertice(&grafo, rotulo, strlen(rotulo), &to))
+    if (!adicionar_vertice(&grafo, NULL, 0, NULL))
     {
-      printf("Nao foi possivel inserir o vertice\n");
+      printf("Impossivel adicionar vertice %u\n", vertice);
+      exit(1);
+    }
+  }
+
+  mostrar_rotulos(&grafo);
+
+  printf("Renomeando vertices...\n");
+  do
+  {
+    printf("Digite %u para parar\n", grafo.max_vertices);
+    ler_InteiroLongoSemSinal((unsigned long *) &de, "Mudar rotulo de qual vertice?", 0, grafo.max_vertices);
+    if (de == grafo.max_vertices)
+      break;
+    printf("Rotulo do vertice %u: ", de);
+    ler_String(rotulo, NULL, 80);
+    renomear_vertice(&grafo, rotulo, strlen(rotulo), de);
+    mostrar_rotulos(&grafo);
+  } while (1);
+
+
+  printf("Adicionando arestas...\n");
+  do
+  {
+    printf("Digite %u para parar\n", grafo.max_vertices);
+    ler_InteiroLongoSemSinal((unsigned long *) &de, "Vertice de origem", 0, grafo.max_vertices);
+    if (de == grafo.max_vertices)
+      break;
+    ler_InteiroLongoSemSinal((unsigned long *) &para, "Vertice de destino", 0, grafo.max_vertices);
+    if (para == grafo.max_vertices)
+      break;
+    peso = 1;
+    if (ponderado)
+    {
+      printf("Peso da aresta entre %u e %u: ", de, para);
+      ler_InteiroLongo((long *) &peso, NULL, INT_MIN, INT_MAX);
+    }
+
+    if (adicionar_aresta(&grafo, de, para, peso))
+    {
+      printf("Aresta criada\n");
     }
     else
     {
-      printf("Inserido vertice %u\n", to);
+      printf("Impossivel criar a aresta\n");
     }
-  }
+  } while (1);
 
-  while (true)
+  mostrar_rotulos(&grafo);
+  imprimir_grafo(&grafo, NULL);
+
+  printf("Removendo arestas...\n");
+  do
   {
-    printf("origem destino peso: ");
-    scanf("%u %u %d", &from, &to, &weight);
-
-    if ((from == -1) || (to == -1))
-    {
+    printf("Digite %u para parar\n", grafo.max_vertices);
+    ler_InteiroLongoSemSinal((unsigned long *) &de, "Vertice de origem", 0, grafo.max_vertices);
+    if (de == grafo.max_vertices)
       break;
-    }
+    ler_InteiroLongoSemSinal((unsigned long *) &para, "Vertice de destino", 0, grafo.max_vertices);
+    if (para == grafo.max_vertices)
+      break;
 
-    if (!insere_aresta(&grafo, from, to, weight))
+    if (remover_aresta(&grafo, de, para))
     {
-      printf("Nao foi possivel inserir a aresta\n");
+      printf("Aresta removida\n");
     }
-  }
+    else
+    {
+      printf("Impossivel remover a aresta\n");
+    }
+  } while (1);
 
-  //imprime_grafo(&grafo);
-  gera_graphviz(&grafo);
   colorir_grafo(&grafo, &cores);
-  printf("V C\n");
-
-  for (i = 0; i < grafo.numVertices; i++)
-  {
-    printf("%s %u\n", grafo.rotulos[i], cores[i]);
-  }
-
+  imprimir_grafo(&grafo, cores);
   free(cores);
-  destroi_grafo(&grafo);
-  printf("Final\n");
-  return true;
+
+  destruir_grafo(&grafo);
+
+  return 0;
 }

@@ -5,13 +5,13 @@
 
 typedef int TIPO_DADO;
 
-typedef struct __noh_pilha
+typedef struct st_noh_pilha
 {
   TIPO_DADO dado;
-  struct __noh_pilha *sucessor;
+  struct st_noh_pilha *sucessor;
 } NOH_PILHA;
 
-typedef struct __descritor_pilha
+typedef struct st_desc_pilha
 {
   unsigned int numelementos;
   // qualquer outra informação que valha a pena manter armazenada
@@ -26,6 +26,7 @@ typedef struct __descritor_pilha
 } DESCRITOR_PILHA;
 
 typedef DESCRITOR_PILHA PILHA;
+
 
 bool pilha_inicializar(PILHA *pilha);
 bool pilha_destruir(PILHA *pilha);

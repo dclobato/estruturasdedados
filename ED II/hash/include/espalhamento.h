@@ -7,7 +7,10 @@
 
 #include <stdbool.h>
 
-typedef struct registro
+static const unsigned short HASH_MIN_N = 4;
+static const unsigned short HASH_MAX_N = 50;
+
+typedef struct
 {
   char nome[30];
   char email[50];
@@ -18,30 +21,30 @@ typedef enum
   LIVRE, OCUPADO, REMOVIDO
 } EstadoDoSlot;
 
-typedef struct hash
+typedef struct
 {
   REGISTRO *chaves;
   EstadoDoSlot *estados;
-  unsigned long tamanho;
-  unsigned long ocupados;
-  unsigned short N;
+  unsigned long int tamanho;
+  unsigned long int ocupados;
+  unsigned short int N;
 } HASH;
 
 bool criar_tabela_hash(HASH *tabela);
 bool destruir_tabela_hash(HASH *tabela);
-bool inserir_na_tabela_hash(HASH *tabela, REGISTRO *registro);
-bool apagar_da_tabela_hash(HASH *tabela, REGISTRO *registro);
-bool busca_na_tabela_hash(HASH *tabela, REGISTRO *registro);
+bool inserir_na_tabela_hash(HASH *tabela, const REGISTRO *registro);
+bool apagar_da_tabela_hash(HASH *tabela, const REGISTRO *registro);
+bool busca_na_tabela_hash(const HASH *tabela, REGISTRO *registro);
 
-void ocupacao_da_tabela_hash(HASH *tabela);
+void ocupacao_da_tabela_hash(const HASH *tabela);
 
-unsigned long tamanho_da_tabela_hash(HASH *tabela);
-unsigned long registros_na_tabela_hash(HASH *tabela);
-double densidade_da_tabela_hash(HASH *tabela);
+unsigned long tamanho_da_tabela_hash(const HASH *tabela);
+unsigned long registros_na_tabela_hash(const HASH *tabela);
+double densidade_da_tabela_hash(const HASH *tabela);
 bool expandir_tabela_hash(HASH *tabela);
 bool encolher_tabela_hash(HASH *tabela);
 bool calcula_primo_proximo_2aN(unsigned short N, unsigned long *primo);
 
-unsigned long calcular_valor_do_hash(char *chave, unsigned long M);
+unsigned long calcular_valor_do_hash(const char *chave, unsigned long M);
 
 #endif //ESPALHAMENTO_ESPALHAMENTO_H

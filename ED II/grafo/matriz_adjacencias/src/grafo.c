@@ -1,839 +1,754 @@
+//
+// Created by danie on 05/08/2020.
+//
+#include "grafo.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
-#include <string.h>
-#include <grafo.h>
-#include <stdbool.h>
 
-bool cria_grafo(TipoGrafo *grafo, unsigned maximoVertices, bool direcionado, bool ponderado)
+bool criar_grafo(GRAFO *grafo, unsigned int max_vertices, bool direcionado, bool ponderado)
 {
-  if ((maximoVertices > MAXNUMVERTICES) || (maximoVertices < 1))
+  if (max_vertices < 1)
   {
     return false;
   }
 
-  grafo->maxVertices = maximoVertices;
-  grafo->numVertices = 0;
-  grafo->numArestas = 0;
+  grafo->max_vertices = max_vertices;
+  grafo->num_vertices = 0;
+  grafo->num_arestas = 0;
   grafo->direcionado = direcionado;
   grafo->ponderado = ponderado;
-  // Alocando dinamicamente a matriz de adjacencias
-  grafo->matriz = (int **) malloc(maximoVertices * sizeof(int *));
 
-  for (unsigned i = 0; i < grafo->maxVertices; i++)
+  // Alocar dinamicamente a matriz de adjacencias
+  grafo->matriz = (int **) malloc(max_vertices * sizeof(int *));
+  if (!grafo->matriz)
   {
-    grafo->matriz[i] = (int *) malloc(maximoVertices * sizeof(int));
+    return false;
+  }
 
-    for (unsigned j = 0; j < grafo->maxVertices; j++)
+  for (unsigned int de = 0; de < max_vertices; ++de)
+  {
+    grafo->matriz[de] = (int *) malloc(max_vertices * sizeof(int));
+    if (!grafo->matriz[de])
     {
-      grafo->matriz[i][j] = 0;
+      destruir_grafo(grafo);
+    }
+    for (int para = 0; para < max_vertices; ++para)
+    {
+      grafo->matriz[de][para] = 0;
     }
   }
 
-  // Alocando dinamicamente o vetor de rotulos
-  grafo->rotulos = (char **) malloc(grafo->maxVertices * sizeof(char *));
-
-  for (unsigned i = 0; i < grafo->maxVertices; i++)
+  // Alocar dinamicamente o vetor de rotulos
+  grafo->rotulos = (char **) malloc(grafo->max_vertices * sizeof(char *));
+  if (!grafo->rotulos)
   {
-    grafo->rotulos[i] = (char *) malloc((MAXTAMROTULO + 1) * sizeof(char));
-    memset(grafo->rotulos[i], '\0', (size_t) MAXTAMROTULO + 1);
+    destruir_grafo(grafo);
+  }
+  for (unsigned int de = 0; de < max_vertices; ++de)
+  {
+    grafo->rotulos[de] = NULL;
   }
 
   return true;
 }
 
-bool destroi_grafo(TipoGrafo *grafo)
+bool destruir_grafo(GRAFO *grafo)
 {
-  for (unsigned i = 0; i < grafo->maxVertices; i++)
+  for (unsigned int de = 0; de < grafo->max_vertices; ++de)
   {
-    free(grafo->rotulos[i]);
-    free(grafo->matriz[i]);
-  }
-
-  free(grafo->rotulos);
-  free(grafo->matriz);
-  return true;
-}
-
-bool insere_aresta(TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, int peso)
-{
-  if ((grafo->numVertices == 0) || (verticeOrigem > grafo->numVertices) || (verticeDestino > grafo->numVertices) ||
-      (grafo->numArestas == MAXNUMARESTAS))
-  {
-    return false;
-  }
-
-  if ((grafo->ponderado) && (peso == 0))
-  {
-    return false;
-  }
-
-  grafo->matriz[verticeOrigem][verticeDestino] = grafo->ponderado ? peso : 1;
-  if (!grafo->direcionado)
-  {
-    grafo->matriz[verticeDestino][verticeOrigem] = grafo->ponderado ? peso : 1;
-  }
-
-  grafo->numArestas++;
-  return true;
-}
-
-bool insere_vertice(TipoGrafo *grafo, char *rotulo, size_t tamanho, unsigned *numeroVerticeInserido)
-{
-  if ((grafo->numVertices == MAXNUMVERTICES) || (tamanho > MAXTAMROTULO))
-  {
-    return false;
-  }
-
-  *numeroVerticeInserido = grafo->numVertices;
-  memset(grafo->rotulos[*numeroVerticeInserido], '\0', MAXTAMROTULO);
-  strncpy(grafo->rotulos[*numeroVerticeInserido], rotulo, tamanho);
-  grafo->numVertices++;
-  return true;
-}
-
-bool remove_aresta(TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, int *peso)
-{
-  if ((grafo->numVertices == 0) || (verticeOrigem > grafo->numVertices) || (verticeDestino > grafo->numVertices))
-  {
-    return false;
-  }
-
-  *peso = grafo->matriz[verticeOrigem][verticeDestino];
-
-  if (*peso == 0)
-  {
-    return false;
-  }
-
-  grafo->matriz[verticeOrigem][verticeDestino] = 0;
-  if (!grafo->direcionado)
-  {
-    grafo->matriz[verticeDestino][verticeOrigem] = 0;
-  }
-
-  grafo->numArestas--;
-  return true;
-}
-
-bool existe_aresta(const TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino)
-{
-  if ((grafo->numVertices == 0) || (verticeOrigem > grafo->numVertices) || (verticeDestino > grafo->numVertices))
-  {
-    return false;
-  }
-
-  return (grafo->matriz[verticeOrigem][verticeDestino] != 0);
-}
-
-void imprime_grafo(const TipoGrafo *grafo)
-{
-  printf("----------------------------------------\n");
-  printf("Rotulos dos vertices\n");
-  printf("--------------------\n");
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
-  {
-    printf("Vertice %u: %s\n", i, grafo->rotulos[i]);
-  }
-
-  printf("--------------------\n");
-  printf("\n");
-  printf("   ");
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
-  {
-    printf("%3d", i);
-  }
-
-  printf("\n");
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
-  {
-    printf("%3d", i);
-
-    for (unsigned j = 0; j < grafo->numVertices; j++)
+    if (grafo->rotulos[de])
     {
-      printf("%3d", grafo->matriz[i][j]);
+      free(grafo->rotulos[de]);
+    }
+    if (grafo->matriz[de])
+    {
+      free(grafo->matriz[de]);
+    }
+  }
+
+  if (grafo->matriz)
+  {
+    free(grafo->matriz);
+  }
+
+  if (grafo->rotulos)
+  {
+    free(grafo->rotulos);
+  }
+
+  return true;
+}
+
+bool adicionar_vertice(GRAFO *grafo, char *rotulo, size_t tamanho, unsigned int *numeroVerticeInserido)
+{
+  if (grafo->num_vertices == grafo->max_vertices)
+  {
+    return false;
+  }
+
+  if (numeroVerticeInserido)
+  {
+    *numeroVerticeInserido = grafo->num_vertices;
+  }
+
+  if (tamanho > 1)
+  {
+    grafo->rotulos[grafo->num_vertices] = (char *) malloc((tamanho + 1) * sizeof(char));
+    if (!grafo->rotulos[grafo->num_vertices])
+    {
+      return false;
+    }
+    strncpy(grafo->rotulos[grafo->num_vertices], rotulo, tamanho);
+  }
+
+  grafo->num_vertices = grafo->num_vertices + 1;
+  return true;
+}
+
+bool renomear_vertice(GRAFO *grafo, char *rotulo, size_t tamanho, unsigned int num_vertice)
+{
+  char *temp;
+
+  if (num_vertice >= grafo->num_vertices)
+  { // renomear vertice que nao existe, erro
+    return false;
+  }
+
+  temp = (char *) malloc((tamanho + 1) * sizeof(char));
+  if (!temp)
+  {
+    return false;
+  }
+  memset(temp, 0, tamanho + 1);
+
+  strncpy(temp, rotulo, tamanho);
+  if (grafo->rotulos[num_vertice])
+  {
+    free(grafo->rotulos[num_vertice]);
+  }
+
+  grafo->rotulos[num_vertice] = temp;
+  return true;
+}
+
+void mostrar_rotulos(const GRAFO *grafo)
+{
+  printf("Vertice Rotulo\n");
+  printf("------- ---- - -  -  -    -\n");
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
+  {
+    printf("%7u %s\n", vertice, grafo->rotulos[vertice] ? grafo->rotulos[vertice] : "-- Nao definido --");
+  }
+  printf("------- ---- - -  -  -    -\n");
+}
+
+bool adicionar_aresta(GRAFO *grafo, unsigned int de, unsigned int para, int peso)
+{
+  if ((de > grafo->num_vertices) || (para > grafo->num_vertices) || (peso == 0))
+  {
+    return false;
+  }
+
+  if (existe_aresta(grafo, de, para, NULL))
+  { // ja existe a aresta. Mude o peso, e nao crie
+    return false;
+  }
+
+  // Grafo nao direcionado nao pode ter ciclo
+  if ((de == para) && (!grafo->direcionado))
+  {
+    return false;
+  }
+
+  grafo->matriz[de][para] = peso;
+  grafo->num_arestas = grafo->num_arestas + 1;
+  if (!grafo->direcionado)
+  {
+    grafo->matriz[para][de] = peso;
+  }
+  return true;
+}
+
+bool remover_aresta(GRAFO *grafo, unsigned int de, unsigned int para)
+{
+  if ((de > grafo->num_vertices) || (para > grafo->num_vertices))
+  {
+    return false;
+  }
+
+  if (!existe_aresta(grafo, de, para, NULL))
+  {
+    return false;
+  }
+
+  grafo->matriz[de][para] = 0;
+  grafo->num_arestas = grafo->num_arestas - 1;
+  if (!grafo->direcionado)
+  {
+    grafo->matriz[para][de] = 0;
+  }
+
+  return true;
+}
+
+bool existe_aresta(const GRAFO *grafo, unsigned int de, unsigned int para, int *peso)
+{
+  if ((de > grafo->num_vertices) || (para > grafo->num_vertices))
+  {
+    return false;
+  }
+
+  if (peso)
+  {
+    *peso = grafo->matriz[de][para];
+  }
+  return (grafo->matriz[de][para] != 0);
+}
+
+bool buscar_em_largura(const GRAFO *grafo, int origem, RSLT_BUSCA *resultado_busca)
+{
+  unsigned int *fila;
+  int inicio, final;
+  unsigned int de;
+  inicio = 0;
+  final = 0;
+
+  if (origem > grafo->num_vertices)
+  {
+    return false;
+  }
+
+  if (grafo->num_vertices < 1)
+  {
+    return false;
+  }
+
+  fila = (unsigned int *) malloc(grafo->num_vertices * sizeof(unsigned int));
+  if (!fila)
+  {
+    return false;
+  }
+
+  for (int i = 0; i < grafo->num_vertices; i++)
+  {
+    resultado_busca->vertices[i].estadoVertice = NAO_PROCESSADO;
+    resultado_busca->vertices[i].descoberta = UINT_MAX;
+    resultado_busca->vertices[i].pai = UINT_MAX;
+  }
+  resultado_busca->num_vertices = 0;
+
+  resultado_busca->vertices[origem].estadoVertice = EM_PROCESSAMENTO;
+  resultado_busca->vertices[origem].descoberta = 0;
+
+  // enfileirar
+  fila[final++] = origem;
+
+  while (inicio != final)
+  {
+    // desenfileirar
+    de = fila[inicio];
+    inicio = inicio + 1;
+    for (unsigned int para = 0; para < grafo->num_vertices; para++)
+    {
+      // é adjacente
+      if (existe_aresta(grafo, de, para, NULL))
+      {
+        if (resultado_busca->vertices[para].estadoVertice == NAO_PROCESSADO)
+        {
+          resultado_busca->vertices[para].estadoVertice = EM_PROCESSAMENTO;
+          resultado_busca->vertices[para].descoberta = resultado_busca->vertices[de].descoberta + 1;
+          resultado_busca->vertices[para].pai = de;
+          // enfileirar
+          fila[final++] = para;
+        }
+      }
+    }
+    resultado_busca->vertices[de].estadoVertice = PROCESSADO;
+    resultado_busca->num_vertices = resultado_busca->num_vertices + 1;
+  }
+  free(fila);
+  return true;
+}
+
+bool buscar_em_profundidade(const GRAFO *grafo, RSLT_BUSCA *resultado_busca)
+{
+  unsigned int tempo_global;
+
+  // Preparacao dos nos, colocando todos nao processados e sem pai
+  for (int vertice = 0; vertice < grafo->num_vertices; vertice++)
+  {
+    resultado_busca->vertices[vertice].estadoVertice = NAO_PROCESSADO;
+    resultado_busca->vertices[vertice].pai = UINT_MAX;
+  }
+  resultado_busca->num_vertices = 0;
+  resultado_busca->DAG = true;
+  tempo_global = 0;
+
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
+  {
+    if (resultado_busca->vertices[vertice].estadoVertice == NAO_PROCESSADO)
+    {
+      buscar_em_profundidade_visita(grafo, vertice, &tempo_global, resultado_busca);
+    }
+  }
+
+  return true;
+}
+
+void buscar_em_profundidade_visita(const GRAFO *grafo, unsigned int de, unsigned int *relogio_global,
+                                   RSLT_BUSCA *resultado_busca)
+{
+  *relogio_global = *relogio_global + 1;
+  resultado_busca->vertices[de].descoberta = *relogio_global;
+  resultado_busca->vertices[de].estadoVertice = EM_PROCESSAMENTO;
+
+  // Varrer todos os vertices procurando adjacencia
+  for (unsigned int para = 0; para < grafo->num_vertices; para++)
+  {
+    // eh adjacente
+    if (existe_aresta(grafo, de, para, NULL))
+    {
+      if (resultado_busca->vertices[para].estadoVertice == EM_PROCESSAMENTO)
+      {
+        resultado_busca->DAG = false;
+      }
+
+      if (resultado_busca->vertices[para].estadoVertice == NAO_PROCESSADO)
+      {
+        resultado_busca->vertices[para].pai = de;
+        buscar_em_profundidade_visita(grafo, para, relogio_global, resultado_busca);
+      }
+    }
+  }
+  resultado_busca->vertices[de].estadoVertice = PROCESSADO;
+  resultado_busca->num_vertices = resultado_busca->num_vertices + 1;
+  *relogio_global = *relogio_global + 1;
+  resultado_busca->vertices[de].final = *relogio_global;
+}
+
+bool criar_ordenacao_topologica(const GRAFO *grafo, unsigned int **vertices)
+{
+  RSLT_BUSCA resultado;
+  VERTEX temp;
+
+  buscar_em_profundidade(grafo, &resultado);
+
+  if (!resultado.DAG)
+  {
+    return false;
+  }
+
+  for (unsigned int vertice = 0; vertice < resultado.num_vertices; vertice++)
+  {
+    resultado.vertices[vertice].numeroDoVertice = vertice;
+  }
+
+  for (unsigned int ex = resultado.num_vertices - 1; ex > 0; ex--)
+  {
+    for (unsigned int in = 0; in < ex; in++)
+    {
+      if (resultado.vertices[in + 1].final >= resultado.vertices[in].final)
+      {
+        temp = resultado.vertices[in + 1];
+        resultado.vertices[in + 1] = resultado.vertices[in];
+        resultado.vertices[in] = temp;
+      }
+    }
+  }
+
+  *vertices = (unsigned int *) malloc(resultado.num_vertices * sizeof(unsigned int));
+  if (!(*vertices))
+  {
+    return false;
+  }
+  for (unsigned int vertice = 0; vertice < resultado.num_vertices; vertice++)
+  {
+    *vertices[vertice] = resultado.vertices[vertice].numeroDoVertice;
+  }
+  return true;
+}
+
+void imprimir_grafo(const GRAFO *grafo, const unsigned int *cores)
+{
+  printf("%sgraph G {\n", grafo->direcionado ? "di" : "");
+  printf("   node [shape = ellipse];\n");
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
+  {
+    if (grafo->rotulos[vertice])
+    {
+      printf("   \"%s\"", grafo->rotulos[vertice]);
+    }
+    else
+    {
+      printf("   %u", vertice);
     }
 
-    printf("\n");
+    if (cores)
+    {
+      printf(" [color = \"%s\"]", GRAFO_H_LISTA_CORES[cores[vertice] % GRAFO_H_TOTAL_DE_CORES]);
+    }
+    printf(";\n");
   }
-
-  printf("----------------------------------------\n");
-}
-
-void gera_graphviz(const TipoGrafo *grafo)
-{
-  int peso;
 
   if (grafo->direcionado)
   {
-    printf("digraph G {\n");
+    for (unsigned int linha = 0; linha < grafo->num_vertices; linha++)
+    {
+      for (unsigned int coluna = 0; coluna < grafo->num_vertices; coluna++)
+      {
+        if (existe_aresta(grafo, linha, coluna, NULL))
+        {
+          if (grafo->rotulos[linha])
+          {
+            printf("   \"%s\" -> ", grafo->rotulos[linha]);
+          }
+          else
+          {
+            printf("   %u -> ", linha);
+          }
+
+          if (grafo->rotulos[coluna])
+          {
+            printf("\"%s\"", grafo->rotulos[coluna]);
+          }
+          else
+          {
+            printf("%u", coluna);
+          }
+
+          if (grafo->ponderado)
+          {
+            printf(" [label=\"%d\"];\n", grafo->matriz[linha][coluna]);
+          }
+          else
+          {
+            printf(";\n");
+          }
+        }
+      }
+    }
   }
   else
   {
-    printf("graph G {\n");
-  }
-  printf("  node [shape=circle];\n");
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
-  {
-    printf("  \"%s\";\n", grafo->rotulos[i]);
-  }
-  for (unsigned de = 0; de < grafo->numVertices; de++)
-  {
-    for (unsigned para = 0; para < grafo->numVertices; para++)
+    for (int linha = 0; linha < grafo->num_vertices; linha++)
     {
-      if (grafo->matriz[de][para] != 0)
+      for (int coluna = linha; coluna < grafo->num_vertices; coluna++)
       {
-        printf("  \"%s\" %s \"%s\"", grafo->rotulos[de], grafo->direcionado ? "->" : "--", grafo->rotulos[para]);
-        if (grafo->ponderado)
+        if (existe_aresta(grafo, linha, coluna, NULL))
         {
-          obter_peso_aresta(grafo, de, para, &peso);
-          printf(" [label=%d]", peso);
+          if (grafo->rotulos[linha])
+          {
+            printf("   \"%s\" -- ", grafo->rotulos[linha]);
+          }
+          else
+          {
+            printf("   %u -- ", linha);
+          }
+
+          if (grafo->rotulos[coluna])
+          {
+            printf("\"%s\"", grafo->rotulos[coluna]);
+          }
+          else
+          {
+            printf("%u", coluna);
+          }
+
+          if (grafo->ponderado)
+          {
+            printf(" [label=\"%d\"];\n", grafo->matriz[linha][coluna]);
+          }
+          else
+          {
+            printf(";\n");
+          }
         }
-        printf(";\n");
       }
     }
   }
   printf("}\n");
 }
 
-bool obter_peso_aresta(const TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, int *peso)
+bool criar_agm_prim(const GRAFO *grafo, unsigned int origem, ArvoreGeradoraMinima *arvore)
 {
-  if ((grafo->numVertices == 0) || (verticeOrigem > grafo->numVertices) || (verticeDestino > grafo->numVertices))
-  {
-    return false;
-  }
-
-  *peso = grafo->matriz[verticeOrigem][verticeDestino];
-  return true;
-}
-
-bool alterar_peso_aresta(const TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, int peso)
-{
-  if ((grafo->numVertices == 0) || (verticeOrigem > grafo->numVertices) || (verticeDestino > grafo->numVertices) ||
-      (peso == 0))
-  {
-    return false;
-  }
-
-  if (!existe_aresta(grafo, verticeOrigem, verticeDestino))
-  {
-    return false;
-  }
-
-  grafo->matriz[verticeOrigem][verticeDestino] = peso;
-  return true;
-}
-
-bool obter_lista_adjacentes(const TipoGrafo *grafo, unsigned vertice, ListaVerticesAdjacentes *listaAdjacentes,
-                            bool complemento)
-{
+  bool *pertenceAGM;
+  unsigned int de;
   int peso;
 
-  if ((grafo->numVertices == 0) || (vertice > grafo->numVertices))
+  if ((grafo->num_vertices == 0) || (origem > grafo->num_vertices))
   {
     return false;
   }
 
-  listaAdjacentes->numAdjacentes = 0;
-  listaAdjacentes->listaDeVertices = (RegistroVertices *) malloc(grafo->numVertices * sizeof(RegistroVertices));
-
-  // complemento == true --> lista de NAO adjacentes
-  if (!complemento)
-  {
-    for (unsigned i = 0; i < grafo->numVertices; i++)
-    {
-      if (existe_aresta(grafo, vertice, i))
-      {
-        obter_peso_aresta(grafo, vertice, i, &peso);
-        listaAdjacentes->listaDeVertices[listaAdjacentes->numAdjacentes].vertice = i;
-        listaAdjacentes->listaDeVertices[listaAdjacentes->numAdjacentes].peso = peso;
-        listaAdjacentes->numAdjacentes++;
-      }
-    }
-  }
-  else
-  {
-    for (unsigned i = 0; i < grafo->numVertices; i++)
-    {
-      if (!existe_aresta(grafo, vertice, i))
-      {
-        listaAdjacentes->listaDeVertices[listaAdjacentes->numAdjacentes].vertice = i;
-        listaAdjacentes->listaDeVertices[listaAdjacentes->numAdjacentes].peso = 0;
-        listaAdjacentes->numAdjacentes++;
-      }
-    }
-  }
-
-  return true;
-}
-
-bool destroi_lista_adjacentes(ListaVerticesAdjacentes *listaAdjacentes)
-{
-  free(listaAdjacentes->listaDeVertices);
-  return true;
-}
-
-bool obter_grau_vertice(const TipoGrafo *grafo, unsigned vertice, unsigned *grauEntrada, unsigned *grauSaida)
-{
-  if ((grafo->numVertices == 0) || (vertice > grafo->numVertices))
+  pertenceAGM = (bool *) malloc(sizeof(bool) * grafo->num_vertices);
+  if (!pertenceAGM)
   {
     return false;
   }
 
-  if (grauEntrada)
+  arvore->pai = (unsigned int *) malloc(sizeof(unsigned int) * grafo->num_vertices);
+  if (!arvore->pai)
   {
-    *grauEntrada = 0;
-  }
-
-  if (grauSaida)
-  {
-    *grauSaida = 0;
-  }
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
-  {
-    if (grauSaida)
-    {
-      if (existe_aresta(grafo, vertice, i))
-      {
-        *grauSaida = *grauSaida + 1;
-      }
-    }
-
-    if (grauEntrada)
-    {
-      if (existe_aresta(grafo, i, vertice))
-      {
-        *grauEntrada = *grauEntrada + 1;
-      }
-    }
-  }
-
-  return true;
-}
-
-bool BFS(const TipoGrafo *grafo, unsigned vertice, PercursoBFS *percurso)
-{
-  unsigned verticeDeTrabalho, verticeAdjacente;
-  unsigned *fila;
-  unsigned int inicio, final;
-  ListaVerticesAdjacentes adjacentes;
-
-  if ((grafo->numVertices == 0) || (vertice > grafo->numVertices))
-  {
+    free(pertenceAGM);
     return false;
   }
 
-  fila = (unsigned *) malloc(grafo->numVertices * sizeof(unsigned));
-  inicio = final = 0;
-
-  percurso->vertex = (RegistroVertices *) malloc(grafo->numVertices * sizeof(RegistroVertices));
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
+  arvore->custo = (int *) malloc(sizeof(int) * grafo->num_vertices);
+  if (!arvore->custo)
   {
-    percurso->vertex[i].corTrabalho = NAO_PROCESSADO;
-    percurso->vertex[i].pai = UINT_MAX;
-    percurso->vertex[i].distancia = UINT_MAX;
-  }
-
-  percurso->verticeOrigem = vertice;
-  percurso->numDestinos = 0;
-  percurso->vertex[vertice].corTrabalho = EM_PROCESSAMENTO;
-  percurso->vertex[vertice].distancia = 0;
-  fila[final++] = vertice;
-
-  while (inicio != final)
-  {
-    verticeDeTrabalho = fila[inicio++];
-    obter_lista_adjacentes(grafo, verticeDeTrabalho, &adjacentes, false);
-
-    for (unsigned i = 0; i < adjacentes.numAdjacentes; i++)
-    {
-      verticeAdjacente = adjacentes.listaDeVertices[i].vertice;
-
-      if (percurso->vertex[verticeAdjacente].corTrabalho == NAO_PROCESSADO)
-      {
-        percurso->vertex[verticeAdjacente].corTrabalho = EM_PROCESSAMENTO;
-        percurso->vertex[verticeAdjacente].distancia = percurso->vertex[verticeDeTrabalho].distancia + 1;
-        percurso->vertex[verticeAdjacente].pai = verticeDeTrabalho;
-        fila[final++] = verticeAdjacente;
-      }
-    }
-
-    percurso->vertex[verticeDeTrabalho].corTrabalho = PROCESSADO;
-    percurso->numDestinos = percurso->numDestinos + 1;
-    destroi_lista_adjacentes(&adjacentes);
-  }
-
-  free(fila);
-  return true;
-}
-
-bool destroi_BFS(PercursoBFS *percurso)
-{
-  free(percurso->vertex);
-  return true;
-}
-
-bool DFS(const TipoGrafo *grafo, unsigned vertice, PercursoDFS *percurso, bool todos)
-{
-  unsigned relogio;
-  unsigned delta;
-
-  if ((grafo->numVertices == 0) || (vertice > grafo->numVertices) && (!todos))
-  {
+    free(pertenceAGM);
+    free(arvore->pai);
     return false;
   }
 
-  percurso->vertex = (RegistroVertices *) malloc(grafo->numVertices * sizeof(RegistroVertices));
-  percurso->ordemTopologica = (unsigned *) malloc(grafo->numVertices * sizeof(unsigned));
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
   {
-    percurso->vertex[i].corTrabalho = NAO_PROCESSADO;
-    percurso->vertex[i].pai = UINT_MAX;
-    percurso->vertex[i].descoberta = UINT_MAX;
-    percurso->vertex[i].termino = UINT_MAX;
-    percurso->ordemTopologica[i] = UINT_MAX;
+    arvore->pai[vertice] = UINT_MAX;
+    arvore->custo[vertice] = INT_MAX;
+    pertenceAGM[vertice] = false;
   }
 
-  relogio = 0;
-  percurso->numDestinos = 0;
-  percurso->DAG = true;
-
-  if (!todos)
-  {
-    DFS_um_no(grafo, vertice, UINT_MAX, percurso, &relogio);
-  }
-  else
-  {
-    for (unsigned i = 0; i < grafo->numVertices; i++)
-    {
-      if (percurso->vertex[i].corTrabalho == NAO_PROCESSADO)
-      {
-        DFS_um_no(grafo, i, UINT_MAX, percurso, &relogio);
-      }
-    }
-  }
-
-  // Se for um DAG, tem ordem topologica
-  // Entao, trazer os indices dos vertices para o inicio do vetor
-  if (percurso->DAG)
-  {
-    delta = grafo->numVertices - percurso->numDestinos;
-
-    // TODO: reescrever essa parte com realloc de dfs->OrdemTopologica
-    unsigned i;
-    for (i = 0; i < percurso->numDestinos; i++)
-    {
-      percurso->ordemTopologica[i] = percurso->ordemTopologica[i + delta];
-    }
-    for (; i < grafo->numVertices; i++)
-    {
-      percurso->ordemTopologica[i] = UINT_MAX;
-    }
-  }
-  else
-  {
-    free(percurso->ordemTopologica);
-  }
-
-  return true;
-}
-
-bool destroi_DFS(PercursoDFS *percurso)
-{
-  free(percurso->vertex);
-
-  if (percurso->DAG)
-  {
-    free(percurso->ordemTopologica);
-  }
-
-  return true;
-}
-
-void DFS_um_no(const TipoGrafo *grafo, unsigned vertice, unsigned pai, PercursoDFS *percurso, unsigned *relogio)
-{
-  unsigned verticeAdjacente;
-  ListaVerticesAdjacentes adjacentes;
-
-  *relogio = *relogio + 1;
-  percurso->vertex[vertice].corTrabalho = EM_PROCESSAMENTO;
-  percurso->vertex[vertice].descoberta = *relogio;
-  percurso->vertex[vertice].pai = pai;
-
-  obter_lista_adjacentes(grafo, vertice, &adjacentes, false);
-  for (unsigned i = 0; i < adjacentes.numAdjacentes; i++)
-  {
-    verticeAdjacente = adjacentes.listaDeVertices[i].vertice;
-
-    switch (percurso->vertex[verticeAdjacente].corTrabalho)
-    {
-      case EM_PROCESSAMENTO: // Aresta de retorno
-        // Se acho outro que esta sendo processado, o grafo
-        // eh ciclico, entao deixa de ser um DAG
-        percurso->DAG = false;
-        break;
-
-      case NAO_PROCESSADO: // Aresta de arvore
-        percurso->vertex[verticeAdjacente].pai = vertice;
-        DFS_um_no(grafo, verticeAdjacente, vertice, percurso, relogio);
-        break;
-
-      case PROCESSADO: // Aresta de avanco ou de cruzamento
-
-      default:
-        break;
-    }
-  }
-  destroi_lista_adjacentes(&adjacentes);
-
-  *relogio = *relogio + 1;
-  percurso->vertex[vertice].corTrabalho = PROCESSADO;
-  percurso->vertex[vertice].termino = *relogio;
-  percurso->numDestinos = percurso->numDestinos + 1;
-
-  // Insere o vertice na cabeca da lista de ordenacao topologica, se ainda for DAG
-  if (percurso->DAG)
-  {
-    percurso->ordemTopologica[grafo->numVertices - percurso->numDestinos] = vertice;
-  }
-}
-
-bool arvore_geradora_minima_prim(const TipoGrafo *grafo, unsigned vertice, ArvoreGeradoraMinima *arvore)
-{
-  unsigned nv;
-  unsigned de, para;
-  int peso;
-  bool *pertenceMST;
-  ListaVerticesAdjacentes adjacentes;
-
-  if ((grafo->numVertices == 0) || (vertice > grafo->numVertices) || (grafo->direcionado))
-  {
-    return false;
-  }
-
-  pertenceMST = (bool *) malloc(grafo->numVertices * sizeof(bool));
-  arvore->custo = (int *) malloc(grafo->numVertices * sizeof(int));
-  arvore->pai = (unsigned *) malloc(grafo->numVertices * sizeof(unsigned));
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
-  {
-    pertenceMST[i] = false;
-    arvore->custo[i] = INT_MAX;
-  }
-
-  arvore->custo[vertice] = INT_MIN;
-  arvore->pai[vertice] = UINT_MAX;
+  arvore->custo[origem] = 0;
   arvore->numArestas = 0;
-  nv = grafo->numVertices - 1;
 
-  for (unsigned i = 0; i < nv; i++)
+  for (unsigned int contador = 0; contador < grafo->num_vertices; contador++)
   {
-    de = minKey(arvore->custo, pertenceMST, grafo->numVertices);
-    pertenceMST[de] = true;
+    de = minKey(arvore->custo, pertenceAGM, grafo->num_vertices);
+    pertenceAGM[de] = true;
     arvore->numArestas++;
 
-    obter_lista_adjacentes(grafo, de, &adjacentes, false);
-    for (unsigned j = 0; j < adjacentes.numAdjacentes; j++)
+    for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
     {
-      para = adjacentes.listaDeVertices[j].vertice;
-      peso = adjacentes.listaDeVertices[j].peso;
-
-      if ((!pertenceMST[para]) && (peso < arvore->custo[para]))
+      if (existe_aresta(grafo, de, vertice, &peso) && !pertenceAGM[vertice] && (arvore->custo[vertice] > peso))
       {
-        arvore->pai[para] = de;
-        arvore->custo[para] = peso;
+        arvore->pai[vertice] = de;
+        arvore->custo[vertice] = peso;
       }
     }
-    destroi_lista_adjacentes(&adjacentes);
   }
+  free(pertenceAGM);
 
-  arvore->pesoTotal = 0L;
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
+  arvore->pesoTotal = 0;
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
   {
-    arvore->pesoTotal = arvore->pesoTotal + (arvore->pai[i] != UINT_MAX ? arvore->custo[i] : 0);
+    arvore->pesoTotal = arvore->pesoTotal + arvore->custo[vertice];
   }
-
-  free(pertenceMST);
-  // Arvore geradora minima tem que ter o minimo de arestas para ligar
-  // todos os nos do grafo. Se nao tiver exatamente isso, ou tem algo
-  // errado aqui, e apareceu um ciclo, ou o grafo nao eh conectado
-  return (arvore->numArestas == nv);
+  return (arvore->numArestas == grafo->num_vertices);
 }
 
-bool destroi_arvore_geradora_minima(ArvoreGeradoraMinima *arvore)
+unsigned int minKey(const int *custo, const bool *pertence, unsigned int numvertices)
 {
-  free(arvore->pai);
-  free(arvore->custo);
-  return true;
-}
+  unsigned menor, indice;
+  menor = INT_MAX;
 
-unsigned minKey(const int *custo, const bool *pertenceArvoreGeradora, unsigned numeroVertices)
-{
-  int min;
-  unsigned min_index, vertice;
-  min = INT_MAX;
-  min_index = UINT_MAX;
-
-  for (vertice = 0; vertice < numeroVertices; vertice++)
+  for (unsigned int vertice = 0; vertice < numvertices; vertice++)
   {
-    if ((!pertenceArvoreGeradora[vertice]) && (custo[vertice] < min))
+    if (!pertence[vertice] && (custo[vertice] <= menor))
     {
-      min = custo[vertice];
-      min_index = vertice;
+      indice = vertice;
+      menor = custo[vertice];
     }
   }
-
-  return min_index;
+  return indice;
 }
 
-bool calcula_melhor_caminho_Dijkstra(const TipoGrafo *grafo, unsigned verticeOrigem, Caminho **caminho)
+bool obter_melhor_caminho(const GRAFO *grafo, unsigned int origem, CAMINHO **caminho)
 {
-  unsigned vertice;
-  unsigned int menor;
-  int peso;
+  int menor, peso;
+  unsigned int u;
 
-  if ((grafo->numVertices == 0) || (verticeOrigem > grafo->numVertices))
+  if ((grafo->num_vertices == 0) || (origem > grafo->num_vertices))
   {
     return false;
   }
 
-  *caminho = (Caminho *) malloc(grafo->numVertices * sizeof(Caminho));
-
-  for (unsigned i = 0; i < grafo->numVertices; i++)
+  *caminho = (CAMINHO *) malloc(sizeof(CAMINHO) * grafo->num_vertices);
+  if (!(*caminho))
   {
-    (*caminho)[i].custo = INT_MAX;
-    (*caminho)[i].pai = UINT_MAX;
-    (*caminho)[i].tamanho = 0;
-    (*caminho)[i].cor = NAO_PROCESSADO;
+    return false;
   }
 
-  (*caminho)[verticeOrigem].custo = 0;
-  (*caminho)[verticeOrigem].pai = verticeOrigem;
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
+  {
+    (*caminho)[vertice].pai = UINT_MAX;
+    (*caminho)[vertice].custo = INT_MAX;
+    (*caminho)[vertice].estadoVertice = NAO_PROCESSADO;
+  }
 
-  for (unsigned i = 0; i < grafo->numVertices; i++)
+  // Custo para sair e chegar no mesmo lugar eh zero
+  (*caminho)[origem].custo = 0;
+
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
   {
     menor = INT_MAX;
-    vertice = i;
 
-    for (unsigned j = 0; j < grafo->numVertices; j++)
+    // Procurando o vertice de menor custo ainda nao processado
+    for (unsigned int i = 0; i < grafo->num_vertices; i++)
     {
-      if (((*caminho)[j].cor == NAO_PROCESSADO) && ((*caminho)[j].custo <= menor))
+      if (((*caminho)[i].estadoVertice == NAO_PROCESSADO) && ((*caminho)[i].custo <= menor))
       {
-        menor = (*caminho)[j].custo;
-        vertice = j;
+        menor = (*caminho)[i].custo;
+        u = i;
       }
     }
 
-    (*caminho)[vertice].cor = EM_PROCESSAMENTO;
-
-    for (unsigned j = 0; j < grafo->numVertices; j++)
+    // Aqui temos em u o vertice de menor custo ainda nao processado
+    // Na primeira vez, eh o vertice de origem
+    (*caminho)[u].estadoVertice = EM_PROCESSAMENTO;
+    for (unsigned int i = 0; i < grafo->num_vertices; i++)
     {
-      obter_peso_aresta(grafo, vertice, j, &peso);
-
-      if ((peso != 0) && ((*caminho)[j].cor == NAO_PROCESSADO) && ((*caminho)[vertice].custo != INT_MAX) &&
-          (((*caminho)[vertice].custo + peso) < (*caminho)[j].custo))
+      if (!existe_aresta(grafo, u, i, &peso))
       {
-        (*caminho)[j].custo = (*caminho)[vertice].custo + peso;
-        (*caminho)[j].pai = vertice;
+        continue;
+      }
+
+      if (((*caminho)[i].estadoVertice == NAO_PROCESSADO) && (*caminho)[i].custo > ((*caminho)[u].custo + peso))
+      {
+        (*caminho)[i].custo = (*caminho)[u].custo + peso;
+        (*caminho)[i].pai = u;
       }
     }
-
-    (*caminho)[vertice].cor = PROCESSADO;
+    (*caminho)[u].estadoVertice = PROCESSADO;
   }
-
   return true;
 }
 
-bool obtem_melhor_caminho(const TipoGrafo *grafo, unsigned verticeOrigem, unsigned verticeDestino, Caminho *caminhos,
-                          unsigned int *custo, unsigned **vertices, unsigned *tamanho)
+bool colorir_grafo(const GRAFO *grafo, unsigned int **cores)
 {
-  unsigned quantos, i, j;
-  unsigned proximo;
+  VERTEX *Vertex, temp;
+  unsigned int corAtual;
+  unsigned int adjacente;
 
-  if ((grafo->numVertices == 0) || (verticeDestino > grafo->numVertices) || (verticeOrigem == verticeDestino))
+  if (grafo->num_vertices == 0)
   {
     return false;
   }
 
-  *vertices = (unsigned *) malloc(grafo->numVertices * sizeof(unsigned));
-  quantos = 0;
-  proximo = verticeDestino;
-  (*vertices)[quantos++] = verticeDestino;
-
-  do
-  {
-    proximo = caminhos[proximo].pai;
-    (*vertices)[quantos++] = proximo;
-  } while (proximo != verticeOrigem);
-
-  *custo = caminhos[verticeDestino].custo;
-  *tamanho = quantos;
-  *vertices = realloc(*vertices, quantos * sizeof(unsigned));
-  i = 0;
-  j = quantos - 1;
-
-  while (i < j)
-  {
-    swap((*vertices)[i], (*vertices)[j]);
-    i++;
-    j--;
-  }
-
-  return true;
-}
-
-bool colorir_grafo(const TipoGrafo *grafo, unsigned **vetorCores)
-{
-  unsigned cor;
-  unsigned verticeAdjacente;
-  RegistroVertices *vertices;
-  ListaVerticesAdjacentes naoadjacentes, adjacentes;
-
-  if (grafo->numVertices == 0)
+  Vertex = (VERTEX *) malloc(sizeof(VERTEX) * grafo->num_vertices);
+  if (!Vertex)
   {
     return false;
   }
 
-  vertices = (RegistroVertices *) malloc(grafo->numVertices * sizeof(RegistroVertices));
-  *vetorCores = (unsigned *) malloc(grafo->numVertices * sizeof(unsigned));
-
-  for (unsigned vertice = 0; vertice < grafo->numVertices; vertice++)
+  *cores = (unsigned int *) malloc(sizeof(unsigned int) * grafo->num_vertices);
+  if (!(*cores))
   {
-    vertices[vertice].vertice = vertice;
-    obter_grau_vertice(grafo, vertice, NULL, &vertices[vertice].grauSaida);
-    (*vetorCores)[vertice] = UINT_MAX;
+    free(Vertex);
+    return false;
   }
 
-  ordenar_lista_vertices_grau(vertices, GRAU_SAIDA, grafo->numVertices, true);
-  cor = UINT_MAX;
-
-  for (unsigned vertice = 0; vertice < grafo->numVertices; vertice++)
+  // Obter o grau de cada vertice
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
   {
-    // Pulando o vertice vertices[vertice].vertice, pois ja esta pintado
-    if ((*vetorCores)[vertices[vertice].vertice] != UINT_MAX)
+    Vertex[vertice].numeroDoVertice = vertice;
+    (*cores)[vertice] = UINT_MAX;
+    obter_grau_saida_vertice(grafo, vertice, &(Vertex[vertice].grauSaida));
+  }
+
+  // Ordernar os vertices de forma decrescente pelo grau de saida
+  for (unsigned int vertice = grafo->num_vertices; vertice >= 0; vertice--)
+  {
+    for (unsigned int j = 1; j < vertice; j++)
+    {
+      if (Vertex[j - 1].grauSaida < Vertex[j].grauSaida)
+      {
+        temp = Vertex[j - 1];
+        Vertex[j - 1] = Vertex[j];
+        Vertex[j] = temp;
+      }
+    }
+    if (vertice == 0)
+    { // para nao dar underflow no vertice--
+      break;
+    }
+  }
+
+  corAtual = 0;
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
+  {
+    // Se o vertice ja estiver pintado, pega o proximo
+    if ((*cores)[Vertex[vertice].numeroDoVertice] != UINT_MAX)
     {
       continue;
     }
 
-    // Incrementando a cor
-    cor++;
-    // Pintando e processando vertice vertices[vertice].vertice da cor cor
-    (*vetorCores)[vertices[vertice].vertice] = cor;
+    (*cores)[Vertex[vertice].numeroDoVertice] = corAtual;
 
-    obter_lista_adjacentes(grafo, vertices[vertice].vertice, &naoadjacentes, true);
-    for (unsigned verticeNaoAdjacente = 0; verticeNaoAdjacente < naoadjacentes.numAdjacentes; verticeNaoAdjacente++)
+    for (unsigned int naoAdjacente = 0; naoAdjacente < grafo->num_vertices; naoAdjacente++)
     {
-      if (naoadjacentes.listaDeVertices[verticeNaoAdjacente].vertice == vertices[vertice].vertice)
+      // Se for o proprio vertice, pega o proximo
+      if (naoAdjacente == Vertex[vertice].numeroDoVertice)
       {
         continue;
       }
-
-      // Pulando este, pois ja esta pintado
-      if ((*vetorCores)[naoadjacentes.listaDeVertices[verticeNaoAdjacente].vertice] != UINT_MAX)
+      // Se for adjacente, pega o proximo
+      if (existe_aresta(grafo, Vertex[vertice].numeroDoVertice, naoAdjacente, NULL))
       {
         continue;
       }
-
-      // Processando nao-adjacentes
-      obter_lista_adjacentes(grafo, naoadjacentes.listaDeVertices[verticeNaoAdjacente].vertice, &adjacentes, false);
-
-      // Procurando nos adjacentes por gente com a mesma cor
-      for (verticeAdjacente = 0; verticeAdjacente < adjacentes.numAdjacentes; verticeAdjacente++)
+      for (adjacente = 0; adjacente < grafo->num_vertices; adjacente++)
       {
-        // Parando, pois tem gente com a mesma cor do lado
-        if ((*vetorCores)[adjacentes.listaDeVertices[verticeAdjacente].vertice] == cor)
+        if (existe_aresta(grafo, naoAdjacente, adjacente, NULL))
         {
-          break;
+          if ((*cores)[adjacente] == corAtual)
+          {
+            break;
+          }
         }
       }
 
-      // Os adjacentes nao tem a cor que eu quero pintar, entao pinta
-      if (verticeAdjacente == adjacentes.numAdjacentes)
+      if ((adjacente == grafo->num_vertices) && ((*cores)[naoAdjacente] == UINT_MAX))
       {
-        (*vetorCores)[naoadjacentes.listaDeVertices[verticeNaoAdjacente].vertice] = cor;
+        (*cores)[naoAdjacente] = corAtual;
       }
-
-      destroi_lista_adjacentes(&adjacentes);
     }
-
-    destroi_lista_adjacentes(&naoadjacentes);
+    corAtual++;
   }
-
   return true;
 }
 
-bool ordenar_lista_vertices_grau(RegistroVertices *vertices, TipoOrdenacao chave, unsigned tamanho, bool invertido)
+bool obter_grau_saida_vertice(const GRAFO *grafo, unsigned int de, unsigned int *grau)
 {
-  unsigned i, j;
-  RegistroVertices temp;
-
-  // TODO: escolher algoritmo de ordenacao mais eficiente
-  if (tamanho < 1)
+  if (grafo->num_vertices == 0)
   {
     return false;
   }
 
-  for (i = 1; i < tamanho; i++)
+  if (!grau)
   {
-    temp = vertices[i];
-    j = i;
-
-    switch (chave)
-    {
-      case GRAU_SAIDA:
-        if (invertido)
-        {
-          while ((j > 0) && (temp.grauSaida > vertices[j - 1].grauSaida))
-          {
-            vertices[j] = vertices[j - 1];
-            j--;
-          }
-        }
-        else
-        {
-          while ((j > 0) && (temp.grauSaida < vertices[j - 1].grauSaida))
-          {
-            vertices[j] = vertices[j - 1];
-            j--;
-          }
-        }
-
-        break;
-
-      case GRAU_ENTRADA:
-        if (invertido)
-        {
-          while ((j > 0) && (temp.grauEntrada > vertices[j - 1].grauEntrada))
-          {
-            vertices[j] = vertices[j - 1];
-            j--;
-          }
-        }
-        else
-        {
-          while ((j > 0) && (temp.grauEntrada < vertices[j - 1].grauEntrada))
-          {
-            vertices[j] = vertices[j - 1];
-            j--;
-          }
-        }
-
-        break;
-
-      default:
-        return false;
-    }
-
-    vertices[j] = temp;
+    return false;
   }
 
+  *grau = 0;
+  for (unsigned int para = 0; para < grafo->num_vertices; para++)
+  {
+    if (existe_aresta(grafo, de, para, NULL))
+    {
+      *grau = *grau + 1;
+    }
+  }
+  return true;
+}
+
+bool obter_grau_entrada_vertice(const GRAFO *grafo, unsigned int para, unsigned int *grau)
+{
+  if (grafo->num_vertices == 0)
+  {
+    return false;
+  }
+
+  if (!grau)
+  {
+    return false;
+  }
+
+  *grau = 0;
+  for (unsigned int de = 0; de < grafo->num_vertices; de++)
+  {
+    if (existe_aresta(grafo, de, para, NULL))
+    {
+      *grau = *grau + 1;
+    }
+  }
   return true;
 }

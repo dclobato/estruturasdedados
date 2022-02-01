@@ -7,9 +7,6 @@
 #include <string.h>
 #include <espalhamento.h>
 
-static const unsigned short HASH_MIN_N = 4;
-static const unsigned short HASH_MAX_N = 50;
-
 bool criar_tabela_hash(HASH *tabela)
 {
   unsigned long M;
@@ -23,7 +20,16 @@ bool criar_tabela_hash(HASH *tabela)
   tabela->N = HASH_MIN_N;
   tabela->tamanho = M;
   tabela->chaves = (REGISTRO *) malloc(sizeof(REGISTRO) * M);
+  if (!tabela->chaves)
+  {
+    return false;
+  }
   tabela->estados = (EstadoDoSlot *) malloc(sizeof(EstadoDoSlot) * M);
+  if (!tabela->estados)
+  {
+    free(tabela->chaves);
+    return false;
+  }
   for (unsigned int slot = 0; slot < M; slot++)
   {
     tabela->estados[slot] = LIVRE;
@@ -34,26 +40,40 @@ bool criar_tabela_hash(HASH *tabela)
 
 bool destruir_tabela_hash(HASH *tabela)
 {
-  free(tabela->chaves);
-  free(tabela->estados);
+  if (tabela->chaves)
+  {
+    free(tabela->chaves);
+  }
+  if (tabela->estados)
+  {
+    free(tabela->estados);
+  }
   tabela->tamanho = 0;
   tabela->ocupados = 0;
   tabela->N = 0;
   return true;
 }
 
-unsigned long calcular_valor_do_hash(char *chave, unsigned long M)
+unsigned long calcular_valor_do_hash(const char *chave, unsigned long M)
 {
-  unsigned long h, a = 31415, b = 27183;
-  for (h = 0; *chave != '\0'; chave++)
+  char *p;
+  unsigned long h, a, b;
+
+  p = (char *) chave;
+  a = 31415;
+  b = 27183;
+  h = 0;
+
+  while(*p != '\0')
   {
-    h = (a * h + *chave) % M;
+    h = (a * h + (*p)) % M;
     a = (a * b) % (M - 1);
+    p++;
   }
   return h;
 }
 
-bool inserir_na_tabela_hash(HASH *tabela, REGISTRO *registro)
+bool inserir_na_tabela_hash(HASH *tabela, const REGISTRO *registro)
 {
   unsigned long h;
 
@@ -79,7 +99,7 @@ bool inserir_na_tabela_hash(HASH *tabela, REGISTRO *registro)
   return true;
 }
 
-bool busca_na_tabela_hash(HASH *tabela, REGISTRO *registro)
+bool busca_na_tabela_hash(const HASH *tabela, REGISTRO *registro)
 {
   unsigned long h, h_0;
 
@@ -102,7 +122,7 @@ bool busca_na_tabela_hash(HASH *tabela, REGISTRO *registro)
   return false;
 }
 
-bool apagar_da_tabela_hash(HASH *tabela, REGISTRO *registro)
+bool apagar_da_tabela_hash(HASH *tabela, const REGISTRO *registro)
 {
   unsigned long h, h_0;
 
@@ -119,8 +139,8 @@ bool apagar_da_tabela_hash(HASH *tabela, REGISTRO *registro)
     {
       tabela->estados[h] = REMOVIDO;
       tabela->ocupados--;
-      // se densidade menor que 0.25, encolher tabela
-      if (densidade_da_tabela_hash(tabela) < 0.25)
+      // se acima do HASH_MIN_N e densidade menor que 0.25, encolher tabela
+      if ((tabela->N > HASH_MIN_N) && (densidade_da_tabela_hash(tabela) < 0.25))
       {
         encolher_tabela_hash(tabela);
       }
@@ -136,17 +156,17 @@ bool apagar_da_tabela_hash(HASH *tabela, REGISTRO *registro)
   return false;
 }
 
-unsigned long tamanho_da_tabela_hash(HASH *tabela)
+unsigned long tamanho_da_tabela_hash(const HASH *tabela)
 {
   return (tabela->tamanho);
 }
 
-unsigned long registros_na_tabela_hash(HASH *tabela)
+unsigned long registros_na_tabela_hash(const HASH *tabela)
 {
   return (tabela->ocupados);
 }
 
-double densidade_da_tabela_hash(HASH *tabela)
+double densidade_da_tabela_hash(const HASH *tabela)
 {
   return ((double) registros_na_tabela_hash(tabela) / tamanho_da_tabela_hash(tabela));
 }
@@ -155,9 +175,12 @@ bool expandir_tabela_hash(HASH *tabela)
 {
   unsigned long novo_M, M_antigo;
   unsigned short novo_N;
+  unsigned long int ocupados_antigo;
+  unsigned short int N_antigo;
 
   REGISTRO *novas_chaves, *chaves_antigas;
   EstadoDoSlot *novos_estados, *estados_antigos;
+
 
   // Ja esta com o tamanho maximo. abortar
   if (tabela->N == HASH_MAX_N)
@@ -169,6 +192,8 @@ bool expandir_tabela_hash(HASH *tabela)
   M_antigo = tabela->tamanho;
   chaves_antigas = tabela->chaves;
   estados_antigos = tabela->estados;
+  ocupados_antigo = tabela->ocupados;
+  N_antigo = tabela->N;
 
   // Calcula e aloca componentes da tabela expandida
   novo_N = tabela->N + 1;
@@ -177,7 +202,17 @@ bool expandir_tabela_hash(HASH *tabela)
     return false;
   }
   novas_chaves = (REGISTRO *) malloc(sizeof(REGISTRO) * novo_M);
+  if (!novas_chaves)
+  {
+    return false;
+  }
+
   novos_estados = (EstadoDoSlot *) malloc(sizeof(EstadoDoSlot) * novo_M);
+  if (!novos_estados)
+  {
+    return false;
+  }
+
   for (unsigned int slot = 0; slot < novo_M; slot++)
   {
     novos_estados[slot] = LIVRE;
@@ -195,7 +230,20 @@ bool expandir_tabela_hash(HASH *tabela)
   {
     if (estados_antigos[slot] == OCUPADO)
     {
-      inserir_na_tabela_hash(tabela, &chaves_antigas[slot]);
+      if (!inserir_na_tabela_hash(tabela, &chaves_antigas[slot]))
+      {
+        // Se deu erro na insercao da chave na tabela nova, desfazer
+        tabela->chaves = chaves_antigas;
+        tabela->estados = estados_antigos;
+        tabela->ocupados = ocupados_antigo;
+        tabela->tamanho = M_antigo;
+        tabela->N = N_antigo;
+
+        free(novas_chaves);
+        free(novos_estados);
+
+        return false;
+      }
     }
   }
 
@@ -210,6 +258,8 @@ bool encolher_tabela_hash(HASH *tabela)
 {
   unsigned long novo_M, M_antigo;
   unsigned short novo_N;
+  unsigned long int ocupados_antigo;
+  unsigned short int N_antigo;
 
   REGISTRO *novas_chaves, *chaves_antigas;
   EstadoDoSlot *novos_estados, *estados_antigos;
@@ -224,6 +274,8 @@ bool encolher_tabela_hash(HASH *tabela)
   M_antigo = tabela->tamanho;
   chaves_antigas = tabela->chaves;
   estados_antigos = tabela->estados;
+  ocupados_antigo = tabela->ocupados;
+  N_antigo = tabela->N;
 
   // Calcula e aloca componentes da tabela expandida
   novo_N = tabela->N - 1;
@@ -238,7 +290,16 @@ bool encolher_tabela_hash(HASH *tabela)
     return false;
   }
   novas_chaves = (REGISTRO *) malloc(sizeof(REGISTRO) * novo_M);
+  if (!novas_chaves)
+  {
+    return false;
+  }
+
   novos_estados = (EstadoDoSlot *) malloc(sizeof(EstadoDoSlot) * novo_M);
+  if (!novos_estados)
+  {
+    return false;
+  }
   for (unsigned int slot = 0; slot < novo_M; slot++)
   {
     novos_estados[slot] = LIVRE;
@@ -256,7 +317,20 @@ bool encolher_tabela_hash(HASH *tabela)
   {
     if (estados_antigos[slot] == OCUPADO)
     {
-      inserir_na_tabela_hash(tabela, &chaves_antigas[slot]);
+      if (!inserir_na_tabela_hash(tabela, &chaves_antigas[slot]))
+      {
+        // Se deu erro na insercao da chave na tabela nova, desfazer
+        tabela->chaves = chaves_antigas;
+        tabela->estados = estados_antigos;
+        tabela->ocupados = ocupados_antigo;
+        tabela->tamanho = M_antigo;
+        tabela->N = N_antigo;
+
+        free(novas_chaves);
+        free(novos_estados);
+
+        return false;
+      }
     }
   }
 
@@ -286,13 +360,13 @@ bool calcula_primo_proximo_2aN(unsigned short N, unsigned long *primo)
   return true;
 }
 
-void ocupacao_da_tabela_hash(HASH *tabela)
+void ocupacao_da_tabela_hash(const HASH *tabela)
 {
   unsigned long h;
   printf("--- Ocupacao da tabela ---------------------------------------\n");
   printf("Capacidade total.....: %10lu\n", tabela->tamanho);
   printf("Valor de N...........: %10u\n", tabela->N);
-  printf("Slots ocupados (%%)...: %10lu (%.2f%%)\n", tabela->ocupados, densidade_da_tabela_hash(tabela));
+  printf("Slots ocupados (%%)...: %10lu (%.2f%%)\n", tabela->ocupados, densidade_da_tabela_hash(tabela) * 100.0);
   putchar('\n');
   printf("(.) Posicao vazia\n");
   printf("(o) Posicao vazia, mas que ja foi ocupada\n");

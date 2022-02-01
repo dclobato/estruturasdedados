@@ -8,7 +8,7 @@
 
 typedef int TIPO_DADO;
 
-typedef struct __pilha
+typedef struct st_pilha
 {
   TIPO_DADO dados[TAM_PILHA];
   unsigned int topo;

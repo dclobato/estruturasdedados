@@ -5,10 +5,10 @@
 
 typedef int TIPO_DADO;
 
-typedef struct __noh_pilha
+typedef struct st_noh_pilha
 {
   TIPO_DADO dado;
-  struct __noh_pilha *sucessor;
+  struct st_noh_pilha *sucessor;
 } NOH_PILHA;
 
 typedef NOH_PILHA *PILHA;
