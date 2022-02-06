@@ -11,6 +11,7 @@ typedef struct
 {
   int **matriz; // Matriz de adjacencia
   char **rotulos; // vetor de vetor de char para rotulos dos vertices
+  unsigned int *cores; // vetor de cores de cada vertice, se aplicada coloracao
   unsigned int num_vertices; // Numero de vertices do grafo
   unsigned int num_arestas; // Numero de arestas no grafo
   unsigned int max_vertices; // Quantidade maxima de vertices previstos
@@ -127,9 +128,11 @@ bool criar_ordenacao_topologica(const GRAFO *grafo, unsigned int **vertices);
 bool obter_melhor_caminho(const GRAFO *grafo, unsigned int origem, CAMINHO **caminho);
 
 bool colorir_grafo(const GRAFO *grafo, unsigned int **cores);
+void aplicar_cores(GRAFO *grafo, const unsigned int *cores);
+void remover_cores(GRAFO *grafo);
 
 bool obter_grau_saida_vertice(const GRAFO *grafo, unsigned int de, unsigned int *grau);
 bool obter_grau_entrada_vertice(const GRAFO *grafo, unsigned int para, unsigned int *grau);
 
-void imprimir_grafo(const GRAFO *grafo, const unsigned int *cores);
+void imprimir_grafo(const GRAFO *grafo);
 #endif //GRAFO_GRAFO_H

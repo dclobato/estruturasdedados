@@ -17,6 +17,7 @@ bool criar_grafo(GRAFO *grafo, unsigned int max_vertices, bool direcionado, bool
   grafo->num_arestas = 0;
   grafo->direcionado = direcionado;
   grafo->ponderado = ponderado;
+  grafo->cores = NULL; // Inicialmente, sem o vetor com as cores dos vertices
 
   // Alocar dinamicamente a matriz de adjacencias
   grafo->matriz = (int **) malloc(max_vertices * sizeof(int *));
@@ -59,21 +60,31 @@ bool destruir_grafo(GRAFO *grafo)
     if (grafo->rotulos[de])
     {
       free(grafo->rotulos[de]);
+      grafo->rotulos[de] = NULL;
     }
     if (grafo->matriz[de])
     {
       free(grafo->matriz[de]);
+      grafo->matriz[de] = NULL;
     }
   }
 
   if (grafo->matriz)
   {
     free(grafo->matriz);
+    grafo->matriz = NULL;
   }
 
   if (grafo->rotulos)
   {
     free(grafo->rotulos);
+    grafo->rotulos = NULL;
+  }
+
+  if (grafo->cores)
+  {
+    free(grafo->cores);
+    grafo->cores = NULL;
   }
 
   return true;
@@ -125,6 +136,7 @@ bool renomear_vertice(GRAFO *grafo, char *rotulo, size_t tamanho, unsigned int n
   if (grafo->rotulos[num_vertice])
   {
     free(grafo->rotulos[num_vertice]);
+    grafo->rotulos[num_vertice] = NULL;
   }
 
   grafo->rotulos[num_vertice] = temp;
@@ -149,13 +161,14 @@ bool adicionar_aresta(GRAFO *grafo, unsigned int de, unsigned int para, int peso
     return false;
   }
 
-  if (existe_aresta(grafo, de, para, NULL))
-  { // ja existe a aresta. Mude o peso, e nao crie
+  // Grafo nao direcionado nao pode ter ciclo
+  if ((de == para) && (!grafo->direcionado))
+  {
     return false;
   }
 
-  // Grafo nao direcionado nao pode ter ciclo
-  if ((de == para) && (!grafo->direcionado))
+  // ja existe a aresta. Mude o peso, e nao crie
+  if (existe_aresta(grafo, de, para, NULL))
   {
     return false;
   }
@@ -368,24 +381,24 @@ bool criar_ordenacao_topologica(const GRAFO *grafo, unsigned int **vertices)
   return true;
 }
 
-void imprimir_grafo(const GRAFO *grafo, const unsigned int *cores)
+void imprimir_grafo(const GRAFO *grafo)
 {
   printf("%sgraph G {\n", grafo->direcionado ? "di" : "");
   printf("   node [shape = ellipse];\n");
   for (unsigned int vertice = 0; vertice < grafo->num_vertices; vertice++)
   {
-    if (grafo->rotulos[vertice])
-    {
-      printf("   \"%s\"", grafo->rotulos[vertice]);
-    }
-    else
+    if (grafo->rotulos[vertice] == NULL)
     {
       printf("   %u", vertice);
     }
-
-    if (cores)
+    else
     {
-      printf(" [color = \"%s\"]", GRAFO_H_LISTA_CORES[cores[vertice] % GRAFO_H_TOTAL_DE_CORES]);
+      printf("   \"%s\"", grafo->rotulos[vertice]);
+    }
+
+    if (grafo->cores)
+    {
+      printf(" [color = \"%s\"]", GRAFO_H_LISTA_CORES[grafo->cores[vertice] % GRAFO_H_TOTAL_DE_CORES]);
     }
     printf(";\n");
   }
@@ -407,7 +420,7 @@ void imprimir_grafo(const GRAFO *grafo, const unsigned int *cores)
             printf("   %u -> ", linha);
           }
 
-          if (grafo->rotulos[coluna])
+          if (grafo->rotulos[coluna] == NULL)
           {
             printf("\"%s\"", grafo->rotulos[coluna]);
           }
@@ -705,6 +718,30 @@ bool colorir_grafo(const GRAFO *grafo, unsigned int **cores)
     corAtual++;
   }
   return true;
+}
+
+void aplicar_cores(GRAFO *grafo, const unsigned int *cores)
+{
+  remover_cores(grafo);
+
+  grafo->cores = (unsigned int *) malloc(grafo->num_vertices * sizeof(unsigned int));
+  if (!grafo->cores)
+  {
+    return;
+  }
+  for (unsigned int vertice = 0; vertice < grafo->num_vertices; ++vertice)
+  {
+    grafo->cores[vertice] = cores[vertice];
+  }
+}
+
+void remover_cores(GRAFO *grafo)
+{
+  if (grafo->cores)
+  {
+    free(grafo->cores);
+    grafo->cores = NULL;
+  }
 }
 
 bool obter_grau_saida_vertice(const GRAFO *grafo, unsigned int de, unsigned int *grau)
